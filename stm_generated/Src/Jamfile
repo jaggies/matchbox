@@ -1,0 +1,18 @@
+SubDir TOP stm_generated Src ;
+SubDirHdrs $(TOP) stm_generated Inc ;
+SubDirHdrs $(TOP) stm_generated Drivers STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
+SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src drivers ;
+
+LINKLIBS on main = -lstm32_hal ;
+
+Main main :
+	bsp_driver_sd.c
+	fatfs.c
+	main.c
+	stm32f4xx_hal_msp.c
+	stm32f4xx_it.c
+	user_diskio.c ;
+

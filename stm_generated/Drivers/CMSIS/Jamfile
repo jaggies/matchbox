@@ -1,0 +1,4 @@
+SubDir TOP stm_generated Drivers ;
+SubInclude TOP stm_generated Src CMSIS DSP_Lib ;
+SubInclude TOP stm_generated Src CMSIS Device ;
+SubInclude TOP stm_generated Src CMSIS RTOS ;

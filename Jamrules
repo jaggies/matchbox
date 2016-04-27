@@ -1,0 +1,23 @@
+ARCH = arm-none-eabi ;
+ALL_LOCATE_TARGET = $(TOP)/build/$(ARCH) ;
+AS = $(ARCH)-as ;
+CC = $(ARCH)-gcc ;
+C++ = $(ARC)-g++ ;
+LD = $(ARCH)-ld ;
+LINK = $(LD) -L $(ALL_LOCATE_TARGET) ;
+
+# M4 with hardware floating point
+CFLAGS += -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mlittle-endian ;
+
+CC += $(CFLAGS) ;
+C++ += $(CFLAGS) ;
+
+#INCLUDE = 
+#../Inc/ 
+#../Drivers/STM32F4xx_HAL_Driver/Inc
+#../Middlewares/Third_Party/FatFs/src/
+#../Drivers/CMSIS/Device/ST/STM32F4xx/Include/
+#../Drivers/CMSIS/Include/
+#../Middlewares/Third_Party/FatFs/src/drivers/ ;
+
+

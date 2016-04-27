@@ -1,0 +1,12 @@
+SubDir TOP stm_generated Middlewares Third_Party FatFs src ;
+SubDirHdrs $(TOP) stm_generated Inc ;
+SubDirHdrs $(TOP) stm_generated Drivers STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
+
+
+Library fat :
+	diskio.c
+	ff.c
+	ff_gen_drv.c
+	;

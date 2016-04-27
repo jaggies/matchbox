@@ -1,4 +1,3 @@
 SubDir TOP stm_generated ;
 SubInclude TOP stm_generated Src ;
 SubInclude TOP stm_generated Drivers ;
-#Drivers Inc Jamfile Middlewares Src stm_generated.gpdsc stm_generated.ioc

@@ -1,0 +1,8 @@
+SubDir TOP stm_generated Drivers CMSIS Device ST STM32F4xx Source Templates ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
+
+Library libstm32_hal :
+	system_stm32f4xx.c
+	startup_stm32f415xx.s
+	;

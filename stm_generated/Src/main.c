@@ -66,6 +66,23 @@ static void MX_SPI3_Init(void);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
+void LED_init()
+{
+    GPIO_InitTypeDef  GPIO_InitStruct;
+
+    GPIO_InitStruct.Pin = GPIO_PIN_13;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 1);
+}
 
 int main(void)
 {
@@ -84,7 +101,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SDIO_SD_Init();
+  //MX_SDIO_SD_Init();
   MX_SPI1_Init();
   MX_SPI2_Init();
   MX_SPI3_Init();
@@ -95,11 +112,20 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  LED_init();
+
+  int i = 0;
   while (1)
   {
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, (i++ % 2));
+	HAL_Delay(500);
+	if (i == 15) 
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0);
 
   }
   /* USER CODE END 3 */

@@ -1,0 +1,2 @@
+SubDir TOP stm_generated Drivers CMSIS DSP_Lib ;
+SubInclude TOP stm_generated Drivers CMSIS DSP_Lib Source ;

@@ -1,4 +1,5 @@
-ARCH = arm-none-eabi ;
+GCC_HOME = /Users/jmiller/trees/open-source/gcc-arm-none-eabi-4_9-2015q3/bin ;
+ARCH = $(GCC_HOME)/arm-none-eabi ;
 ALL_LOCATE_TARGET = $(TOP)/build/$(ARCH) ;
 AS = $(ARCH)-as ;
 AR = $(ARCH)-ar cur ;
@@ -12,11 +13,12 @@ LINK = $(CC) ;
 # M4 with hardware floating point
 CFLAGS += -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 -DSTM32F415xx ;
 
-LDFLAGS += -nostdlib -nostartfiles -ffreestanding -mfloat-abi=hard ;
+#LDFLAGS += -nostdlib -nostartfiles -ffreestanding -mfloat-abi=hard ;
+LDFLAGS += -mfpu=fpv4-sp-d16 -mthumb -mfloat-abi=hard ; #/ --specs=nosys.specs ;
 
 CC += $(CFLAGS) $(COPT) ;
 C++ += $(CFLAGS) ;
-LINK += $(LDFLAGS) -L $(ALL_LOCATE_TARGET) -T $(MEMMAP) -Wl,--gc-sections ;
+LINK += $(LDFLAGS) -L $(ALL_LOCATE_TARGET) -T $(MEMMAP) -Wl,--gc-sections -mcpu=cortex-m4 ;
 
 
 #INCLUDE = 

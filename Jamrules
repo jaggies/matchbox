@@ -9,7 +9,7 @@ CC = $(GCC_PATH)-gcc ;
 C++ = $(GCC_PATH)-g++ ;
 LD = $(GCC_PATH)-ld ;
 RANLIB = $(ARCH)-ranlib ;
-MEMMAP = devices/STM32F415RG_FLASH.ld ;
+MEMMAP = $(TOP)/devices/STM32F415RG_FLASH.ld ;
 LINK = $(CC) ;
 
 # M4 with hardware floating point

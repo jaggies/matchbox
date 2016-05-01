@@ -101,36 +101,23 @@ void maybeJumpToBootloader() {
     // Jump to bootloader if PC13 is low at reset
     pinInitInput(GPIOC, GPIO_PIN_13);
     if (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)) {
-        bootLoader(); while (1);
-//        /*Configure GPIO pins : PA10 PA11 PA12 */
-//        GPIO_InitTypeDef GPIO_InitStruct;
-//        GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12;
-//        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-//        GPIO_InitStruct.Pull = GPIO_NOPULL;
-//        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-//        GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
-//        HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-        int i;
         pinInitOutput(GPIOC, GPIO_PIN_13, 1);
-        for (i = 0; i < 50; i++) {
+        for (int i = 0; i < 20; i++) {
             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, i % 2);
             HAL_Delay(100);
         }
-
         SysTick->CTRL = 0; // Reset Systick timer
         SysTick->LOAD = 0;
         SysTick->VAL = 0;
         HAL_DeInit();
         HAL_RCC_DeInit();
-
-        __set_PRIMASK(1); // Disable interrupts
+        //__set_PRIMASK(1); // Disable interrupts - causes STM32f415 to fail entering DFU mode
         __HAL_RCC_GPIOC_CLK_DISABLE();
         __HAL_RCC_GPIOA_CLK_DISABLE();
         __HAL_RCC_GPIOB_CLK_DISABLE();
         __HAL_RCC_GPIOD_CLK_DISABLE();
         __set_MSP(0x20001000); // reset stack pointer to bootloader default
-
-        while(1);
+        bootLoader(); while (1);
     }
 }
 

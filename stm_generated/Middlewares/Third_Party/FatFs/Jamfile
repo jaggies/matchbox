@@ -1,2 +1,2 @@
 SubDir TOP stm_generated Middlewares Third_Party FatFs ;
-#SubInclude TOP stm_generated Middlewares Third_Party FatFs src ;
+SubInclude TOP stm_generated Middlewares Third_Party FatFs src ;

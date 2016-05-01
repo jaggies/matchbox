@@ -10,6 +10,7 @@
 /-----------------------------------------------------------------------------*/
 /* Replace 'stm32xxx' with the STM32 Serie used, ex: stm32f4xx_hal.h */
 #include "stm32f4xx_hal.h" 
+#include "cmsis_os.h"
 
 /* If uSD is used, then include the uSD BSP header file. 
    Replace 'stm32xxx' with your EVAL board name, ex: stm324x9i_eval_sd.h 

@@ -1,2 +1,3 @@
 SubDir TOP stm_generated Middlewares Third_Party ;
 SubInclude TOP stm_generated Middlewares Third_Party FatFs ;
+SubInclude TOP stm_generated Middlewares Third_Party FreeRTOS ;

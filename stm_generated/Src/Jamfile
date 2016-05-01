@@ -7,7 +7,8 @@ SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
 SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src drivers ;
 SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc ;
 SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
-
+SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Core Inc ;
+SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Class CDC Inc ;
 
 LINKLIBS on main = -lstm32_hal -lc ;
 #LINKLIBS on main = -lstm32_hal ;
@@ -20,9 +21,11 @@ Main main :
 	stm32f4xx_it.c
 	syscalls.c
 	usb_device.c
+	usb_host.c
 	usbd_cdc_if.c
 	usbd_conf.c
 	usbd_desc.c
+	usbh_conf.c
 	#user_diskio.c
 	;
 

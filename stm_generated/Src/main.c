@@ -32,7 +32,7 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "usb_device.h"
+#include "usb_host.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -63,6 +63,7 @@ static void MX_SPI3_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_SDIO_SD_Init(void);
+void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -152,7 +153,7 @@ int main(void)
   MX_ADC1_Init();
   MX_ADC2_Init();
   //MX_SDIO_SD_Init(); // Interferes with PD2
-  MX_USB_DEVICE_Init();
+  MX_USB_HOST_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -166,6 +167,7 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
+    MX_USB_HOST_Process();
 
   /* USER CODE BEGIN 3 */
 
@@ -222,7 +224,7 @@ void MX_ADC1_Init(void)
 
   ADC_ChannelConfTypeDef sConfig;
 
-    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
     */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
@@ -237,7 +239,7 @@ void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   HAL_ADC_Init(&hadc1);
 
-    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
     */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
@@ -252,7 +254,7 @@ void MX_ADC2_Init(void)
 
   ADC_ChannelConfTypeDef sConfig;
 
-    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
     */
   hadc2.Instance = ADC2;
   hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
@@ -267,7 +269,7 @@ void MX_ADC2_Init(void)
   hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   HAL_ADC_Init(&hadc2);
 
-    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
     */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = 1;
@@ -351,9 +353,9 @@ void MX_SPI3_Init(void)
 
 }
 
-/** Configure pins as
-        * Analog
-        * Input
+/** Configure pins as 
+        * Analog 
+        * Input 
         * Output
         * EVENT_OUT
         * EXTI
@@ -396,10 +398,10 @@ void assert_failed(uint8_t* file, uint32_t line)
 
 /**
   * @}
-  */
+  */ 
 
 /**
   * @}
-*/
+*/ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

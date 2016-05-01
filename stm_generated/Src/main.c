@@ -32,7 +32,7 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "usb_host.h"
+#include "usb_device.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -63,7 +63,6 @@ static void MX_SPI3_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_SDIO_SD_Init(void);
-void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -153,7 +152,7 @@ int main(void)
   MX_ADC1_Init();
   MX_ADC2_Init();
   //MX_SDIO_SD_Init(); // Interferes with PD2
-  MX_USB_HOST_Init();
+  MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -167,7 +166,6 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
-    MX_USB_HOST_Process();
 
   /* USER CODE BEGIN 3 */
 

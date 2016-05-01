@@ -1,0 +1,14 @@
+SubDir TOP stm_generated Middlewares ST STM32_USB_Device_Library Core Src ;
+SubDirHdrs $(TOP) stm_generated Inc ;
+SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc ;
+SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
+SubDirHdrs $(TOP) stm_generated Drivers STM32F4xx_HAL_Driver Inc ;
+
+Library libstm32_hal :
+	usbd_conf_template.c
+	usbd_core.c
+	usbd_ctlreq.c
+	usbd_ioreq.c
+	;

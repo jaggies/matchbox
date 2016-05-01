@@ -5,9 +5,12 @@ SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src ;
 SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
 SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
 SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src drivers ;
+SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc ;
+SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
 
-#LINKLIBS on main = -lstm32_hal -lc ;
-LINKLIBS on main = -lstm32_hal ;
+
+LINKLIBS on main = -lstm32_hal -lc ;
+#LINKLIBS on main = -lstm32_hal ;
 
 Main main :
 	bsp_driver_sd.c
@@ -15,7 +18,12 @@ Main main :
 	main.c
 	stm32f4xx_hal_msp.c
 	stm32f4xx_it.c
-	#user_diskio.c 
+	syscalls.c
+	usb_device.c
+	usbd_cdc_if.c
+	usbd_conf.c
+	usbd_desc.c
+	#user_diskio.c
 	;
 
 

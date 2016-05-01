@@ -1,4 +1,4 @@
 SubDir TOP stm_generated ;
 SubInclude TOP stm_generated Src ;
 SubInclude TOP stm_generated Drivers ;
-
+SubInclude TOP stm_generated Middlewares ;

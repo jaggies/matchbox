@@ -1,0 +1,12 @@
+SubDir TOP stm_generated Middlewares ST STM32_USB_Device_Library Class CDC Src ;
+SubDirHdrs $(TOP) stm_generated Inc ;
+SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
+SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc ;
+SubDirHdrs $(TOP) stm_generated Drivers STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
+
+Library libstm32_hal :
+	usbd_cdc.c
+	usbd_cdc_if_template.c
+	;

@@ -32,6 +32,7 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
+#include "usb_device.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -48,8 +49,6 @@ SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 SPI_HandleTypeDef hspi3;
 
-PCD_HandleTypeDef hpcd_USB_OTG_FS;
-
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
@@ -61,7 +60,6 @@ static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_SPI3_Init(void);
-static void MX_USB_OTG_FS_PCD_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_SDIO_SD_Init(void);
@@ -97,22 +95,43 @@ void pinInitInput(GPIO_TypeDef* bus, int pin)
 
 typedef void (*fPtr)(void);
 
-void JumpToBootLoader() {
-    fPtr bootLoader = (fPtr) *(uint32_t*) 0x1fff0004;
-    SysTick->CTRL = 0; // Reset Systick timer
-    SysTick->LOAD = 0;
-    SysTick->VAL = 0;
-    HAL_DeInit();
-    HAL_RCC_DeInit();
+void maybeJumpToBootloader() {
+    const fPtr bootLoader = (fPtr) *(uint32_t*) 0x1fff0004;
 
-    __set_PRIMASK(1); // Disable interrupts
-    __HAL_RCC_GPIOC_CLK_DISABLE();
-    __HAL_RCC_GPIOA_CLK_DISABLE();
-    __HAL_RCC_GPIOB_CLK_DISABLE();
-    __HAL_RCC_GPIOD_CLK_DISABLE();
-    __set_MSP(0x20002000); // reset stack pointer to bootloader default
-    bootLoader();
-    while(1);
+    // Jump to bootloader if PC13 is low at reset
+    pinInitInput(GPIOC, GPIO_PIN_13);
+    if (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)) {
+        bootLoader(); while (1);
+//        /*Configure GPIO pins : PA10 PA11 PA12 */
+//        GPIO_InitTypeDef GPIO_InitStruct;
+//        GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12;
+//        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+//        GPIO_InitStruct.Pull = GPIO_NOPULL;
+//        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+//        GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
+//        HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+        int i;
+        pinInitOutput(GPIOC, GPIO_PIN_13, 1);
+        for (i = 0; i < 50; i++) {
+            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, i % 2);
+            HAL_Delay(100);
+        }
+
+        SysTick->CTRL = 0; // Reset Systick timer
+        SysTick->LOAD = 0;
+        SysTick->VAL = 0;
+        HAL_DeInit();
+        HAL_RCC_DeInit();
+
+        __set_PRIMASK(1); // Disable interrupts
+        __HAL_RCC_GPIOC_CLK_DISABLE();
+        __HAL_RCC_GPIOA_CLK_DISABLE();
+        __HAL_RCC_GPIOB_CLK_DISABLE();
+        __HAL_RCC_GPIOD_CLK_DISABLE();
+        __set_MSP(0x20001000); // reset stack pointer to bootloader default
+
+        while(1);
+    }
 }
 
 int main(void)
@@ -137,35 +156,16 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
 
-  // Jump to bootloader if PC13 is low at reset
-  pinInitInput(GPIOC, GPIO_PIN_13);
-  if (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)) {
-      /*Configure GPIO pins : PA10 PA11 PA12 */
-      GPIO_InitTypeDef GPIO_InitStruct;
-      GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12;
-      GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-      GPIO_InitStruct.Pull = GPIO_NOPULL;
-      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-      GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
-      HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-      int i;
-      pinInitOutput(GPIOC, GPIO_PIN_13, 1);
-      for (i = 0; i < 50; i++) {
-          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, i % 2);
-          HAL_Delay(100);
-      }
-      JumpToBootLoader();
-  }
+  maybeJumpToBootloader();
 
   //MX_SDIO_SD_Init(); // Disable until rev 1.0 with pin reassignment
   MX_SPI1_Init();
   MX_SPI2_Init();
   MX_SPI3_Init();
-  MX_USB_OTG_FS_PCD_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
   //MX_SDIO_SD_Init(); // Interferes with PD2
+  MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -235,7 +235,7 @@ void MX_ADC1_Init(void)
 
   ADC_ChannelConfTypeDef sConfig;
 
-    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
+    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
     */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
@@ -250,7 +250,7 @@ void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   HAL_ADC_Init(&hadc1);
 
-    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
+    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
     */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
@@ -265,7 +265,7 @@ void MX_ADC2_Init(void)
 
   ADC_ChannelConfTypeDef sConfig;
 
-    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
+    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
     */
   hadc2.Instance = ADC2;
   hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
@@ -280,7 +280,7 @@ void MX_ADC2_Init(void)
   hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   HAL_ADC_Init(&hadc2);
 
-    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
+    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
     */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = 1;
@@ -364,28 +364,9 @@ void MX_SPI3_Init(void)
 
 }
 
-/* USB_OTG_FS init function */
-void MX_USB_OTG_FS_PCD_Init(void)
-{
-
-  hpcd_USB_OTG_FS.Instance = USB_OTG_FS;
-  hpcd_USB_OTG_FS.Init.dev_endpoints = 7;
-  hpcd_USB_OTG_FS.Init.speed = PCD_SPEED_FULL;
-  hpcd_USB_OTG_FS.Init.dma_enable = DISABLE;
-  hpcd_USB_OTG_FS.Init.ep0_mps = DEP0CTL_MPS_64;
-  hpcd_USB_OTG_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
-  hpcd_USB_OTG_FS.Init.Sof_enable = DISABLE;
-  hpcd_USB_OTG_FS.Init.low_power_enable = DISABLE;
-  hpcd_USB_OTG_FS.Init.lpm_enable = DISABLE;
-  hpcd_USB_OTG_FS.Init.vbus_sensing_enable = ENABLE;
-  hpcd_USB_OTG_FS.Init.use_dedicated_ep1 = DISABLE;
-  HAL_PCD_Init(&hpcd_USB_OTG_FS);
-
-}
-
-/** Configure pins as 
-        * Analog 
-        * Input 
+/** Configure pins as
+        * Analog
+        * Input
         * Output
         * EVENT_OUT
         * EXTI
@@ -428,10 +409,10 @@ void assert_failed(uint8_t* file, uint32_t line)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-*/ 
+*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

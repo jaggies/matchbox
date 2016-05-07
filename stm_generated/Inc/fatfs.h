@@ -40,12 +40,15 @@
 
 #include "ff.h"
 #include "ff_gen_drv.h"
+#include "sd_diskio.h" /* defines SD_Driver as external */
 #include "user_diskio.h" /* defines USER_Driver as external */
 
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
+extern uint8_t retSD; /* Return value for SD */
+extern char SD_Path[4]; /* SD logical drive path */
 extern uint8_t retUSER; /* Return value for USER */
 extern char USER_Path[4]; /* USER logical drive path */
 

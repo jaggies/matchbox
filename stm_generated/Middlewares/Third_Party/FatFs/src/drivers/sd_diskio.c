@@ -27,6 +27,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
+#include "bsp_driver_sd.h"
 #include "ff_gen_drv.h"
 
 /* Private typedef -----------------------------------------------------------*/

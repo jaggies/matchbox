@@ -44,8 +44,8 @@ caddr_t _sbrk(int incr)
 
 	if (heap_end + incr > &heap_top)
 	{
-//		write(1, "Heap and stack collision\n", 25);
-//		abort();
+		write(1, "Heap and stack collision\n", 25);
+		abort();
 		errno = ENOMEM;
 		return (caddr_t) -1;
 	}
@@ -98,6 +98,9 @@ int _read(int file, char *ptr, int len)
         while (USBD_BUSY == (result = CDC_Receive_FS (ptr, &length))) {
             osDelay(50);
         }
+    } else {
+        errno = EBADF;
+        return -1;
     }
     return result == USBD_OK ? length : 0;
 }
@@ -110,6 +113,9 @@ int _write(int file, char *data, int len)
         while (USBD_BUSY == (result = CDC_Transmit_FS(data, len))) {
             osDelay(50);
         }
+    } else {
+        errno = EBADF;
+        return -1;
     }
     return result == USBD_OK ? bytes_written : 0;
 }
@@ -121,6 +127,11 @@ int _close(int file)
 
 int _fstat(int file, struct stat *st)
 {
+    if (file != STDOUT_FILENO || file != STDERR_FILENO) {
+        errno = EBADF;
+        return -1;
+    }
+    bzero(st, sizeof(stat));
 	st->st_mode = S_IFCHR;
 	return 0;
 }
@@ -160,6 +171,7 @@ int _times(struct tms *buf)
 
 int _stat(char *file, struct stat *st)
 {
+    bzero(st, sizeof(stat));
 	st->st_mode = S_IFCHR;
 	return 0;
 }

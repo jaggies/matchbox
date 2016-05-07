@@ -461,6 +461,7 @@ void StartDefaultTask(void const * argument)
   pinInitOutput(GPIOC, GPIO_PIN_13, 0);
   int i = 0;
   char buff[32];
+  printf("Stack ptr %08x\n", __get_MSP());
   while (1) {
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, (i++ % 2));
     printf("Hello %d\n", i);

@@ -15,6 +15,8 @@
 #include <reent.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include "cmsis_os.h"
+#include "usbd_cdc_if.h"
 
 #undef errno
 extern int errno;
@@ -25,6 +27,8 @@ extern int errno;
 extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
 
+#define STDOUT_FILENO 1
+#define STDERR_FILENO 2
 
 caddr_t _sbrk(int incr)
 {
@@ -86,15 +90,28 @@ void _exit (int status)
 	while (1) {}
 }
 
-int _write(int file, char *ptr, int len)
+int _read(int file, char *ptr, int len)
 {
-	int DataIdx;
+    int result = 0;
+    uint32_t length = 0;
+    if (file == STDOUT_FILENO || file == STDERR_FILENO) {
+        while (USBD_BUSY == (result = CDC_Receive_FS (ptr, &length))) {
+            osDelay(50);
+        }
+    }
+    return result == USBD_OK ? length : 0;
+}
 
-		for (DataIdx = 0; DataIdx < len; DataIdx++)
-		{
-		   __io_putchar( *ptr++ );
-		}
-	return len;
+int _write(int file, char *data, int len)
+{
+    int bytes_written;
+    int result = 0;
+    if (file == STDOUT_FILENO || file == STDERR_FILENO) {
+        while (USBD_BUSY == (result = CDC_Transmit_FS(data, len))) {
+            osDelay(50);
+        }
+    }
+    return result == USBD_OK ? bytes_written : 0;
 }
 
 int _close(int file)
@@ -116,18 +133,6 @@ int _isatty(int file)
 int _lseek(int file, int ptr, int dir)
 {
 	return 0;
-}
-
-int _read(int file, char *ptr, int len)
-{
-	int DataIdx;
-
-	for (DataIdx = 0; DataIdx < len; DataIdx++)
-	{
-	  *ptr++ = __io_getchar();
-	}
-
-   return len;
 }
 
 int _open(char *path, int flags, ...)

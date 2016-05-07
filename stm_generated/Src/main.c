@@ -35,7 +35,6 @@
 #include "cmsis_os.h"
 #include "fatfs.h"
 #include "usb_device.h"
-#include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -464,10 +463,7 @@ void StartDefaultTask(void const * argument)
   char buff[32];
   while (1) {
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, (i++ % 2));
-    int n = snprintf(buff, sizeof(buff), "Hello %d\n", i);
-    while (USBD_BUSY == CDC_Transmit_FS(buff, n)) {
-        osDelay(50);
-    }
+    printf("Hello %d\n", i);
   }
   /* USER CODE END 5 */
 }

@@ -187,7 +187,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 256);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -461,11 +461,13 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   pinInitOutput(GPIOC, GPIO_PIN_13, 0);
   int i = 0;
-  uint8_t* msg = "Hello, World!\n";
+  char buff[32];
   while (1) {
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, (i++ % 2));
-    CDC_Transmit_FS(msg, 14);
-    osDelay(500);
+    int n = snprintf(buff, sizeof(buff), "Hello %d\n", i);
+    while (USBD_BUSY == CDC_Transmit_FS(buff, n)) {
+        osDelay(50);
+    }
   }
   /* USER CODE END 5 */
 }

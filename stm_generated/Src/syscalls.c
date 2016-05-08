@@ -24,9 +24,7 @@ extern int errno;
 #undef FreeRTOS
 #define MAX_STACK_SIZE 0x200
 
-extern int __io_putchar(int ch) __attribute__((weak));
-extern int __io_getchar(void) __attribute__((weak));
-
+#define STDIN_FILENO 0
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
@@ -94,15 +92,15 @@ int _read(int file, char *ptr, int len)
 {
     int result = 0;
     uint32_t length = 0;
-    if (file == STDOUT_FILENO || file == STDERR_FILENO) {
+    if (file == STDIN_FILENO) {
         while (USBD_BUSY == (result = CDC_Receive_FS (ptr, &length))) {
-            osDelay(50);
+            osThreadYield();
         }
     } else {
         errno = EBADF;
         return -1;
     }
-    return result == USBD_OK ? length : 0;
+    return result == USBD_OK ? len : 0;
 }
 
 int _write(int file, char *data, int len)
@@ -111,7 +109,7 @@ int _write(int file, char *data, int len)
     int result = 0;
     if (file == STDOUT_FILENO || file == STDERR_FILENO) {
         while (USBD_BUSY == (result = CDC_Transmit_FS(data, len))) {
-            osDelay(50);
+            osThreadYield();
         }
     } else {
         errno = EBADF;
@@ -127,7 +125,7 @@ int _close(int file)
 
 int _fstat(int file, struct stat *st)
 {
-    if (file != STDOUT_FILENO || file != STDERR_FILENO) {
+    if (file != STDOUT_FILENO || file != STDERR_FILENO || file != STDIN_FILENO) {
         errno = EBADF;
         return -1;
     }
@@ -138,12 +136,17 @@ int _fstat(int file, struct stat *st)
 
 int _isatty(int file)
 {
-	return 1;
+    if (file == STDOUT_FILENO || file == STDERR_FILENO || file == STDIN_FILENO) {
+        return 1;
+    } else {
+        errno = EBADF;
+        return -1;
+    }
 }
 
 int _lseek(int file, int ptr, int dir)
 {
-	return 0;
+	return -1;
 }
 
 int _open(char *path, int flags, ...)

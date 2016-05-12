@@ -33,6 +33,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "cmsis_os.h"
+#include "stm32f415xx.h"
 #include "fatfs.h"
 #include "usb_device.h"
 
@@ -85,6 +86,20 @@ void StartDefaultTask(void const * argument);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
+#define SW1_BUS GPIOC // PC1
+#define SW1_PIN GPIO_PIN_1
+#define SW2_BUS GPIOA // PA13
+#define SW2_PIN GPIO_PIN_13
+
+//#define VERSION_01
+
+#ifdef VERSION_01
+#define LED_BUS SW1_BUS // Oops. Wired to PC13
+#define LED_PIN SW1_PIN
+#else
+#define LED_BUS GPIOB // rewired to PB2
+#define LED_PIN GPIO_PIN_2
+#endif
 
 void pinInitOutput(GPIO_TypeDef* bus, int pin, int initValue) {
     GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
@@ -106,18 +121,27 @@ void pinInitInput(GPIO_TypeDef* bus, int pin)
     HAL_GPIO_Init(bus, &GPIO_InitStruct);
 }
 
+void pinInitIrq(GPIO_TypeDef* bus, int pin, int falling) {
+    GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+    GPIO_InitStruct.Mode = falling ? GPIO_MODE_IT_FALLING : GPIO_MODE_IT_RISING;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Pin = pin;
+    GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+    HAL_GPIO_Init(bus, &GPIO_InitStruct);
+}
+
 typedef void (*fPtr)(void);
 
 void maybeJumpToBootloader() {
     const fPtr bootLoader = (fPtr) *(uint32_t*) 0x1fff0004;
 
     // Jump to bootloader if PC13 is low at reset
-    pinInitInput(GPIOC, GPIO_PIN_13);
-    if (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)) {
-        pinInitOutput(GPIOC, GPIO_PIN_13, 1);
-        for (int i = 0; i < 20; i++) {
-            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, i % 2);
-            HAL_Delay(100);
+    pinInitInput(SW1_BUS, SW1_PIN);
+    if (!HAL_GPIO_ReadPin(SW1_BUS, SW1_PIN)) {
+        pinInitOutput(LED_BUS, LED_PIN, 1);
+        for (int i = 0; i < 40; i++) {
+            HAL_GPIO_WritePin(LED_BUS, LED_PIN, i % 2);
+            HAL_Delay(50);
         }
         SysTick->CTRL = 0; // Reset Systick timer
         SysTick->LOAD = 0;
@@ -132,6 +156,22 @@ void maybeJumpToBootloader() {
         __set_MSP(0x20001000); // reset stack pointer to bootloader default
         bootLoader(); while (1);
     }
+}
+
+void EXTI1_IRQHandler(void)
+{
+    __HAL_GPIO_EXTI_CLEAR_IT(SW1_PIN);
+    __HAL_GPIO_EXTI_CLEAR_IT(SW2_PIN);
+    HAL_NVIC_ClearPendingIRQ(EXTI1_IRQn);
+    printf("IRQ1!\n");
+}
+
+void EXTI15_10_IRQHandler(void)
+{
+    __HAL_GPIO_EXTI_CLEAR_IT(SW1_PIN);
+    __HAL_GPIO_EXTI_CLEAR_IT(SW2_PIN);
+    HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
+    printf("IRQ5_10!\n");
 }
 
 int main(void)
@@ -186,7 +226,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 256);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -448,23 +488,49 @@ void MX_GPIO_Init(void)
 /* USER CODE END 4 */
 
 /* StartDefaultTask function */
+static int usbInitialized = 0;
+static uint8_t* asFile = 0;
+static uint32_t asLine = 0;
+static uint32_t asCount = 0;
+
 void StartDefaultTask(void const * argument)
 {
   /* init code for USB_DEVICE */
   MX_USB_DEVICE_Init();
+  usbInitialized = 1;
 
   /* init code for FATFS */
   MX_FATFS_Init();
 
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-  pinInitOutput(GPIOC, GPIO_PIN_13, 0);
+  pinInitOutput(LED_BUS, LED_PIN, 0);
   int i = 0;
   char buff[32];
   printf("Stack ptr %08x\n", __get_MSP());
+
+  HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
+  HAL_NVIC_ClearPendingIRQ(EXTI1_IRQn);
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+  pinInitIrq(SW1_BUS, SW1_PIN, 1);
+  pinInitIrq(SW2_BUS, SW2_PIN, 1);
+
+  // Print any asserts that happened before USB was initialized
+  if (asFile) {
+      printf("ASSERT: %s:%d (count=%d)\n", asFile, asLine, asCount);
+      asFile = 0;
+      asCount = 0;
+  }
+
   while (1) {
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, (i++ % 2));
+    HAL_GPIO_WritePin(LED_BUS, LED_PIN, (i++ % 2));
     printf("Hello %d\n", i);
+    osDelay(500);
   }
   /* USER CODE END 5 */
 }
@@ -484,7 +550,14 @@ void assert_failed(uint8_t* file, uint32_t line)
   /* User can add his own implementation to report the file name and line number,
     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
-
+    if (usbInitialized) {
+        printf("ASSERT: %s: line %d\n", file, line);
+    } else {
+        // print it later
+        asFile = file;
+        asLine = line;
+        asCount++;
+    }
 }
 
 #endif

@@ -13,8 +13,10 @@ MEMMAP = $(TOP)/devices/STM32F415RG_FLASH.ld ;
 LINK = $(CC) ;
 
 # M4 with hardware floating point
-CFLAGS += -DSTM32F415xx -std=c99 -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 -DSTM32F415xx ;
+CFLAGS += -DSTM32F415xx -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 -DSTM32F415xx ;
 #CFLAGS += -DUSE_FULL_ASSERT ;
+CCFLAGS += $(CFLAGS) -std=c99 ;
+C++FLAGS += $(CFLAGS) ;
 
 #LDFLAGS += -nostdlib -nostartfiles -ffreestanding -mfloat-abi=hard ;
 LDFLAGS += -mfpu=fpv4-sp-d16 -mthumb -mfloat-abi=hard ; #/ --specs=nosys.specs ;

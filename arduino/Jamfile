@@ -1,0 +1,6 @@
+SubDir TOP arduino ;
+#SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Class CDC Inc ;
+
+Library libstm32_hal :
+	arduino_main.cpp
+	;

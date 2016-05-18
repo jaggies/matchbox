@@ -1,2 +1,3 @@
 SubDir TOP ;
+SubInclude TOP arduino ;
 SubInclude TOP stm_generated ;

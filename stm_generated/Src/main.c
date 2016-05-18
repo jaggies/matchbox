@@ -101,6 +101,12 @@ void StartDefaultTask(void const * argument);
 #define LED_PIN GPIO_PIN_2
 #endif
 
+static int usbInitialized = 0;
+static uint8_t* asFile = 0;
+static uint32_t asLine = 0;
+static uint32_t asCount = 0;
+static uint32_t adcValue = 0;
+
 void pinInitOutput(GPIO_TypeDef* bus, int pin, int initValue) {
     GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
     GPIO_InitStruct.Pin = pin;
@@ -161,17 +167,25 @@ void maybeJumpToBootloader() {
 void EXTI1_IRQHandler(void)
 {
     __HAL_GPIO_EXTI_CLEAR_IT(SW1_PIN);
-    __HAL_GPIO_EXTI_CLEAR_IT(SW2_PIN);
     HAL_NVIC_ClearPendingIRQ(EXTI1_IRQn);
     printf("IRQ1!\n");
 }
 
 void EXTI15_10_IRQHandler(void)
 {
-    __HAL_GPIO_EXTI_CLEAR_IT(SW1_PIN);
     __HAL_GPIO_EXTI_CLEAR_IT(SW2_PIN);
     HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
     printf("IRQ5_10!\n");
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle)
+{
+    adcValue = HAL_ADC_GetValue(adcHandle);
+}
+
+void ADC_IRQHandler(void)
+{
+    HAL_ADC_IRQHandler(&hadc1);
 }
 
 int main(void)
@@ -254,6 +268,7 @@ int main(void)
   }
   /* USER CODE END 3 */
 
+  return 0;
 }
 
 /** System Clock Configuration
@@ -306,20 +321,22 @@ void MX_ADC1_Init(void)
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.ScanConvMode = DISABLE;
-  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfDiscConversion = 0;
   hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
+  hadc1.Init.EOCSelection = DISABLE;
   HAL_ADC_Init(&hadc1);
 
     /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
     */
   sConfig.Channel = ADC_CHANNEL_15;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
 }
@@ -488,10 +505,6 @@ void MX_GPIO_Init(void)
 /* USER CODE END 4 */
 
 /* StartDefaultTask function */
-static int usbInitialized = 0;
-static uint8_t* asFile = 0;
-static uint32_t asLine = 0;
-static uint32_t asCount = 0;
 
 void StartDefaultTask(void const * argument)
 {
@@ -509,13 +522,14 @@ void StartDefaultTask(void const * argument)
   char buff[32];
   printf("Stack ptr %08x\n", __get_MSP());
 
-  HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
-  HAL_NVIC_ClearPendingIRQ(EXTI1_IRQn);
   HAL_NVIC_SetPriority(EXTI1_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+  HAL_NVIC_SetPriority(ADC_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
+  HAL_NVIC_EnableIRQ(ADC_IRQn);
 
   pinInitIrq(SW1_BUS, SW1_PIN, 1);
   pinInitIrq(SW2_BUS, SW2_PIN, 1);
@@ -527,9 +541,11 @@ void StartDefaultTask(void const * argument)
       asCount = 0;
   }
 
+  HAL_ADC_Start_IT(&hadc1);
+
   while (1) {
     HAL_GPIO_WritePin(LED_BUS, LED_PIN, (i++ % 2));
-    printf("Hello %d\n", i);
+    printf("ADC %x\n", adcValue);
     osDelay(500);
   }
   /* USER CODE END 5 */

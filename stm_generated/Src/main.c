@@ -177,7 +177,7 @@ void delay(int n)
 }
 
 void sendByte(uint8_t b) {
-    for (int i = 7; i >= 0; i--) {
+    for (int i = 0; i < 8; i++) {
         HAL_GPIO_WritePin(LCD_SCLK_BUS, LCD_SCLK_PIN, 0);
         HAL_GPIO_WritePin(LCD_SI_BUS, LCD_SI_PIN, (b >> i) & 1);
         HAL_GPIO_WritePin(LCD_SCLK_BUS, LCD_SCLK_PIN, 1);
@@ -198,10 +198,10 @@ uint8_t swap(uint8_t x)
 // Single line format : SCS CMD ROW <data0..n> 0 0 SCS#
 // Multi-line format : SCS CMD ROW <data0..n> IGNORED ROW <data0..127> ... SCS#
 void lcdSendLine(uint8_t* buff, int row, int frame, int clear) {
-    sendByte(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
-    sendByte(swap(row+1)); // first row is 1, not 0 and bitswapped :/
+    sendByte(swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0)));
+    sendByte(row+1); // first row is 1, not 0 and bitswapped :/
     for (int i = 0; i < CHAN*XRES / 8; i++) {
-        sendByte(swap(buff[i]));
+        sendByte(buff[i]);
     }
 }
 

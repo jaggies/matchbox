@@ -195,15 +195,14 @@ uint8_t swap(uint8_t x)
     return res;
 }
 
+// Single line format : SCS CMD ROW <data0..n> 0 0 SCS#
+// Multi-line format : SCS CMD ROW <data0..n> IGNORED ROW <data0..127> ... SCS#
 void lcdSendLine(uint8_t* buff, int row, int frame, int clear) {
-    if (row == 0) {
-        sendByte(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
-    }
-    sendByte(swap(row+1)); // first row is 1, not 0
+    sendByte(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
+    sendByte(swap(row+1)); // first row is 1, not 0 and bitswapped :/
     for (int i = 0; i < CHAN*XRES / 8; i++) {
-        sendByte(buff[i]);
+        sendByte(swap(buff[i]));
     }
-    sendByte(0);
 }
 
 void lcdUpdate(uint8_t * buffer) {
@@ -217,6 +216,27 @@ void lcdUpdate(uint8_t * buffer) {
     HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 0); // cs
     HAL_GPIO_WritePin(LCD_EXTC_BUS, LCD_EXTC_PIN, (frame++) & 0x01);
     clear = 0;
+}
+
+void lcdSetPixel(uint8_t* buffer, uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
+{
+    uint16_t rbitaddr = (y * XRES + x) * CHAN + 0;
+    uint16_t rbyteaddr = rbitaddr / 8;
+    uint16_t rbit = rbitaddr % 8;
+    buffer[rbyteaddr] &= ~(1 << rbit);
+    buffer[rbyteaddr] |= r ? (1 << rbit) : 0;
+
+    uint16_t gbitaddr = (y * XRES + x) * CHAN + 1;
+    uint16_t gbyteaddr = gbitaddr / 8;
+    uint16_t gbit = gbitaddr % 8;
+    buffer[gbyteaddr] &= ~(1 << gbit);
+    buffer[gbyteaddr] |= g ? (1 << gbit) : 0;
+
+    uint16_t bbitaddr = (y * XRES + x) * CHAN + 2;
+    uint16_t bbyteaddr = bbitaddr / 8;
+    uint16_t bbit = bbitaddr % 8;
+    buffer[bbyteaddr] &= ~(1 << bbit);
+    buffer[bbyteaddr] |= b ? (1 << bbit) : 0;
 }
 
 typedef void (*fPtr)(void);
@@ -602,9 +622,8 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   pinInitOutput(LED_BUS, LED_PIN, 0);
-  int i = 0;
   char buff[32];
-  printf("Stack ptr %08x\n", __get_MSP());
+  //printf("Stack ptr %08x\n", __get_MSP());
 
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
@@ -630,12 +649,19 @@ void StartDefaultTask(void const * argument)
   // Init LCD
   lcdInit();
 
+  int frame = 0;
   while (1) {
-    HAL_GPIO_WritePin(LED_BUS, LED_PIN, (i++ % 2));
-//    printf("ADC %x\n", adcValue);
-    memset(lcdBuff, i, LCD_SIZE);
+    // printf("ADC %x\n", adcValue);
+    // memset(lcdBuff, i, LCD_SIZE);
+    HAL_GPIO_WritePin(LED_BUS, LED_PIN, 1);
+    for (int i = 0; i < 128; i++) {
+        for (int j = 0; j < 128; j++) {
+            lcdSetPixel(lcdBuff, i, j, frame & 1, frame & 2, frame & 4);
+        }
+    }
+    HAL_GPIO_WritePin(LED_BUS, LED_PIN, 0);
     lcdUpdate(lcdBuff);
-//    osDelay(500);
+    frame++;
   }
   /* USER CODE END 5 */
 }

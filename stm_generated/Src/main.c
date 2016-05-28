@@ -31,7 +31,7 @@
   ******************************************************************************
   */
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
+#include "stm32f4xx.h" // chip-specific defines
 #include "cmsis_os.h"
 #include "fatfs.h"
 #include "usb_device.h"
@@ -112,12 +112,18 @@ void StartDefaultTask(void const * argument);
 #define LCD_EXTC_PIN GPIO_PIN_4
 #define LCD_DISP_BUS GPIOB
 #define LCD_DISP_PIN GPIO_PIN_5
+#define LCD_LINE_SIZE (CHAN*XRES/8) // size of a line in bytes
+#define LCD_SIZE (YRES * LCD_LINE_SIZE) // size of lcd frame in bytes
+#define XRES 128
+#define YRES 128
+#define CHAN 3 // 3 == color, 1 == mono
 
 static int usbInitialized = 0;
 static uint8_t* asFile = 0;
 static uint32_t asLine = 0;
 static uint32_t asCount = 0;
 static uint16_t adcValue[128] = { 0 };
+static uint8_t lcdBuff[LCD_SIZE];
 
 void pinInitOutput(GPIO_TypeDef* bus, int pin, int initValue) {
     GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
@@ -162,10 +168,6 @@ static const int pin[] =
 static const int lcd_defaults[] = { 1, 0, 0, 1 };
 #endif
 
-#define XRES 128
-#define YRES 128
-#define CHAN 3 // 3 == color, 1 == mono
-#define LCD_SIZE ((YRES * CHAN * XRES) >> 3)
 
 void lcdInit() {
     for (int i = 0; i < sizeof(bus) / sizeof(bus[0]); i++) {
@@ -202,7 +204,8 @@ void sendBytes(uint8_t* data, uint16_t count) {
         sendByte(data[i]);
     }
 #else
-    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, data, count, 1000);
+//    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, data, count, 1000);
+    HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&hspi2, data, count);
     if (status != HAL_OK) {
         printf("sendBytes(): error = %d\n", status);
     }
@@ -227,6 +230,7 @@ void lcdSendLine(uint8_t* buff, int row, int frame, int clear) {
     sendBytes(buff, CHAN*XRES / 8);
 }
 
+// For manual update
 void lcdUpdate(uint8_t * buffer) {
     static int clear = 1;
     static int frame = 0;
@@ -234,10 +238,39 @@ void lcdUpdate(uint8_t * buffer) {
     for (int i = 0; i < 128; i++) {
         lcdSendLine(buffer + i*(CHAN*XRES/8), i, frame & 1, clear);
     }
-    sendByte(0);
     HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 0); // cs
     HAL_GPIO_WritePin(LCD_EXTC_BUS, LCD_EXTC_PIN, (frame++) & 0x01);
     clear = 0;
+}
+
+void lcdUpdateLineIrq() {
+    static uint8_t row = 0;
+    static uint8_t frame = 0;
+    static uint8_t clear = 0; // TODO
+    static uint8_t lineBuffer[2 + LCD_LINE_SIZE];
+    HAL_StatusTypeDef status;
+    if (row == 0) {
+        HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 1); // cs
+//        printf("Frame %d\n", frame);
+    } else if (row == 128) {
+        uint8_t zero = 0;
+        if (HAL_OK != (status = HAL_SPI_Transmit(&hspi2, &zero, 1, 1000))) {
+            printf("Failed sending finish, status = %d\n", status);
+        }
+        row = 0;
+        frame++;
+        HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 0); // cs
+        return;
+    }
+
+    // Send one line
+    lineBuffer[0] = swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
+    lineBuffer[1] = row + 1; // first row starts at 1
+    memcpy(lineBuffer+2, lcdBuff + row * LCD_LINE_SIZE, LCD_LINE_SIZE);
+    if (HAL_OK != (status = HAL_SPI_Transmit(&hspi2, lineBuffer, LCD_LINE_SIZE + 2, 1000))) {
+        printf("Failed sending data, status = %d\n", status);
+    }
+    row++;
 }
 
 void lcdSetPixel(uint8_t* buffer, uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
@@ -308,6 +341,22 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle)
 {
     adcValue[adcCount++] = HAL_ADC_GetValue(adcHandle);
     adcCount = adcCount > 127 ? 0 : adcCount;
+}
+
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+    if (hspi == &hspi1) {
+        printf("%s: SPI1!!\n", __func__);
+    } else if (hspi == &hspi2) {
+        lcdUpdateLineIrq();
+    } else {
+        printf("%s: Invalid SPI %p\n", __func__, hspi);
+    }
+}
+
+void SPI2_IRQHandler()
+{
+    HAL_SPI_IRQHandler(&hspi2);
 }
 
 void ADC_IRQHandler(void)
@@ -591,7 +640,6 @@ void MX_GPIO_Init(void)
 /* USER CODE END 4 */
 
 /* StartDefaultTask function */
-static uint8_t lcdBuff[LCD_SIZE];
 
 void StartDefaultTask(void const * argument)
 {
@@ -617,6 +665,12 @@ void StartDefaultTask(void const * argument)
   HAL_NVIC_SetPriority(ADC_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   HAL_NVIC_EnableIRQ(ADC_IRQn);
 
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
+  HAL_NVIC_SetPriority(SPI2_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
+  HAL_NVIC_EnableIRQ(SPI2_IRQn);
+
   pinInitIrq(SW1_BUS, SW1A_PIN, 1);
   pinInitIrq(SW2_BUS, SW2_PIN, 1);
 
@@ -631,23 +685,26 @@ void StartDefaultTask(void const * argument)
 
   // Init LCD
   lcdInit();
+  lcdUpdateLineIrq(); // Call this once to get IRQ updates going
 
   int frame = 0;
   while (1) {
     // printf("ADC %x\n", adcValue);
     HAL_GPIO_WritePin(LED_BUS, LED_PIN, 1);
-    memset(lcdBuff, 0xff, LCD_SIZE);
-    for (int i = 0; i < 128; i++) {
-        lcdSetPixel(lcdBuff, i, adcValue[i]&0x7f, 0, 0, 0);
-    }
-
+//    memset(lcdBuff, 0xff, LCD_SIZE);
 //    for (int i = 0; i < 128; i++) {
-//        for (int j = 0; j < 128; j++) {
-//            lcdSetPixel(lcdBuff, i, j, frame & 1, frame & 2, frame & 4);
-//        }
+//        lcdSetPixel(lcdBuff, i, adcValue[i]&0x7f, 0, 0, 0);
 //    }
+
+    for (int i = 0; i < 128; i++) {
+        for (int j = 0; j < 128; j++) {
+            lcdSetPixel(lcdBuff, i, j, frame & 1, frame & 2, frame & 4);
+        }
+    }
     HAL_GPIO_WritePin(LED_BUS, LED_PIN, 0);
-    lcdUpdate(lcdBuff);
+//    lcdUpdate(lcdBuff);
+    for (int i = 0; i < 129; i++)
+        lcdUpdateLineIrq();
     frame++;
   }
   /* USER CODE END 5 */

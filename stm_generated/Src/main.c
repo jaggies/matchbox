@@ -121,7 +121,7 @@ static int usbInitialized = 0;
 static uint8_t* asFile = 0;
 static uint32_t asLine = 0;
 static uint32_t asCount = 0;
-static uint32_t adcValue = 0;
+static uint16_t adcValue[128] = { 0 };
 
 void pinInitOutput(GPIO_TypeDef* bus, int pin, int initValue) {
     GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
@@ -281,9 +281,11 @@ void EXTI15_10_IRQHandler(void)
     printf("IRQ5_10!\n");
 }
 
+static int adcCount = 0;
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle)
 {
-    adcValue = HAL_ADC_GetValue(adcHandle);
+    adcValue[adcCount++] = HAL_ADC_GetValue(adcHandle);
+    adcCount = adcCount > 127 ? 0 : adcCount;
 }
 
 void ADC_IRQHandler(void)
@@ -644,7 +646,7 @@ void StartDefaultTask(void const * argument)
       asCount = 0;
   }
 
-//  HAL_ADC_Start_IT(&hadc1);
+  HAL_ADC_Start_IT(&hadc1);
 
   // Init LCD
   lcdInit();
@@ -652,13 +654,17 @@ void StartDefaultTask(void const * argument)
   int frame = 0;
   while (1) {
     // printf("ADC %x\n", adcValue);
-    // memset(lcdBuff, i, LCD_SIZE);
     HAL_GPIO_WritePin(LED_BUS, LED_PIN, 1);
+    memset(lcdBuff, 0xff, LCD_SIZE);
     for (int i = 0; i < 128; i++) {
-        for (int j = 0; j < 128; j++) {
-            lcdSetPixel(lcdBuff, i, j, frame & 1, frame & 2, frame & 4);
-        }
+        lcdSetPixel(lcdBuff, i, adcValue[i]&0x7f, 0, 0, 0);
     }
+
+//    for (int i = 0; i < 128; i++) {
+//        for (int j = 0; j < 128; j++) {
+//            lcdSetPixel(lcdBuff, i, j, frame & 1, frame & 2, frame & 4);
+//        }
+//    }
     HAL_GPIO_WritePin(LED_BUS, LED_PIN, 0);
     lcdUpdate(lcdBuff);
     frame++;

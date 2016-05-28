@@ -93,9 +93,9 @@ int _read(int file, char *ptr, int len)
     int result = 0;
     uint32_t length = 0;
     if (file == STDIN_FILENO) {
-        while (USBD_BUSY == (result = CDC_Receive_FS (ptr, &length))) {
-            osThreadYield();
-        }
+        // while (USBD_BUSY == (result = CDC_Receive_FS (ptr, &length))) {
+            // osThreadYield();
+        // }
     } else {
         errno = EBADF;
         return -1;

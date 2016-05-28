@@ -33,7 +33,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "cmsis_os.h"
-#include "stm32f415xx.h"
 #include "fatfs.h"
 #include "usb_device.h"
 
@@ -45,14 +44,12 @@
 ADC_HandleTypeDef hadc1;
 
 I2C_HandleTypeDef hi2c1;
-I2C_HandleTypeDef hi2c2;
 
 SD_HandleTypeDef hsd;
 HAL_SD_CardInfoTypedef SDCardInfo;
 
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
-SPI_HandleTypeDef hspi3;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -69,11 +66,9 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
-static void MX_SPI3_Init(void);
 static void MX_SDIO_SD_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_I2C2_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_ADC1_Init(void);
 void StartDefaultTask(void const * argument);
@@ -104,6 +99,7 @@ void StartDefaultTask(void const * argument);
 #endif
 
 // LCD
+//#define SOFT_SPI
 #define LCD_PEN_BUS GPIOB
 #define LCD_PEN_PIN GPIO_PIN_9
 #define LCD_SCLK_BUS GPIOB
@@ -152,11 +148,19 @@ void pinInitIrq(GPIO_TypeDef* bus, int pin, int falling) {
     HAL_GPIO_Init(bus, &GPIO_InitStruct);
 }
 
+#ifdef SOFT_SPI
 static GPIO_TypeDef* bus[] =
     { LCD_PEN_BUS, LCD_SCLK_BUS, LCD_SI_BUS, LCD_SCS_BUS, LCD_EXTC_BUS, LCD_DISP_BUS };
 static const int pin[] =
     { LCD_PEN_PIN, LCD_SCLK_PIN, LCD_SI_PIN, LCD_SCS_PIN, LCD_EXTC_PIN, LCD_DISP_PIN };
 static const int lcd_defaults[] = { 1, 0, 0, 0, 0, 1 };
+#else
+static GPIO_TypeDef* bus[] =
+    { LCD_PEN_BUS, LCD_SCS_BUS, LCD_EXTC_BUS, LCD_DISP_BUS };
+static const int pin[] =
+    { LCD_PEN_PIN, LCD_SCS_PIN, LCD_EXTC_PIN, LCD_DISP_PIN };
+static const int lcd_defaults[] = { 1, 0, 0, 1 };
+#endif
 
 #define XRES 128
 #define YRES 128
@@ -177,12 +181,32 @@ void delay(int n)
 }
 
 void sendByte(uint8_t b) {
+#ifdef SOFT_SPI
     for (int i = 0; i < 8; i++) {
         HAL_GPIO_WritePin(LCD_SCLK_BUS, LCD_SCLK_PIN, 0);
         HAL_GPIO_WritePin(LCD_SI_BUS, LCD_SI_PIN, (b >> i) & 1);
         HAL_GPIO_WritePin(LCD_SCLK_BUS, LCD_SCLK_PIN, 1);
     }
     HAL_GPIO_WritePin(LCD_SCLK_BUS, LCD_SCLK_PIN, 0);
+#else
+    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, &b, 1, 1000);
+    if (status != HAL_OK) {
+        printf("sendByte(): error = %d\n", status);
+    }
+#endif
+}
+
+void sendBytes(uint8_t* data, uint16_t count) {
+#ifdef SOFT_SPI
+    for (uint16_t i = 0; i < count; i++) {
+        sendByte(data[i]);
+    }
+#else
+    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, data, count, 1000);
+    if (status != HAL_OK) {
+        printf("sendBytes(): error = %d\n", status);
+    }
+#endif
 }
 
 uint8_t swap(uint8_t x)
@@ -200,9 +224,7 @@ uint8_t swap(uint8_t x)
 void lcdSendLine(uint8_t* buff, int row, int frame, int clear) {
     sendByte(swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0)));
     sendByte(row+1); // first row is 1, not 0 and bitswapped :/
-    for (int i = 0; i < CHAN*XRES / 8; i++) {
-        sendByte(buff[i]);
-    }
+    sendBytes(buff, CHAN*XRES / 8);
 }
 
 void lcdUpdate(uint8_t * buffer) {
@@ -315,15 +337,11 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
 
-  maybeJumpToBootloader();
-
-  //MX_SDIO_SD_Init(); // Disable until rev 1.0 with pin reassignment
   MX_SPI1_Init();
   MX_SPI2_Init();
-  MX_SPI3_Init();
+  // MX_SDIO_SD_Init(); // Disable until rev 1.0 with pin reassignment
   MX_USART1_UART_Init();
   MX_I2C1_Init();
-  MX_I2C2_Init();
   MX_USART2_UART_Init();
   MX_ADC1_Init();
 
@@ -463,23 +481,6 @@ void MX_I2C1_Init(void)
 
 }
 
-/* I2C2 init function */
-void MX_I2C2_Init(void)
-{
-
-  hi2c2.Instance = I2C2;
-  hi2c2.Init.ClockSpeed = 100000;
-  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c2.Init.OwnAddress1 = 0;
-  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c2.Init.OwnAddress2 = 0;
-  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  HAL_I2C_Init(&hi2c2);
-
-}
-
 /* SDIO init function */
 void MX_SDIO_SD_Init(void)
 {
@@ -524,33 +525,13 @@ void MX_SPI2_Init(void)
   hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi2.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi2.Init.NSS = SPI_NSS_SOFT;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16; // ~2.25MHz
+  hspi2.Init.FirstBit = SPI_FIRSTBIT_LSB;
   hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi2.Init.CRCPolynomial = 10;
   HAL_SPI_Init(&hspi2);
-
-}
-
-/* SPI3 init function */
-void MX_SPI3_Init(void)
-{
-
-  hspi3.Instance = SPI3;
-  hspi3.Init.Mode = SPI_MODE_MASTER;
-  hspi3.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi3.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi3.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi3.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi3.Init.CRCPolynomial = 10;
-  HAL_SPI_Init(&hspi3);
 
 }
 
@@ -686,7 +667,6 @@ void assert_failed(uint8_t* file, uint32_t line)
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
     if (usbInitialized) {
         printf("ASSERT: %s: line %d\n", file, line);
     } else {
@@ -695,6 +675,7 @@ void assert_failed(uint8_t* file, uint32_t line)
         asLine = line;
         asCount++;
     }
+  /* USER CODE END 6 */
 }
 
 #endif

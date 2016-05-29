@@ -32,6 +32,8 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h" // chip-specific defines
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_sd.h"
 #include "cmsis_os.h"
 #include "fatfs.h"
 #include "usb_device.h"
@@ -124,6 +126,7 @@ static uint32_t asLine = 0;
 static uint32_t asCount = 0;
 static uint16_t adcValue[128] = { 0 };
 static uint8_t lcdBuff[LCD_SIZE];
+static uint8_t mode;
 
 void pinInitOutput(GPIO_TypeDef* bus, int pin, int initValue) {
     GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
@@ -167,7 +170,6 @@ static const int pin[] =
     { LCD_PEN_PIN, LCD_SCS_PIN, LCD_EXTC_PIN, LCD_DISP_PIN };
 static const int lcd_defaults[] = { 1, 0, 0, 1 };
 #endif
-
 
 void lcdInit() {
     for (int i = 0; i < sizeof(bus) / sizeof(bus[0]); i++) {
@@ -255,20 +257,21 @@ void lcdUpdateLineIrq() {
     } else if (row == 128) {
         uint8_t zero = 0;
         if (HAL_OK != (status = HAL_SPI_Transmit(&hspi2, &zero, 1, 1000))) {
-            printf("Failed sending finish, status = %d\n", status);
+//            printf("Failed sending finish, status = %d\n", status);
         }
         row = 0;
         frame++;
         HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 0); // cs
-        return;
+        delay(100);
+        HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 1); // cs
     }
 
     // Send one line
     lineBuffer[0] = swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
     lineBuffer[1] = row + 1; // first row starts at 1
     memcpy(lineBuffer+2, lcdBuff + row * LCD_LINE_SIZE, LCD_LINE_SIZE);
-    if (HAL_OK != (status = HAL_SPI_Transmit(&hspi2, lineBuffer, LCD_LINE_SIZE + 2, 1000))) {
-        printf("Failed sending data, status = %d\n", status);
+    if (HAL_OK != (status = HAL_SPI_Transmit_IT(&hspi2, lineBuffer, LCD_LINE_SIZE + 2))) {
+//        printf("Failed sending data, status = %d\n", status);
     }
     row++;
 }
@@ -333,7 +336,8 @@ void EXTI15_10_IRQHandler(void)
 {
     __HAL_GPIO_EXTI_CLEAR_IT(SW2_PIN);
     HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
-    printf("IRQ5_10!\n");
+    // printf("IRQ5_10!\n");
+    mode++;
 }
 
 static int adcCount = 0;
@@ -356,6 +360,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 
 void SPI2_IRQHandler()
 {
+    HAL_NVIC_ClearPendingIRQ(SPI2_IRQn);
     HAL_SPI_IRQHandler(&hspi2);
 }
 
@@ -575,7 +580,7 @@ void MX_SPI2_Init(void)
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16; // ~2.25MHz
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16; // _16 = ~2.25MHz
   hspi2.Init.FirstBit = SPI_FIRSTBIT_LSB;
   hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -691,20 +696,42 @@ void StartDefaultTask(void const * argument)
   while (1) {
     // printf("ADC %x\n", adcValue);
     HAL_GPIO_WritePin(LED_BUS, LED_PIN, 1);
-//    memset(lcdBuff, 0xff, LCD_SIZE);
-//    for (int i = 0; i < 128; i++) {
-//        lcdSetPixel(lcdBuff, i, adcValue[i]&0x7f, 0, 0, 0);
-//    }
 
-    for (int i = 0; i < 128; i++) {
+    int tmp = mode & 0x1f;
+    if (tmp > 11) {
+        memset(lcdBuff, 0xff, LCD_SIZE);
+        for (int i = 0; i < 128; i++) {
+            lcdSetPixel(lcdBuff, i, adcValue[i] & 0x7f, tmp&1, tmp&2, tmp&4);
+        }
+    } else for (int i = 0; i < 128; i++) {
         for (int j = 0; j < 128; j++) {
-            lcdSetPixel(lcdBuff, i, j, frame & 1, frame & 2, frame & 4);
+            uint8_t r, g, b;
+            switch (tmp) {
+                case 0: r = frame & 1; g = frame & 2; b = frame & 4;
+                break;
+                case 1: r = (j >> 4) & 1; g = (j >> 5) & 1; b = (j >> 6) & 1;
+                break;
+                case 2: r = (i >> 4) & 1; g = (i >> 5) & 1; b = (i >> 6) & 1;
+                break;
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10: r = g = b = ((j>>(tmp-3)) ^ (i>>(tmp-3))) & 1;
+                break;
+                case 11: r = g = b = ((j>>(frame&0x7)) ^ (i>>(frame&0x7))) & 1;
+                break;
+            }
+            lcdSetPixel(lcdBuff, i, j, r, g, b);
         }
     }
     HAL_GPIO_WritePin(LED_BUS, LED_PIN, 0);
 //    lcdUpdate(lcdBuff);
-    for (int i = 0; i < 129; i++)
-        lcdUpdateLineIrq();
+//    for (int i = 0; i < 129; i++)
+//        lcdUpdateLineIrq();
     frame++;
   }
   /* USER CODE END 5 */

@@ -1,4 +1,4 @@
-GCC_HOME = /Users/jmiller/trees/open-source/gcc-arm-none-eabi-4_9-2015q3/bin/ ;
+GCC_HOME = $(HOME)/trees/open-source/gcc-arm-none-eabi-4_9-2015q3/bin/ ;
 #GCC_HOME = "" ;
 ARCH = arm-none-eabi ;
 GCC_PATH = $(GCC_HOME)$(ARCH) ;

@@ -158,6 +158,12 @@ void pinInitIrq(GPIO_TypeDef* bus, int pin, int falling) {
     HAL_GPIO_Init(bus, &GPIO_InitStruct);
 }
 
+void toggleLed() {
+    static uint8_t data;
+    // printf("ADC %x\n", adcValue);
+    HAL_GPIO_WritePin(LED_BUS, LED_PIN, (data++) & 1);
+}
+
 #ifdef SOFT_SPI
 static GPIO_TypeDef* bus[] =
     { LCD_PEN_BUS, LCD_SCLK_BUS, LCD_SI_BUS, LCD_SCS_BUS, LCD_EXTC_BUS, LCD_DISP_BUS };
@@ -339,8 +345,16 @@ void EXTI15_10_IRQHandler(void)
 {
     __HAL_GPIO_EXTI_CLEAR_IT(SW2_PIN);
     HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
-    // printf("IRQ5_10!\n");
     mode++;
+    printf("%s(mode = %d)\n", __func__, mode);
+}
+
+// Hack to receive bytes. Looks like the STM implementation is woefully incomplete :/
+void doReceive(uint8_t* buff, uint32_t* len)
+{
+//    printf("rx:%p len=%d", buff, *len);
+    write(1, buff, *len);
+    mode = *buff - '0';
 }
 
 static int adcCount = 0;
@@ -679,6 +693,10 @@ void StartDefaultTask(void const * argument)
   HAL_NVIC_SetPriority(SPI2_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   HAL_NVIC_EnableIRQ(SPI2_IRQn);
 
+  // Done in usbd_conf.c
+  //HAL_NVIC_SetPriority(OTG_FS_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
+  //HAL_NVIC_EnableIRQ(OTG_FS_IRQn);
+
   pinInitIrq(SW1_BUS, SW1A_PIN, 1);
   pinInitIrq(SW2_BUS, SW2_PIN, 1);
 
@@ -697,10 +715,8 @@ void StartDefaultTask(void const * argument)
 
   int frame = 0;
   while (1) {
-    // printf("ADC %x\n", adcValue);
-    HAL_GPIO_WritePin(LED_BUS, LED_PIN, frame & 1);
-
-    int tmp = mode & 0x1f;
+//    toggleLed();
+    int tmp = mode % 20;
     if (tmp > 11) {
         memset(lcdBuff, 0xff, LCD_SIZE);
         for (int i = 0; i < 128; i++) {

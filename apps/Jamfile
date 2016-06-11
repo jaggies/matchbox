@@ -1,0 +1,2 @@
+SubDir TOP apps ;
+SubInclude TOP apps lcdtest ;

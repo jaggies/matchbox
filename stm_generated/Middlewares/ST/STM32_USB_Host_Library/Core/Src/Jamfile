@@ -9,7 +9,7 @@ SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Core Inc ;
 SubDirHdrs $(TOP) stm_generated Inc ;
 
 Library libstm32_hal :
-	usbh_conf_template.c
+	#usbh_conf_template.c
 	usbh_core.c
 	usbh_ctlreq.c
 	usbh_ioreq.c

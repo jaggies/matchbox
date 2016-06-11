@@ -41,7 +41,7 @@ Library libstm32_hal :
 	stm32f4xx_hal_lptim.c
 	stm32f4xx_hal_ltdc.c
 	stm32f4xx_hal_ltdc_ex.c
-	stm32f4xx_hal_msp_template.c
+	#stm32f4xx_hal_msp_template.c
 	stm32f4xx_hal_nand.c
 	stm32f4xx_hal_nor.c
 	stm32f4xx_hal_pccard.c
@@ -65,7 +65,7 @@ Library libstm32_hal :
 	stm32f4xx_hal_sram.c
 	stm32f4xx_hal_tim.c
 	stm32f4xx_hal_tim_ex.c
-	stm32f4xx_hal_timebase_tim_template.c
+	#stm32f4xx_hal_timebase_tim_template.c
 	stm32f4xx_hal_uart.c
 	stm32f4xx_hal_usart.c
 	stm32f4xx_hal_wwdg.c

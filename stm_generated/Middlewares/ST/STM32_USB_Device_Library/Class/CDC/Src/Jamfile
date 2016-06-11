@@ -8,5 +8,5 @@ SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
 
 Library libstm32_hal :
 	usbd_cdc.c
-	usbd_cdc_if_template.c
+	#usbd_cdc_if_template.c
 	;

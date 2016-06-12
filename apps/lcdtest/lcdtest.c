@@ -121,6 +121,9 @@ void StartDefaultTask(void const * argument);
 #define YRES 128
 #define CHAN 3 // 3 == color, 1 == mono
 
+const float VREF = 3.3f;
+const float VREF_CALIBRATION = 4.65f / 4.63f; // measured value, probably due to R15/R16 tolerance
+
 static int usbInitialized = 0;
 static uint8_t* asFile = 0;
 static uint32_t asLine = 0;
@@ -351,9 +354,9 @@ void EXTI15_10_IRQHandler(void)
         sum += adcValue[i];
     }
     sum /= 128.0f;
-    sum /= 4095.0;
-    float v = 2.8925 * 2.0f * sum;
-    printf("%s(mode = %d) vbatt=%2.2fv\n", __func__, mode, v);
+    float vcc = VREF * VREF_CALIBRATION * sum / 4095.0f;
+    vcc *= 2.0f; // measured voltage is half due to voltage divider
+    printf("%s(mode = %d) VCC=%f\n", __func__, mode, vcc);
 }
 
 // Hack to receive bytes. Looks like the STM implementation is woefully incomplete :/
@@ -722,7 +725,7 @@ void StartDefaultTask(void const * argument)
 
   int frame = 0;
   while (1) {
-//    toggleLed();
+    toggleLed();
     int tmp = mode % 20;
     if (tmp > 11) {
         memset(lcdBuff, 0xff, LCD_SIZE);

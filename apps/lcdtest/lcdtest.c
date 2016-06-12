@@ -363,6 +363,7 @@ void EXTI15_10_IRQHandler(void)
 void doReceive(uint8_t* buff, uint32_t* len)
 {
 //    printf("rx:%p len=%d", buff, *len);
+    extern int write(int, const char*, int len);
     write(1, buff, *len);
     mode = *buff - '0';
 }

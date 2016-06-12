@@ -1,0 +1,6 @@
+SubDir TOP lib gl ;
+#SubDirHdrs $(TOP) stm_generated Inc ;
+Library libgl :
+	gl.c
+	vector.c
+	;

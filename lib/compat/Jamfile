@@ -1,0 +1,6 @@
+SubDir TOP lib compat ;
+
+Library libstm32_hal :
+	arduino_main.cpp
+	#arduino.cpp
+	;

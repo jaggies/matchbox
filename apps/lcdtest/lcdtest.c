@@ -346,7 +346,14 @@ void EXTI15_10_IRQHandler(void)
     __HAL_GPIO_EXTI_CLEAR_IT(SW2_PIN);
     HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
     mode++;
-    printf("%s(mode = %d)\n", __func__, mode);
+    float sum = 0;
+    for (int i = 0; i < 128; i++) {
+        sum += adcValue[i];
+    }
+    sum /= 128.0f;
+    sum /= 4095.0;
+    float v = 2.8925 * 2.0f * sum;
+    printf("%s(mode = %d) vbatt=%2.2fv\n", __func__, mode, v);
 }
 
 // Hack to receive bytes. Looks like the STM implementation is woefully incomplete :/

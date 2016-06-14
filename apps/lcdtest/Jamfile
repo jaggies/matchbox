@@ -13,7 +13,7 @@ SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Class CD
 SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Core Inc ;
 SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Class CDC Inc ;
 
-LINKLIBS on lcdtest = -Wl,--whole-archive -lstm32_hal -lc -lfat -Wl,--no-whole-archive ;
+LINKLIBS on lcdtest = -Wl,--whole-archive -lstm32_hal -lc -lfat -lfont -Wl,--no-whole-archive ;
 
 Main lcdtest :
 	lcdtest.c

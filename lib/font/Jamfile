@@ -1,0 +1,16 @@
+SubDir TOP lib font ;
+SubDirHdrs $(TOP) lib render ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
+SubDirHdrs $(TOP) stm_generated Drivers STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) stm_generated Inc ;
+SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FreeRTOS Source include ;
+SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src ;
+SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src drivers ;
+SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc ;
+
+Library libfont :
+	font.cpp
+	;

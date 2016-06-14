@@ -1,6 +1,7 @@
 SubDir TOP lib ;
 
 SubInclude TOP lib compat ;
+SubInclude TOP lib font ;
 SubInclude TOP lib gl ;
 SubInclude TOP lib matchbox ;
 SubInclude TOP lib render ;

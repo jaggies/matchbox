@@ -131,6 +131,7 @@ static uint32_t asCount = 0;
 static uint16_t adcValue[128] = { 0 };
 static uint8_t lcdBuff[LCD_SIZE];
 static uint8_t mode;
+extern char roboto_bold_10_bits[];
 
 void pinInitOutput(GPIO_TypeDef* bus, int pin, int initValue) {
     GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
@@ -357,6 +358,7 @@ void EXTI15_10_IRQHandler(void)
     float vcc = VREF * VREF_CALIBRATION * sum / 4095.0f;
     vcc *= 2.0f; // measured voltage is half due to voltage divider
     printf("%s(mode = %d) VCC=%f\n", __func__, mode, vcc);
+    printf("bits: %p %08x\n", roboto_bold_10_bits, *(uint32_t*)roboto_bold_10_bits);
 }
 
 // Hack to receive bytes. Looks like the STM implementation is woefully incomplete :/
@@ -728,34 +730,42 @@ void StartDefaultTask(void const * argument)
   while (1) {
     toggleLed();
     int tmp = mode % 20;
-    if (tmp > 11) {
+        if (tmp > 11) {
         memset(lcdBuff, 0xff, LCD_SIZE);
         for (int i = 0; i < 128; i++) {
             lcdSetPixel(lcdBuff, i, adcValue[i] & 0x7f, tmp&1, tmp&2, tmp&4);
         }
-    } else for (int i = 0; i < 128; i++) {
+    } else {
         for (int j = 0; j < 128; j++) {
-            uint8_t r, g, b;
-            switch (tmp) {
-                case 0: r = frame & 1; g = frame & 2; b = frame & 4;
-                break;
-                case 1: r = (j >> 4) & 1; g = (j >> 5) & 1; b = (j >> 6) & 1;
-                break;
-                case 2: r = (i >> 4) & 1; g = (i >> 5) & 1; b = (i >> 6) & 1;
-                break;
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                case 10: r = g = b = ((j>>(tmp-3)) ^ (i>>(tmp-3))) & 1;
-                break;
-                case 11: r = g = b = ((j>>(frame&0x7)) ^ (i>>(frame&0x7))) & 1;
-                break;
+            for (int i = 0; i < 128; i++) {
+                uint8_t r, g, b;
+                switch (tmp) {
+                    case 0: r = frame & 1; g = frame & 2; b = frame & 4;
+                    break;
+                    case 1: r = (j >> 4) & 1; g = (j >> 5) & 1; b = (j >> 6) & 1;
+                    break;
+                    case 2: r = (i >> 4) & 1; g = (i >> 5) & 1; b = (i >> 6) & 1;
+                    break;
+                    case 3:{
+                        int bitOffset = j*128 + i;
+                        int byteOffset = bitOffset / 8;
+                        int bit = 1 << (bitOffset % 8);
+                        r = g = b = roboto_bold_10_bits[byteOffset] & bit;
+                    }
+                    break;
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10: r = g = b = ((j>>(tmp-3)) ^ (i>>(tmp-3))) & 1;
+                    break;
+                    case 11: r = g = b = ((j>>(frame&0x7)) ^ (i>>(frame&0x7))) & 1;
+                    break;
+                }
+                lcdSetPixel(lcdBuff, i, j, r, g, b);
             }
-            lcdSetPixel(lcdBuff, i, j, r, g, b);
         }
     }
     frame++;

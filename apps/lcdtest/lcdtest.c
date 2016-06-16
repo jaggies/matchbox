@@ -115,8 +115,9 @@ void StartDefaultTask(void const * argument);
 #define LCD_EXTC_PIN GPIO_PIN_4
 #define LCD_DISP_BUS GPIOB
 #define LCD_DISP_PIN GPIO_PIN_5
-#define LCD_LINE_SIZE (CHAN*XRES/8) // size of a line in bytes
+#define LCD_LINE_SIZE (CHAN*XRES/8) // size of a line in bytes (data only)
 #define LCD_SIZE (YRES * LCD_LINE_SIZE) // size of lcd frame in bytes
+#define LCD_BURST 4 // number of lines to send over SPI at once
 #define XRES 128
 #define YRES 128
 #define CHAN 3 // 3 == color, 1 == mono
@@ -256,10 +257,32 @@ void lcdUpdate(uint8_t * buffer) {
     clear = 0;
 }
 
+struct Line {
+        uint8_t cmd;
+        uint8_t row;
+        uint8_t data[LCD_LINE_SIZE];
+};
+
+static uint8_t frame = 0;
+static uint8_t clear = 0; // TODO
+static struct Line frameBuffer[YRES];
+
+void lcdUpdateFrameIrq() {
+    HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 0); // cs disabled
+    HAL_StatusTypeDef status;
+    for (int i = 0; i < YRES; i++) {
+        frameBuffer[i].cmd = swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
+        frameBuffer[i].row = i + 1;
+        memcpy(frameBuffer[i].data, lcdBuff + i * LCD_LINE_SIZE, LCD_LINE_SIZE);
+    }
+    HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 1); // cs enabled
+    status = HAL_SPI_Transmit_IT(&hspi2, frameBuffer, sizeof(frameBuffer));
+    assert(HAL_OK == status);
+    frame++;
+}
+
 void lcdUpdateLineIrq() {
     static uint8_t row = 0;
-    static uint8_t frame = 0;
-    static uint8_t clear = 0; // TODO
     HAL_StatusTypeDef status;
     if (row == 0) {
         HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 1); // cs
@@ -285,7 +308,6 @@ void lcdUpdateLineIrq() {
 
     status = HAL_SPI_Transmit_IT(&hspi2, lcdBuff + row * LCD_LINE_SIZE, LCD_LINE_SIZE);
     assert(HAL_OK == status);
-
     row++;
 }
 
@@ -357,8 +379,8 @@ void EXTI15_10_IRQHandler(void)
     sum /= 128.0f;
     float vcc = VREF * VREF_CALIBRATION * sum / 4095.0f;
     vcc *= 2.0f; // measured voltage is half due to voltage divider
-    printf("%s(mode = %d) VCC=%f\n", __func__, mode, vcc);
-    printf("bits: %p %08x\n", roboto_bold_10_bits, *(uint32_t*)roboto_bold_10_bits);
+//    printf("%s(mode = %d) VCC=%f\n", __func__, mode, vcc);
+//    printf("bits: %p %08x\n", roboto_bold_10_bits, *(uint32_t*)roboto_bold_10_bits);
 }
 
 // Hack to receive bytes. Looks like the STM implementation is woefully incomplete :/
@@ -382,7 +404,8 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
     if (hspi == &hspi1) {
         printf("%s: SPI1!!\n", __func__);
     } else if (hspi == &hspi2) {
-        lcdUpdateLineIrq();
+//        lcdUpdateLineIrq();
+        lcdUpdateFrameIrq();
     } else {
         printf("%s: Invalid SPI %p\n", __func__, hspi);
     }
@@ -724,7 +747,8 @@ void StartDefaultTask(void const * argument)
 
   // Init LCD
   lcdInit();
-  lcdUpdateLineIrq(); // Call this once to get IRQ updates going
+//  lcdUpdateLineIrq(); // Call this once to get IRQ updates going
+  lcdUpdateFrameIrq();
 
   int frame = 0;
   while (1) {

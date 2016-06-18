@@ -36,6 +36,13 @@ static inline uint8_t bitSwap(uint8_t x)
     return res;
 }
 
+Lcd::Lcd(SPI_HandleTypeDef& spi, uint8_t en, uint8_t sclk, uint8_t si, uint8_t scs, uint8_t extc,
+        uint8_t disp) : _spi(spi), _en(en), _sclk(sclk), _si(si), _scs(scs), _extc(extc),
+        _disp(disp), _clear(1), _row(0), _frame(0), _dither(8, 1), _currentFont(0)
+{
+    _instance = this;
+}
+
 void Lcd::begin() {
 #ifdef SOFT_SPI
     uint8_t pins[] = {_en, _sclk, _si, _scs, _extc, _disp };

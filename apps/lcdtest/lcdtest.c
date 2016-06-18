@@ -38,6 +38,7 @@
 #include "cmsis_os.h"
 #include "fatfs.h"
 #include "usb_device.h"
+#include "matchbox.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -84,37 +85,26 @@ void StartDefaultTask(void const * argument);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
-#define SW1_BUS GPIOC
-#define SW1_PIN GPIO_PIN_13
-#define SW1A_BUS GPIOC // de-conflicted PC13 on newer hardware
-#define SW1A_PIN GPIO_PIN_1
-#define SW2_BUS GPIOA // PA13
-#define SW2_PIN GPIO_PIN_13
+#define SW1_PIN PC13 // redefined to PC1 later
+#define SW2_PIN PA13
 
+#define POWER_PIN PD2
 //#define VERSION_01
 
 #ifdef VERSION_01
-#define LED_BUS SW1_BUS // Oops. Wired to PC13
-#define LED_PIN SW1_PIN
+#define LED_PIN SW1_PIN // Oops. Wired to PC13
 #else
-#define LED_BUS GPIOB // rewired to PB2
-#define LED_PIN GPIO_PIN_2
+#define LED_PIN PB2
 #endif
 
 // LCD
 //#define SOFT_SPI
-#define LCD_PEN_BUS GPIOB
-#define LCD_PEN_PIN GPIO_PIN_9
-#define LCD_SCLK_BUS GPIOB
-#define LCD_SCLK_PIN GPIO_PIN_10
-#define LCD_SI_BUS GPIOC
-#define LCD_SI_PIN GPIO_PIN_3
-#define LCD_SCS_BUS GPIOB
-#define LCD_SCS_PIN GPIO_PIN_1
-#define LCD_EXTC_BUS GPIOB
-#define LCD_EXTC_PIN GPIO_PIN_4
-#define LCD_DISP_BUS GPIOB
-#define LCD_DISP_PIN GPIO_PIN_5
+#define LCD_PEN_PIN PB9
+#define LCD_SCLK_PIN PB10
+#define LCD_SI_PIN PC3
+#define LCD_SCS_PIN PB1
+#define LCD_EXTC_PIN PB4
+#define LCD_DISP_PIN PB5
 #define LCD_LINE_SIZE (CHAN*XRES/8) // size of a line in bytes (data only)
 #define LCD_SIZE (YRES * LCD_LINE_SIZE) // size of lcd frame in bytes
 #define LCD_BURST 4 // number of lines to send over SPI at once
@@ -134,58 +124,23 @@ static uint8_t lcdBuff[LCD_SIZE];
 static uint8_t mode;
 extern char roboto_bold_10_bits[];
 
-void pinInitOutput(GPIO_TypeDef* bus, int pin, int initValue) {
-    GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
-    GPIO_InitStruct.Pin = pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-    HAL_GPIO_Init(bus, &GPIO_InitStruct);
-    HAL_GPIO_WritePin(bus, pin, initValue);
-}
-
-void pinInitInput(GPIO_TypeDef* bus, int pin)
-{
-    GPIO_InitTypeDef GPIO_InitStruct = { 0 };
-    GPIO_InitStruct.Pin = pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(bus, &GPIO_InitStruct);
-}
-
-void pinInitIrq(GPIO_TypeDef* bus, int pin, int falling) {
-    GPIO_InitTypeDef GPIO_InitStruct = { 0 };
-    GPIO_InitStruct.Mode = falling ? GPIO_MODE_IT_FALLING : GPIO_MODE_IT_RISING;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Pin = pin;
-    GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-    HAL_GPIO_Init(bus, &GPIO_InitStruct);
-}
-
 void toggleLed() {
     static uint8_t data;
     // printf("ADC %x\n", adcValue);
-    HAL_GPIO_WritePin(LED_BUS, LED_PIN, (data++) & 1);
+    writePin(LED_PIN, (data++) & 1);
 }
 
 #ifdef SOFT_SPI
-static GPIO_TypeDef* bus[] =
-    { LCD_PEN_BUS, LCD_SCLK_BUS, LCD_SI_BUS, LCD_SCS_BUS, LCD_EXTC_BUS, LCD_DISP_BUS };
-static const int pin[] =
-    { LCD_PEN_PIN, LCD_SCLK_PIN, LCD_SI_PIN, LCD_SCS_PIN, LCD_EXTC_PIN, LCD_DISP_PIN };
+static const int pin[] = LCD_PEN_PIN, LCD_SCLK_PIN, LCD_SI_PIN, LCD_SCS_PIN, LCD_EXTC_PIN, LCD_DISP_PIN };
 static const int lcd_defaults[] = { 1, 0, 0, 0, 0, 1 };
 #else
-static GPIO_TypeDef* bus[] =
-    { LCD_PEN_BUS, LCD_SCS_BUS, LCD_EXTC_BUS, LCD_DISP_BUS };
-static const int pin[] =
-    { LCD_PEN_PIN, LCD_SCS_PIN, LCD_EXTC_PIN, LCD_DISP_PIN };
+static const int pin[] = { LCD_PEN_PIN, LCD_SCS_PIN, LCD_EXTC_PIN, LCD_DISP_PIN };
 static const int lcd_defaults[] = { 1, 0, 0, 1 };
 #endif
 
 void lcdInit() {
-    for (int i = 0; i < sizeof(bus) / sizeof(bus[0]); i++) {
-        pinInitOutput(bus[i], pin[i], lcd_defaults[i]);
+    for (int i = 0; i < sizeof(pin) / sizeof(pin[0]); i++) {
+        pinInitOutput(pin[i], lcd_defaults[i]);
     }
 }
 
@@ -199,11 +154,11 @@ void delay(int n)
 void sendByte(uint8_t b) {
 #ifdef SOFT_SPI
     for (int i = 0; i < 8; i++) {
-        HAL_GPIO_WritePin(LCD_SCLK_BUS, LCD_SCLK_PIN, 0);
-        HAL_GPIO_WritePin(LCD_SI_BUS, LCD_SI_PIN, (b >> i) & 1);
-        HAL_GPIO_WritePin(LCD_SCLK_BUS, LCD_SCLK_PIN, 1);
+        writePin(LCD_SCLK_PIN, 0);
+        writePin(LCD_SI_PIN, (b >> i) & 1);
+        writePin(LCD_SCLK_PIN, 1);
     }
-    HAL_GPIO_WritePin(LCD_SCLK_BUS, LCD_SCLK_PIN, 0);
+    writePin(LCD_SCLK_PIN, 0);
 #else
     HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, &b, 1, 1000);
     if (status != HAL_OK) {
@@ -248,12 +203,12 @@ void lcdSendLine(uint8_t* buff, int row, int frame, int clear) {
 void lcdUpdate(uint8_t * buffer) {
     static int clear = 1;
     static int frame = 0;
-    HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 1); // cs
+    writePin(LCD_SCS_PIN, 1); // cs
     for (int i = 0; i < 128; i++) {
         lcdSendLine(buffer + i*(CHAN*XRES/8), i, frame & 1, clear);
     }
-    HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 0); // cs
-    HAL_GPIO_WritePin(LCD_EXTC_BUS, LCD_EXTC_PIN, (frame++) & 0x01);
+    writePin(LCD_SCS_PIN, 0); // cs
+    writePin(LCD_EXTC_PIN, (frame++) & 0x01);
     clear = 0;
 }
 
@@ -268,15 +223,15 @@ static uint8_t clear = 0; // TODO
 static struct Line frameBuffer[YRES];
 
 void lcdUpdateFrameIrq() {
-    HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 0); // cs disabled
-    HAL_StatusTypeDef status;
+    writePin(LCD_SCS_PIN, 0); // cs disabled
     for (int i = 0; i < YRES; i++) {
         frameBuffer[i].cmd = swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
         frameBuffer[i].row = i + 1;
         memcpy(frameBuffer[i].data, lcdBuff + i * LCD_LINE_SIZE, LCD_LINE_SIZE);
     }
-    HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 1); // cs enabled
-    status = HAL_SPI_Transmit_IT(&hspi2, (uint8_t*) frameBuffer, sizeof(frameBuffer));
+    writePin(LCD_SCS_PIN, 1); // cs enabled
+    HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&hspi2,
+            (uint8_t*)frameBuffer, sizeof(frameBuffer));
     assert(HAL_OK == status);
     frame++;
 }
@@ -285,16 +240,16 @@ void lcdUpdateLineIrq() {
     static uint8_t row = 0;
     HAL_StatusTypeDef status;
     if (row == 0) {
-        HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 1); // cs
+        writePin(LCD_SCS_PIN, 1); // cs
     } else if (row == 128) {
         uint8_t zero = 0;
         status = HAL_SPI_Transmit(&hspi2, &zero, 1, 1000);
         assert(HAL_OK == status);
         row = 0;
         frame++;
-        HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 0); // cs
+        writePin(LCD_SCS_PIN, 0); // cs
         delay(100);
-        HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 1); // cs
+        writePin(LCD_SCS_PIN, 1); // cs
     }
 
     // Send one line
@@ -338,11 +293,11 @@ void maybeJumpToBootloader() {
     const fPtr bootLoader = (fPtr) *(uint32_t*) 0x1fff0004;
 
     // Jump to bootloader if PC13 is low at reset
-    pinInitInput(SW1_BUS, SW1_PIN | SW1A_PIN);
-    if (!HAL_GPIO_ReadPin(SW1_BUS, SW1_PIN) || !HAL_GPIO_ReadPin(SW1_BUS, SW1A_PIN)) {
-        pinInitOutput(LED_BUS, LED_PIN, 1);
+    pinInitInput(SW1_PIN);
+    if (!readPin(SW1_PIN)) {
+        pinInitOutput(LED_PIN, 1);
         for (int i = 0; i < 40; i++) {
-            HAL_GPIO_WritePin(LED_BUS, LED_PIN, i % 2);
+            writePin(LED_PIN, i % 2);
             HAL_Delay(50);
         }
         SysTick->CTRL = 0; // Reset Systick timer
@@ -362,14 +317,14 @@ void maybeJumpToBootloader() {
 
 void EXTI1_IRQHandler(void)
 {
-    __HAL_GPIO_EXTI_CLEAR_IT(SW1_PIN);
+    __HAL_GPIO_EXTI_CLEAR_IT(toIoPin(SW1_PIN));
     HAL_NVIC_ClearPendingIRQ(EXTI1_IRQn);
     printf("IRQ1!\n");
 }
 
 void EXTI15_10_IRQHandler(void)
 {
-    __HAL_GPIO_EXTI_CLEAR_IT(SW2_PIN);
+    __HAL_GPIO_EXTI_CLEAR_IT(toIoPin(SW2_PIN));
     HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
     mode++;
     float sum = 0;
@@ -437,9 +392,8 @@ int main(void)
   /* Init GPIO subsystem */
   MX_GPIO_Init();
 
-  // PD2 is wired to the LTC2954 KILL# pin. It must be remain high or power will
-  // shut off.
-  pinInitOutput(GPIOD, GPIO_PIN_2, 1);
+  // POWER_PIN is wired to the LTC2954 KILL# pin. It must be remain high or power will shut off.
+  pinInitOutput(POWER_PIN, 1);
 
   /* Configure the system clock */
   SystemClock_Config();
@@ -710,7 +664,7 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-  pinInitOutput(LED_BUS, LED_PIN, 0);
+  pinInitOutput(LED_PIN, 0);
   char buff[32];
   //printf("Stack ptr %08x\n", __get_MSP());
 
@@ -733,8 +687,8 @@ void StartDefaultTask(void const * argument)
   //HAL_NVIC_SetPriority(OTG_FS_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   //HAL_NVIC_EnableIRQ(OTG_FS_IRQn);
 
-  pinInitIrq(SW1_BUS, SW1A_PIN, 1);
-  pinInitIrq(SW2_BUS, SW2_PIN, 1);
+  pinInitIrq(SW1_PIN, 1);
+  pinInitIrq(SW2_PIN, 1);
 
   // Print any asserts that happened before USB was initialized
   if (asFile) {

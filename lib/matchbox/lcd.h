@@ -23,11 +23,7 @@ class Lcd {
 	public:
         enum FontSize { FONT_SMALL, FONT_MEDIUM, FONT_LARGE };
         Lcd(SPI_HandleTypeDef& spi, uint8_t en = PB9, uint8_t sclk = PB10,
-                uint8_t si = PC3, uint8_t scs = PB1, uint8_t extc = PB4, uint8_t disp = PB5)
-	            : _spi(spi), _en(en), _sclk(sclk), _si(si), _scs(scs), _extc(extc), _disp(disp),
-	              _clear(1), _row(0), _frame(0), _dither(8, 1), _currentFont(0) {
-            _instance = this;
-        }
+                uint8_t si = PC3, uint8_t scs = PB1, uint8_t extc = PB4, uint8_t disp = PB5);
 		void begin(void);
 		void clear(uint8_t r, uint8_t g, uint8_t b);
 		void setPixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);

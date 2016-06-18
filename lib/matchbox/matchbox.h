@@ -26,9 +26,8 @@ void pinInitOutput(uint16_t pin, uint16_t initValue);
 void pinInitInput(uint16_t pin);
 void pinInitIrq(uint16_t pin, uint16_t falling);
 void writePin(uint16_t pin, uint16_t value);
-GPIO_TypeDef* toBus(int x);
-int toPin(int pin);
 int readPin(uint16_t pin);
+uint16_t toIoPin(uint16_t pin);
 
 # ifdef __cplusplus
 }

@@ -12,5 +12,5 @@ SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src drivers ;
 SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc ;
 
 Library libfont :
-	font.cpp
+	fonts.cpp
 	;

@@ -276,7 +276,7 @@ void lcdUpdateFrameIrq() {
         memcpy(frameBuffer[i].data, lcdBuff + i * LCD_LINE_SIZE, LCD_LINE_SIZE);
     }
     HAL_GPIO_WritePin(LCD_SCS_BUS, LCD_SCS_PIN, 1); // cs enabled
-    status = HAL_SPI_Transmit_IT(&hspi2, frameBuffer, sizeof(frameBuffer));
+    status = HAL_SPI_Transmit_IT(&hspi2, (uint8_t*) frameBuffer, sizeof(frameBuffer));
     assert(HAL_OK == status);
     frame++;
 }

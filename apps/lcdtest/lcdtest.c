@@ -199,19 +199,6 @@ void lcdSendLine(uint8_t* buff, int row, int frame, int clear) {
     sendBytes(buff, CHAN*XRES / 8);
 }
 
-// For manual update
-void lcdUpdate(uint8_t * buffer) {
-    static int clear = 1;
-    static int frame = 0;
-    writePin(LCD_SCS_PIN, 1); // cs
-    for (int i = 0; i < 128; i++) {
-        lcdSendLine(buffer + i*(CHAN*XRES/8), i, frame & 1, clear);
-    }
-    writePin(LCD_SCS_PIN, 0); // cs
-    writePin(LCD_EXTC_PIN, (frame++) & 0x01);
-    clear = 0;
-}
-
 struct Line {
         uint8_t cmd;
         uint8_t row;
@@ -222,7 +209,21 @@ static uint8_t frame = 0;
 static uint8_t clear = 0; // TODO
 static struct Line frameBuffer[YRES];
 
+// Manually refresh display
+//void lcdUpdate(uint8_t * buffer) {
+//    writePin(LCD_SCS_PIN, 1); // cs
+//    for (int i = 0; i < 128; i++) {
+//        lcdSendLine(buffer + i*(CHAN*XRES/8), i, frame & 1, clear);
+//    }
+//    writePin(LCD_SCS_PIN, 0); // cs
+//    writePin(LCD_EXTC_PIN, (frame++) & 0x01);
+//    clear = 0;
+//}
+
 void lcdUpdateFrameIrq() {
+    // Toggle common driver once per frame
+    writePin(LCD_EXTC_PIN, (frame++) & 0x01);
+
     writePin(LCD_SCS_PIN, 0); // cs disabled
     for (int i = 0; i < YRES; i++) {
         frameBuffer[i].cmd = swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
@@ -233,7 +234,6 @@ void lcdUpdateFrameIrq() {
     HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&hspi2,
             (uint8_t*)frameBuffer, sizeof(frameBuffer));
     assert(HAL_OK == status);
-    frame++;
 }
 
 void lcdUpdateLineIrq() {

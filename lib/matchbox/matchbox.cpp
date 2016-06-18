@@ -37,7 +37,7 @@ void pinInitOutput(uint16_t pin, uint16_t initValue) {
     GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
     GPIO_TypeDef* bus = toBus(pin); // PA, PB, etc.
     HAL_GPIO_Init(bus, &GPIO_InitStruct);
-    HAL_GPIO_WritePin(bus, pin, initValue ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(bus, GPIO_InitStruct.Pin, initValue ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
 void pinInitInput(uint16_t pin)

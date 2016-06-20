@@ -191,6 +191,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
     if (hspi == &hspi1) {
         printf("%s: SPI1!!\n", __func__);
     } else if (hspi == &hspi2) {
+        printf("%s: LCD should refresh!\n", __func__);
 //        lcd.refresh();
     } else {
         printf("%s: Invalid SPI %p\n", __func__, hspi);
@@ -521,11 +522,11 @@ void StartDefaultTask(void const * argument)
   pinInitIrq(SW2_PIN, 1);
 
   // Print any asserts that happened before USB was initialized
-//  if (asFile) {
-//      printf("ASSERT: %s:%d (count=%d)\n", asFile, asLine, asCount);
-//      asFile = 0;
-//      asCount = 0;
-//  }
+  if (asFile) {
+      printf("ASSERT: %s:%d (count=%d)\n", asFile, asLine, asCount);
+      asFile = 0;
+      asCount = 0;
+  }
 
 //  HAL_ADC_Start_IT(&hadc1);
 

@@ -16,7 +16,7 @@
 #include "matchbox.h"
 #include "lcd.h"
 
-//#define SOFT_SPI
+#define SOFT_SPI
 volatile int dly;
 void delay(int n)
 {
@@ -53,6 +53,7 @@ void Lcd::begin() {
     for (int i = 0; i < Number(pins); i++) {
         pinInitOutput(pins[i], defaults[i]);
     }
+    bzero(&_frameBuffer, sizeof(_frameBuffer));
 }
 
 void Lcd::sendByte(uint8_t b) {
@@ -100,8 +101,8 @@ void Lcd::refresh() {
 // Manually update the display
 void Lcd::refreshFrame() {
     writePin(_scs, 1);
-    for (int i = 0; i < 128; i++) {
-        _frameBuffer[i].cmd = (0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+    for (int i = 0; i < _yres; i++) {
+        _frameBuffer[i].cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
         _frameBuffer[i].row = i + 1;
         refreshLine(i);
     }
@@ -116,7 +117,7 @@ void Lcd::refreshFrameSpi() {
 
     writePin(_scs, 0); // cs disabled
     for (int i = 0; i < _yres; i++) {
-        _frameBuffer[i].cmd = (0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+        _frameBuffer[i].cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
         _frameBuffer[i].row = i + 1;
     }
     writePin(_scs, 1); // cs enabled

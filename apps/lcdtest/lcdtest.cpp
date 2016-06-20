@@ -108,7 +108,7 @@ static uint32_t asCount = 0;
 static uint16_t adcValue[128] = { 0 };
 static uint8_t mode;
 extern char roboto_bold_10_bits[];
-//static Lcd lcd(hspi2);
+static Lcd lcd(hspi2);
 
 void toggleLed() {
     static uint8_t data;
@@ -530,16 +530,16 @@ void StartDefaultTask(void const * argument)
 //  HAL_ADC_Start_IT(&hadc1);
 
   // Init LCD
-//  lcd.begin();
-
-//  lcdUpdateLineIrq(); // Call this once to get IRQ updates going
+  lcd.begin();
+  lcd.clear(1,1,1);
 //  lcd.refresh();
 
   int frame = 0;
   while (1) {
     toggleLed();
-    osDelay(500);
-    printf("HELLO!\n");
+    lcd.circle(64,64,frame%64, (frame>>6) & 1, (frame>>7) & 1, (frame>>8) & 1);
+    lcd.refresh();
+//    lcd.refresh();
 //    int tmp = mode % 20;
 //    if (tmp > 11) {
 //        lcd.clear(1,0,0);
@@ -579,8 +579,7 @@ void StartDefaultTask(void const * argument)
 //            }
 //        }
 //    }
-//    frame++;
-//    lcd.refresh(); // fixme!
+    frame++;
   }
   /* USER CODE END 5 */
 }

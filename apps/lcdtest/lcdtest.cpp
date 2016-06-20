@@ -39,6 +39,7 @@
 #include "fatfs.h"
 #include "usb_device.h"
 #include "matchbox.h"
+#include "lcd.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -97,21 +98,6 @@ void StartDefaultTask(void const * argument);
 #define LED_PIN PB2
 #endif
 
-// LCD
-//#define SOFT_SPI
-#define LCD_PEN_PIN PB9
-#define LCD_SCLK_PIN PB10
-#define LCD_SI_PIN PC3
-#define LCD_SCS_PIN PB1
-#define LCD_EXTC_PIN PB4
-#define LCD_DISP_PIN PB5
-#define LCD_LINE_SIZE (CHAN*XRES/8) // size of a line in bytes (data only)
-#define LCD_SIZE (YRES * LCD_LINE_SIZE) // size of lcd frame in bytes
-#define LCD_BURST 4 // number of lines to send over SPI at once
-#define XRES 128
-#define YRES 128
-#define CHAN 3 // 3 == color, 1 == mono
-
 const float VREF = 3.3f;
 const float VREF_CALIBRATION = 4.65f / 4.63f; // measured value, probably due to R15/R16 tolerance
 
@@ -120,171 +106,14 @@ static uint8_t* asFile = 0;
 static uint32_t asLine = 0;
 static uint32_t asCount = 0;
 static uint16_t adcValue[128] = { 0 };
-static uint8_t lcdBuff[LCD_SIZE];
 static uint8_t mode;
 extern char roboto_bold_10_bits[];
+//static Lcd lcd(hspi2);
 
 void toggleLed() {
     static uint8_t data;
     // printf("ADC %x\n", adcValue);
     writePin(LED_PIN, (data++) & 1);
-}
-
-#ifdef SOFT_SPI
-static const int pin[] = LCD_PEN_PIN, LCD_SCLK_PIN, LCD_SI_PIN, LCD_SCS_PIN, LCD_EXTC_PIN, LCD_DISP_PIN };
-static const int lcd_defaults[] = { 1, 0, 0, 0, 0, 1 };
-#else
-static const int pin[] = { LCD_PEN_PIN, LCD_SCS_PIN, LCD_EXTC_PIN, LCD_DISP_PIN };
-static const int lcd_defaults[] = { 1, 0, 0, 1 };
-#endif
-
-void lcdInit() {
-    for (int i = 0; i < sizeof(pin) / sizeof(pin[0]); i++) {
-        pinInitOutput(pin[i], lcd_defaults[i]);
-    }
-}
-
-volatile int dly;
-void delay(int n)
-{
-    dly = n;
-    while (dly--);
-}
-
-void sendByte(uint8_t b) {
-#ifdef SOFT_SPI
-    for (int i = 0; i < 8; i++) {
-        writePin(LCD_SCLK_PIN, 0);
-        writePin(LCD_SI_PIN, (b >> i) & 1);
-        writePin(LCD_SCLK_PIN, 1);
-    }
-    writePin(LCD_SCLK_PIN, 0);
-#else
-    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, &b, 1, 1000);
-    if (status != HAL_OK) {
-        printf("sendByte(): error = %d\n", status);
-    }
-#endif
-}
-
-void sendBytes(uint8_t* data, uint16_t count) {
-#ifdef SOFT_SPI
-    for (uint16_t i = 0; i < count; i++) {
-        sendByte(data[i]);
-    }
-#else
-//    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, data, count, 1000);
-    HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&hspi2, data, count);
-    if (status != HAL_OK) {
-        printf("sendBytes(): error = %d\n", status);
-    }
-#endif
-}
-
-uint8_t swap(uint8_t x)
-{
-    uint8_t res = 0;
-    for (int i = 0; i < 8; i++) {
-        res = (res << 1) | (x & 1);
-        x >>= 1;
-    }
-    return res;
-}
-
-// Single line format : SCS CMD ROW <data0..n> 0 0 SCS#
-// Multi-line format : SCS CMD ROW <data0..n> IGNORED ROW <data0..127> ... SCS#
-void lcdSendLine(uint8_t* buff, int row, int frame, int clear) {
-    sendByte(swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0)));
-    sendByte(row+1); // first row is 1, not 0 and bitswapped :/
-    sendBytes(buff, CHAN*XRES / 8);
-}
-
-struct Line {
-        uint8_t cmd;
-        uint8_t row;
-        uint8_t data[LCD_LINE_SIZE];
-};
-
-static uint8_t frame = 0;
-static uint8_t clear = 0; // TODO
-static struct Line frameBuffer[YRES];
-
-// Manually refresh display
-//void lcdUpdate(uint8_t * buffer) {
-//    writePin(LCD_SCS_PIN, 1); // cs
-//    for (int i = 0; i < 128; i++) {
-//        lcdSendLine(buffer + i*(CHAN*XRES/8), i, frame & 1, clear);
-//    }
-//    writePin(LCD_SCS_PIN, 0); // cs
-//    writePin(LCD_EXTC_PIN, (frame++) & 0x01);
-//    clear = 0;
-//}
-
-void lcdUpdateFrameIrq() {
-    // Toggle common driver once per frame
-    writePin(LCD_EXTC_PIN, (frame++) & 0x01);
-
-    writePin(LCD_SCS_PIN, 0); // cs disabled
-    for (int i = 0; i < YRES; i++) {
-        frameBuffer[i].cmd = swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
-        frameBuffer[i].row = i + 1;
-        memcpy(frameBuffer[i].data, lcdBuff + i * LCD_LINE_SIZE, LCD_LINE_SIZE);
-    }
-    writePin(LCD_SCS_PIN, 1); // cs enabled
-    HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&hspi2,
-            (uint8_t*)frameBuffer, sizeof(frameBuffer));
-    assert(HAL_OK == status);
-}
-
-void lcdUpdateLineIrq() {
-    static uint8_t row = 0;
-    HAL_StatusTypeDef status;
-    if (row == 0) {
-        writePin(LCD_SCS_PIN, 1); // cs
-    } else if (row == 128) {
-        uint8_t zero = 0;
-        status = HAL_SPI_Transmit(&hspi2, &zero, 1, 1000);
-        assert(HAL_OK == status);
-        row = 0;
-        frame++;
-        writePin(LCD_SCS_PIN, 0); // cs
-        delay(100);
-        writePin(LCD_SCS_PIN, 1); // cs
-    }
-
-    // Send one line
-    uint8_t cmd = swap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0));
-    status = HAL_SPI_Transmit(&hspi2, &cmd, 1, 1000);
-    assert(HAL_OK == status);
-
-    uint8_t tmpRow = row + 1; // first row starts at 1
-    status = HAL_SPI_Transmit(&hspi2, &tmpRow, 1, 1000);
-    assert(HAL_OK == status);
-
-    status = HAL_SPI_Transmit_IT(&hspi2, lcdBuff + row * LCD_LINE_SIZE, LCD_LINE_SIZE);
-    assert(HAL_OK == status);
-    row++;
-}
-
-void lcdSetPixel(uint8_t* buffer, uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
-{
-    uint16_t rbitaddr = (y * XRES + x) * CHAN + 0;
-    uint16_t rbyteaddr = rbitaddr / 8;
-    uint16_t rbit = rbitaddr % 8;
-    buffer[rbyteaddr] &= ~(1 << rbit);
-    buffer[rbyteaddr] |= r ? (1 << rbit) : 0;
-
-    uint16_t gbitaddr = (y * XRES + x) * CHAN + 1;
-    uint16_t gbyteaddr = gbitaddr / 8;
-    uint16_t gbit = gbitaddr % 8;
-    buffer[gbyteaddr] &= ~(1 << gbit);
-    buffer[gbyteaddr] |= g ? (1 << gbit) : 0;
-
-    uint16_t bbitaddr = (y * XRES + x) * CHAN + 2;
-    uint16_t bbyteaddr = bbitaddr / 8;
-    uint16_t bbit = bbitaddr % 8;
-    buffer[bbyteaddr] &= ~(1 << bbit);
-    buffer[bbyteaddr] |= b ? (1 << bbit) : 0;
 }
 
 typedef void (*fPtr)(void);
@@ -334,15 +163,18 @@ void EXTI15_10_IRQHandler(void)
     sum /= 128.0f;
     float vcc = VREF * VREF_CALIBRATION * sum / 4095.0f;
     vcc *= 2.0f; // measured voltage is half due to voltage divider
-//    printf("%s(mode = %d) VCC=%f\n", __func__, mode, vcc);
+    printf("%s(mode = %d) VCC=%f\n", __func__, mode, vcc);
 //    printf("bits: %p %08x\n", roboto_bold_10_bits, *(uint32_t*)roboto_bold_10_bits);
 }
 
 // Hack to receive bytes. Looks like the STM implementation is woefully incomplete :/
+extern "C" {
+    int write(int, uint8_t*, int len);
+    void doReceive(uint8_t* buff, uint32_t* len);
+}
 void doReceive(uint8_t* buff, uint32_t* len)
 {
 //    printf("rx:%p len=%d", buff, *len);
-    extern int write(int, const char*, int len);
     write(1, buff, *len);
     mode = *buff - '0';
 }
@@ -359,8 +191,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
     if (hspi == &hspi1) {
         printf("%s: SPI1!!\n", __func__);
     } else if (hspi == &hspi2) {
-//        lcdUpdateLineIrq();
-        lcdUpdateFrameIrq();
+//        lcd.refresh();
     } else {
         printf("%s: Invalid SPI %p\n", __func__, hspi);
     }
@@ -664,8 +495,7 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-  pinInitOutput(LED_PIN, 0);
-  char buff[32];
+  pinInitOutput(LED_PIN, 1);
   //printf("Stack ptr %08x\n", __get_MSP());
 
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
@@ -691,62 +521,66 @@ void StartDefaultTask(void const * argument)
   pinInitIrq(SW2_PIN, 1);
 
   // Print any asserts that happened before USB was initialized
-  if (asFile) {
-      printf("ASSERT: %s:%d (count=%d)\n", asFile, asLine, asCount);
-      asFile = 0;
-      asCount = 0;
-  }
+//  if (asFile) {
+//      printf("ASSERT: %s:%d (count=%d)\n", asFile, asLine, asCount);
+//      asFile = 0;
+//      asCount = 0;
+//  }
 
-  HAL_ADC_Start_IT(&hadc1);
+//  HAL_ADC_Start_IT(&hadc1);
 
   // Init LCD
-  lcdInit();
+//  lcd.begin();
+
 //  lcdUpdateLineIrq(); // Call this once to get IRQ updates going
-  lcdUpdateFrameIrq();
+//  lcd.refresh();
 
   int frame = 0;
   while (1) {
     toggleLed();
-    int tmp = mode % 20;
-        if (tmp > 11) {
-        memset(lcdBuff, 0xff, LCD_SIZE);
-        for (int i = 0; i < 128; i++) {
-            lcdSetPixel(lcdBuff, i, adcValue[i] & 0x7f, tmp&1, tmp&2, tmp&4);
-        }
-    } else {
-        for (int j = 0; j < 128; j++) {
-            for (int i = 0; i < 128; i++) {
-                uint8_t r, g, b;
-                switch (tmp) {
-                    case 0: r = frame & 1; g = frame & 2; b = frame & 4;
-                    break;
-                    case 1: r = (j >> 4) & 1; g = (j >> 5) & 1; b = (j >> 6) & 1;
-                    break;
-                    case 2: r = (i >> 4) & 1; g = (i >> 5) & 1; b = (i >> 6) & 1;
-                    break;
-                    case 3:{
-                        int bitOffset = j*128 + i;
-                        int byteOffset = bitOffset / 8;
-                        int bit = 1 << (bitOffset % 8);
-                        r = g = b = roboto_bold_10_bits[byteOffset] & bit;
-                    }
-                    break;
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
-                    case 10: r = g = b = ((j>>(tmp-3)) ^ (i>>(tmp-3))) & 1;
-                    break;
-                    case 11: r = g = b = ((j>>(frame&0x7)) ^ (i>>(frame&0x7))) & 1;
-                    break;
-                }
-                lcdSetPixel(lcdBuff, i, j, r, g, b);
-            }
-        }
-    }
-    frame++;
+    osDelay(500);
+    printf("HELLO!\n");
+//    int tmp = mode % 20;
+//    if (tmp > 11) {
+//        lcd.clear(1,0,0);
+//        for (int i = 0; i < 128; i++) {
+//            lcd.setPixel(i, adcValue[i] & 0x7f, tmp&1, tmp&2, tmp&4);
+//        }
+//    } else {
+//        for (int j = 0; j < 128; j++) {
+//            for (int i = 0; i < 128; i++) {
+//                uint8_t r, g, b;
+//                switch (tmp) {
+//                    case 0: r = frame & 1; g = frame & 2; b = frame & 4;
+//                    break;
+//                    case 1: r = (j >> 4) & 1; g = (j >> 5) & 1; b = (j >> 6) & 1;
+//                    break;
+//                    case 2: r = (i >> 4) & 1; g = (i >> 5) & 1; b = (i >> 6) & 1;
+//                    break;
+//                    case 3:{
+//                        int bitOffset = j*128 + i;
+//                        int byteOffset = bitOffset / 8;
+//                        int bit = 1 << (bitOffset % 8);
+//                        r = g = b = roboto_bold_10_bits[byteOffset] & bit;
+//                    }
+//                    break;
+//                    case 4:
+//                    case 5:
+//                    case 6:
+//                    case 7:
+//                    case 8:
+//                    case 9:
+//                    case 10: r = g = b = ((j>>(tmp-3)) ^ (i>>(tmp-3))) & 1;
+//                    break;
+//                    case 11: r = g = b = ((j>>(frame&0x7)) ^ (i>>(frame&0x7))) & 1;
+//                    break;
+//                }
+//                lcd.setPixel(i, j, r, g, b);
+//            }
+//        }
+//    }
+//    frame++;
+//    lcd.refresh(); // fixme!
   }
   /* USER CODE END 5 */
 }

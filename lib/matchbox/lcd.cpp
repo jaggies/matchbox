@@ -16,8 +16,6 @@
 #include "matchbox.h"
 #include "lcd.h"
 
-Lcd* Lcd::_instance;
-
 //#define SOFT_SPI
 volatile int dly;
 void delay(int n)
@@ -38,9 +36,9 @@ static inline uint8_t bitSwap(uint8_t x)
 
 Lcd::Lcd(SPI_HandleTypeDef& spi, uint8_t en, uint8_t sclk, uint8_t si, uint8_t scs, uint8_t extc,
         uint8_t disp) : _spi(spi), _en(en), _sclk(sclk), _si(si), _scs(scs), _extc(extc),
-        _disp(disp), _clear(1), _row(0), _frame(0), _dither(8, 1), _currentFont(0)
+        _disp(disp), _clear(1), _row(0), _frame(0), _dither(8, 1), _currentFont(0),
+        _xres(LCD_XRES), _yres(LCD_YRES), _channels(LCD_CHAN), _line_size(LCD_XRES*LCD_CHAN/8)
 {
-    _instance = this;
 }
 
 void Lcd::begin() {
@@ -55,8 +53,6 @@ void Lcd::begin() {
     for (int i = 0; i < Number(pins); i++) {
         pinInitOutput(pins[i], defaults[i]);
     }
-    // Start background display updates
-    refreshLineIrq();
 }
 
 void Lcd::sendByte(uint8_t b) {
@@ -91,28 +87,45 @@ void Lcd::sendBytes(uint8_t* data, uint16_t count) {
 
 // Single line format : SCS CMD ROW <data0..n> 0 0 SCS#
 // Multi-line format : SCS CMD ROW <data0..n> IGNORED ROW <data0..127> ... SCS#
-void Lcd::sendLine(uint8_t* buff, int row, int frame, int clear) {
-    sendByte(bitSwap(0x80 | (frame ? 0x40:0) | (clear ? 0x20 : 0)));
-    sendByte(row+1); // first row is 1, not 0 and bitswapped :/
-    sendBytes(buff, channels*xres / 8);
+void Lcd::refreshLine(int row) {
+    sendByte(_frameBuffer[row].cmd);
+    sendByte(_frameBuffer[row].row); // first row is 1, not 0 and bitswapped :/
+    sendBytes(_frameBuffer[row].data, _line_size);
+}
+
+void Lcd::refresh() {
+    refreshFrame();
 }
 
 // Manually update the display
-void Lcd::refresh() {
+void Lcd::refreshFrame() {
     writePin(_scs, 1);
     for (int i = 0; i < 128; i++) {
-        sendLine(buffer + i*(channels*xres/8), i, _frame & 1, _clear);
+        _frameBuffer[i].cmd = (0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+        _frameBuffer[i].row = i + 1;
+        refreshLine(i);
     }
     writePin(_scs, 0);
     writePin(_extc, (_frame++) & 0x01);
     _clear = 0;
 }
 
-void Lcd::refreshLineIrq() {
-    Lcd::_instance->refreshLine();
+void Lcd::refreshFrameSpi() {
+    // Toggle common driver once per frame
+    writePin(_extc, (_frame++) & 0x01);
+
+    writePin(_scs, 0); // cs disabled
+    for (int i = 0; i < _yres; i++) {
+        _frameBuffer[i].cmd = (0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+        _frameBuffer[i].row = i + 1;
+    }
+    writePin(_scs, 1); // cs enabled
+    HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&_spi, (uint8_t*)_frameBuffer,
+            sizeof(_frameBuffer));
+    assert(HAL_OK == status);
 }
 
-void Lcd::refreshLine() {
+void Lcd::refreshLineSpi() {
     static uint8_t clear = 0; // TODO
     HAL_StatusTypeDef status;
     if (_row == 0) {
@@ -129,46 +142,39 @@ void Lcd::refreshLine() {
     }
 
     // Send one line
-    uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (clear ? 0x20 : 0));
-    status = HAL_SPI_Transmit(&_spi, &cmd, 1, 1000);
+    _frameBuffer[_row].cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (clear ? 0x20 : 0));
+    _frameBuffer[_row].row = _row + 1; // first row starts at 1
+    status = HAL_SPI_Transmit_IT(&_spi, (uint8_t*) &_frameBuffer[_row], _line_size);
     assert(HAL_OK == status);
-
-    uint8_t tmpRow = _row + 1; // first row starts at 1
-    status = HAL_SPI_Transmit(&_spi, &tmpRow, 1, 1000);
-    assert(HAL_OK == status);
-
-    status = HAL_SPI_Transmit_IT(&_spi, buffer + _row * line_size, line_size);
-    assert(HAL_OK == status);
-
     _row++;
 }
 
 void Lcd::setPixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
 {
     // TODO: use ARM M4 Bit Banding
-    uint16_t rbitaddr = (y * xres + x) * channels + 0;
+    uint16_t rbitaddr = x * _channels + 0;
     uint16_t rbyteaddr = rbitaddr / 8;
     uint16_t rbit = rbitaddr % 8;
-    buffer[rbyteaddr] &= ~(1 << rbit);
-    buffer[rbyteaddr] |= r ? (1 << rbit) : 0;
+    _frameBuffer[y].data[rbyteaddr] &= ~(1 << rbit);
+    _frameBuffer[y].data[rbyteaddr] |= r ? (1 << rbit) : 0;
 
-    uint16_t gbitaddr = (y * xres + x) * channels + 1;
+    uint16_t gbitaddr = x * _channels + 1;
     uint16_t gbyteaddr = gbitaddr / 8;
     uint16_t gbit = gbitaddr % 8;
-    buffer[gbyteaddr] &= ~(1 << gbit);
-    buffer[gbyteaddr] |= g ? (1 << gbit) : 0;
+    _frameBuffer[y].data[gbyteaddr] &= ~(1 << gbit);
+    _frameBuffer[y].data[gbyteaddr] |= g ? (1 << gbit) : 0;
 
-    uint16_t bbitaddr = (y * xres + x) * channels + 2;
+    uint16_t bbitaddr = x * _channels + 2;
     uint16_t bbyteaddr = bbitaddr / 8;
     uint16_t bbit = bbitaddr % 8;
-    buffer[bbyteaddr] &= ~(1 << bbit);
-    buffer[bbyteaddr] |= b ? (1 << bbit) : 0;
+    _frameBuffer[y].data[bbyteaddr] &= ~(1 << bbit);
+    _frameBuffer[y].data[bbyteaddr] |= b ? (1 << bbit) : 0;
 }
 
 void
 Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
-    for (int j = 0; j < yres; j++) {
-        for (int i = 0; i < xres; i++) {
+    for (int j = 0; j < _yres; j++) {
+        for (int i = 0; i < _xres; i++) {
             // TODO: optimize this
             setPixel(i, j, r, g, b);
         }

@@ -10,7 +10,7 @@ C++ = $(GCC_PATH)-g++ ;
 LD = $(GCC_PATH)-ld ;
 RANLIB = $(ARCH)-ranlib ;
 MEMMAP = $(TOP)/devices/STM32F415RG_FLASH.ld ;
-LINK = $(CC) ;
+LINK = $(C++) ;
 
 # M4 with hardware floating point
 CFLAGS += -DSTM32F415xx -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 -DSTM32F415xx ;

@@ -1,5 +1,6 @@
 SubDir TOP apps lcdtest ;
 SubDirHdrs $(TOP) lib matchbox ;
+SubDirHdrs $(TOP) lib render ;
 SubDirHdrs $(TOP) stm_generated Inc ;
 SubDirHdrs $(TOP) stm_generated Drivers STM32F4xx_HAL_Driver Inc ;
 SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src ;
@@ -17,5 +18,5 @@ SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Class CDC 
 LINKLIBS on lcdtest = -Wl,--whole-archive -lstm32_hal -lc -lfat -lmatchbox -lfont -Wl,--no-whole-archive ;
 
 Main lcdtest :
-	lcdtest.c
+	lcdtest.cpp
 	;

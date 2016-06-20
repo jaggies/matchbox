@@ -16,7 +16,7 @@
 #include "matchbox.h"
 #include "lcd.h"
 
-#define SOFT_SPI
+//#define SOFT_SPI
 volatile int dly;
 void delay(int n)
 {
@@ -95,7 +95,7 @@ void Lcd::refreshLine(int row) {
 }
 
 void Lcd::refresh() {
-    refreshFrame();
+    refreshFrameSpi();
 }
 
 // Manually update the display
@@ -121,9 +121,10 @@ void Lcd::refreshFrameSpi() {
         _frameBuffer[i].row = i + 1;
     }
     writePin(_scs, 1); // cs enabled
-    HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&_spi, (uint8_t*)_frameBuffer,
+    HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&_spi, (uint8_t*)&_frameBuffer[0],
             sizeof(_frameBuffer));
     assert(HAL_OK == status);
+    _clear = 0;
 }
 
 void Lcd::refreshLineSpi() {

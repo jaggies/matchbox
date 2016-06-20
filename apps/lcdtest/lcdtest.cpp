@@ -144,14 +144,14 @@ void maybeJumpToBootloader() {
     }
 }
 
-void EXTI1_IRQHandler(void)
+extern "C" void EXTI1_IRQHandler(void)
 {
     __HAL_GPIO_EXTI_CLEAR_IT(toIoPin(SW1_PIN));
     HAL_NVIC_ClearPendingIRQ(EXTI1_IRQn);
     printf("IRQ1!\n");
 }
 
-void EXTI15_10_IRQHandler(void)
+extern "C" void EXTI15_10_IRQHandler(void)
 {
     __HAL_GPIO_EXTI_CLEAR_IT(toIoPin(SW2_PIN));
     HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
@@ -163,16 +163,16 @@ void EXTI15_10_IRQHandler(void)
     sum /= 128.0f;
     float vcc = VREF * VREF_CALIBRATION * sum / 4095.0f;
     vcc *= 2.0f; // measured voltage is half due to voltage divider
-    printf("%s(mode = %d) VCC=%f\n", __func__, mode, vcc);
+//    printf("%s(mode = %d) VCC=%f\n", __func__, mode, vcc);
 //    printf("bits: %p %08x\n", roboto_bold_10_bits, *(uint32_t*)roboto_bold_10_bits);
 }
 
 // Hack to receive bytes. Looks like the STM implementation is woefully incomplete :/
 extern "C" {
     int write(int, uint8_t*, int len);
-    void doReceive(uint8_t* buff, uint32_t* len);
 }
-void doReceive(uint8_t* buff, uint32_t* len)
+
+extern "C" void doReceive(uint8_t* buff, uint32_t* len)
 {
 //    printf("rx:%p len=%d", buff, *len);
     write(1, buff, *len);
@@ -180,31 +180,31 @@ void doReceive(uint8_t* buff, uint32_t* len)
 }
 
 static int adcCount = 0;
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle)
+extern "C" void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle)
 {
     adcValue[adcCount++] = HAL_ADC_GetValue(adcHandle);
     adcCount = adcCount > 127 ? 0 : adcCount;
 }
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
     if (hspi == &hspi1) {
         printf("%s: SPI1!!\n", __func__);
     } else if (hspi == &hspi2) {
-        printf("%s: LCD should refresh!\n", __func__);
-//        lcd.refresh();
+//        printf("%s: LCD should refresh!\n", __func__);
+        lcd.refresh();
     } else {
         printf("%s: Invalid SPI %p\n", __func__, hspi);
     }
 }
 
-void SPI2_IRQHandler()
+extern "C" void SPI2_IRQHandler()
 {
     HAL_NVIC_ClearPendingIRQ(SPI2_IRQn);
     HAL_SPI_IRQHandler(&hspi2);
 }
 
-void ADC_IRQHandler(void)
+extern "C" void ADC_IRQHandler(void)
 {
     HAL_ADC_IRQHandler(&hadc1);
 }
@@ -237,6 +237,12 @@ int main(void)
   MX_I2C1_Init();
   MX_USART2_UART_Init();
   MX_ADC1_Init();
+  MX_USB_DEVICE_Init();
+  usbInitialized = 1;
+
+  /* init code for FATFS */
+  MX_FATFS_Init();
+
 
   /* USER CODE BEGIN 2 */
 
@@ -487,13 +493,6 @@ void MX_GPIO_Init(void)
 
 void StartDefaultTask(void const * argument)
 {
-  /* init code for USB_DEVICE */
-  MX_USB_DEVICE_Init();
-  usbInitialized = 1;
-
-  /* init code for FATFS */
-  MX_FATFS_Init();
-
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   pinInitOutput(LED_PIN, 1);
@@ -528,18 +527,19 @@ void StartDefaultTask(void const * argument)
       asCount = 0;
   }
 
-//  HAL_ADC_Start_IT(&hadc1);
+  HAL_ADC_Start_IT(&hadc1);
 
   // Init LCD
   lcd.begin();
   lcd.clear(1,1,1);
-//  lcd.refresh();
+  lcd.refresh(); // start refreshing
 
+  printf("Hello world!!!\n");
   int frame = 0;
   while (1) {
     toggleLed();
     lcd.circle(64,64,frame%64, (frame>>6) & 1, (frame>>7) & 1, (frame>>8) & 1);
-    lcd.refresh();
+//    lcd.refresh();
 //    lcd.refresh();
 //    int tmp = mode % 20;
 //    if (tmp > 11) {
@@ -594,7 +594,7 @@ void StartDefaultTask(void const * argument)
    * @param line: assert_param error line source number
    * @retval None
    */
-void assert_failed(uint8_t* file, uint32_t line)
+extern "C" void assert_failed(uint8_t* file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,

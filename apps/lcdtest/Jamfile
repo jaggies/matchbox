@@ -17,6 +17,8 @@ SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Class CDC 
 
 LINKLIBS on lcdtest = -Wl,--whole-archive -lstm32_hal -lc -lfat -lmatchbox -lfont -Wl,--no-whole-archive ;
 
+Depends lcdtest : librender.a libmatchbox.a libfont.a libfat.a libstm32_hal.a ;
+
 Main lcdtest :
 	lcdtest.cpp
 	;

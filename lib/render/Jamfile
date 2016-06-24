@@ -7,6 +7,5 @@ SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
 Library librender :
 	Interpolator.cpp
 	OrderedDither.cpp
-	font.cpp
 	triangle.cpp
 	;

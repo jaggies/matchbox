@@ -12,6 +12,7 @@
 #include "stm32f4xx_hal_dma.h"
 #include "stm32f4xx_hal_spi.h"
 #include "OrderedDither.h"
+#include "font.h"
 
 // TODO: Move these to a config file
 #define LCD_PEN_PIN PB9
@@ -25,8 +26,6 @@
 #define LCD_XRES 128
 #define LCD_YRES 128
 #define LCD_LINE_SIZE (LCD_CHAN*LCD_XRES/8) // size of a line in bytes (data only)
-
-class Font;
 
 class Lcd {
 	public:
@@ -80,7 +79,7 @@ class Lcd {
 		const uint8_t _en, _sclk, _si, _scs, _extc, _disp;
 		uint8_t _clear;
 		OrderedDither _dither;
-		Font* const _currentFont;
+		const Font* _currentFont;
 		struct Line _frameBuffer[LCD_YRES];
 };
 

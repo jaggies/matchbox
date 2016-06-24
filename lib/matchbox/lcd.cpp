@@ -39,6 +39,7 @@ Lcd::Lcd(SPI_HandleTypeDef& spi, uint8_t en, uint8_t sclk, uint8_t si, uint8_t s
         _disp(disp), _clear(1), _row(0), _frame(0), _dither(8, 1), _currentFont(0),
         _xres(LCD_XRES), _yres(LCD_YRES), _channels(LCD_CHAN), _line_size(LCD_XRES*LCD_CHAN/8)
 {
+    _currentFont = getFont("roboto_bold_10");
 }
 
 void Lcd::begin() {
@@ -279,21 +280,31 @@ int Lcd::putChar(uint8_t c, int x, int y) {
     static const uint8_t fColor[] = {0, 0, 0}; // TODO: allow these to be set
     static const uint8_t bColor[] = {0xff, 0xff, 0xff};
 
-    if (!_currentFont || c < 0x1f || c > 0x7f) return 0;
+    if (!_currentFont) return 0;
 
-	// Points to last byte of selected character
-	const uint8_t* pixels = _currentFont->data + (_currentFont->charLength * (c - 0x1F));
-	for (int i = _currentFont->rows - 1; i >= 0; i--) {
-		uint8_t chr = *pixels++;
-		uint8_t mask = 0x80;
-		// loop through character row
-		for (int j = 0; j < (int) _currentFont->columns; j += 2) {
-			const uint8_t* color = (chr & mask) ? fColor : bColor;
-			mask = mask >> 1;
-			setPixel(i,j, color[0], color[1], color[2]);
+    // Find character to print. TODO: use binary search
+    const CharData* charData = 0;
+    for (int i = 0; i < _currentFont->charCount; i++) {
+        if (c == _currentFont->charData[i].ch) {
+            charData = &_currentFont->charData[i];
+            break;
+        }
+    }
+
+    if (!charData) {
+        return 0; // character not found
+    }
+
+	for (int j = 0; j < charData->height; j++) {
+		for (int i = 0; i < charData->width; i++) {
+		    const int bitAddr = (charData->y + j) * _currentFont->width + (charData->x + i);
+		    const int byteAddr = bitAddr / 8;
+		    const int bitMask = 1 << (bitAddr % 8);
+			const uint8_t* color = (_currentFont->bitmap[byteAddr] & bitMask) ? fColor : bColor;
+			setPixel(i + x, j + y, color[0], color[1], color[2]);
 		}
 	}
-	return _currentFont->columns;
+	return charData->width;
 }
 
 void Lcd::putString(const char *str, int x, int y) {

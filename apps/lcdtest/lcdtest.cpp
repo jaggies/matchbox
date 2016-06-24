@@ -39,6 +39,7 @@
 #include "fatfs.h"
 #include "usb_device.h"
 #include "matchbox.h"
+#include "font.h"
 #include "lcd.h"
 
 /* USER CODE BEGIN Includes */
@@ -534,10 +535,13 @@ void StartDefaultTask(void const * argument)
   lcd.clear(1,1,1);
   lcd.refresh(); // start refreshing
 
-  printf("Hello world!!!\n");
+//  printf("Hello world!!!\n");
   int frame = 0;
+  char buff[32];
   while (1) {
     toggleLed();
+    sprintf(buff, "Hello %04d", frame);
+    lcd.putString(buff, 0, 0);
     lcd.circle(64,64,frame%64, (frame>>6) & 1, (frame>>7) & 1, (frame>>8) & 1);
 //    lcd.refresh();
 //    lcd.refresh();

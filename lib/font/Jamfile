@@ -13,4 +13,6 @@ SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc
 
 Library libfont :
 	fonts.cpp
+	roboto_bold_10.cpp
+	roboto_bold_14.cpp
 	;

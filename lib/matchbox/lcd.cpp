@@ -117,8 +117,9 @@ void Lcd::refreshFrameSpi() {
     writePin(_extc, (_frame++) & 0x01);
 
     writePin(_scs, 0); // cs disabled
+    uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
     for (int i = 0; i < _yres; i++) {
-        _frameBuffer[i].cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+        _frameBuffer[i].cmd = cmd;
         _frameBuffer[i].row = i + 1;
     }
     writePin(_scs, 1); // cs enabled
@@ -150,28 +151,6 @@ void Lcd::refreshLineSpi() {
     status = HAL_SPI_Transmit_IT(&_spi, (uint8_t*) &_frameBuffer[_row], _line_size);
     assert(HAL_OK == status);
     _row++;
-}
-
-void Lcd::setPixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
-{
-    // TODO: use ARM M4 Bit Banding
-    uint16_t rbitaddr = x * _channels + 0;
-    uint16_t rbyteaddr = rbitaddr / 8;
-    uint16_t rbit = rbitaddr % 8;
-    _frameBuffer[y].data[rbyteaddr] &= ~(1 << rbit);
-    _frameBuffer[y].data[rbyteaddr] |= r ? (1 << rbit) : 0;
-
-    uint16_t gbitaddr = x * _channels + 1;
-    uint16_t gbyteaddr = gbitaddr / 8;
-    uint16_t gbit = gbitaddr % 8;
-    _frameBuffer[y].data[gbyteaddr] &= ~(1 << gbit);
-    _frameBuffer[y].data[gbyteaddr] |= g ? (1 << gbit) : 0;
-
-    uint16_t bbitaddr = x * _channels + 2;
-    uint16_t bbyteaddr = bbitaddr / 8;
-    uint16_t bbit = bbitaddr % 8;
-    _frameBuffer[y].data[bbyteaddr] &= ~(1 << bbit);
-    _frameBuffer[y].data[bbyteaddr] |= b ? (1 << bbit) : 0;
 }
 
 void

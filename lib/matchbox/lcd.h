@@ -83,4 +83,38 @@ class Lcd {
 		struct Line _frameBuffer[LCD_YRES];
 };
 
+#define BITBAND_SRAM_REF 0x20000000
+#define BITBAND_SRAM_BASE 0x22000000
+#define BITBAND_SRAM(a,b) ((BITBAND_SRAM_BASE + (a-BITBAND_SRAM_REF)*32 + (b*4)))
+#define DO_BITBAND
+
+inline void Lcd::setPixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
+{
+#ifdef DO_BITBAND
+    uint32_t pixaddr = x * _channels;
+    uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) &_frameBuffer[y].data[0], pixaddr);
+    *pixel++ = r ? 1 : 0;
+    *pixel++ = g ? 1 : 0;
+    *pixel = b ? 1 : 0;
+#else
+    uint16_t rbitaddr = x * _channels + 0;
+    uint16_t rbyteaddr = rbitaddr / 8;
+    uint16_t rbit = rbitaddr % 8;
+    _frameBuffer[y].data[rbyteaddr] &= ~(1 << rbit);
+    _frameBuffer[y].data[rbyteaddr] |= r ? (1 << rbit) : 0;
+
+    uint16_t gbitaddr = x * _channels + 1;
+    uint16_t gbyteaddr = gbitaddr / 8;
+    uint16_t gbit = gbitaddr % 8;
+    _frameBuffer[y].data[gbyteaddr] &= ~(1 << gbit);
+    _frameBuffer[y].data[gbyteaddr] |= g ? (1 << gbit) : 0;
+
+    uint16_t bbitaddr = x * _channels + 2;
+    uint16_t bbyteaddr = bbitaddr / 8;
+    uint16_t bbit = bbitaddr % 8;
+    _frameBuffer[y].data[bbyteaddr] &= ~(1 << bbit);
+    _frameBuffer[y].data[bbyteaddr] |= b ? (1 << bbit) : 0;
+#endif
+}
+
 #endif /* LCD_H_ */

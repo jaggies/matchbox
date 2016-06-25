@@ -486,6 +486,44 @@ void MX_GPIO_Init(void)
 
 }
 
+void drawBars(int vertical)
+{
+    for (int j = 0; j < 128; j++) {
+        for (int i = 0; i < 128; i++) {
+            uint8_t r, g, b;
+            int index = vertical ? j : i;
+            lcd.setPixel(i,j, (index >> 4) & 1, (index >> 5) & 1, (index >> 6) & 1);
+        }
+    }
+}
+
+void drawChecker(int scale)
+{
+    for (int j = 0; j < 128; j++) {
+        for (int i = 0; i < 128; i++) {
+            uint8_t pix = ((j>>(scale)) ^ (i>>(scale))) & 1;
+            lcd.setPixel(i,j, pix, pix, pix);
+        }
+    }
+}
+
+void drawAdc(uint8_t r, uint8_t g, uint8_t b, bool useLine)
+{
+    lcd.clear(1,1,1);
+    if (useLine) {
+        for (int x0 = 0; x0 < 127; x0++) {
+            int y0 = adcValue[x0] & 0x7f;
+            int x1 = x0+1;
+            int y1 = adcValue[x1] & 0x7f;
+            lcd.line(x0, y0, x1, y1, r, g, b);
+        }
+    } else {
+        for (int i = 0; i < 128; i++) {
+            lcd.setPixel(i, adcValue[i] & 0x7f, r, g, b);
+        }
+    }
+}
+
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
@@ -540,42 +578,19 @@ void StartDefaultTask(void const * argument)
   char buff[32];
   while (1) {
     toggleLed();
-    sprintf(buff, "Frame %04d", frame);
+    sprintf(buff, "Frame%04d", frame);
     lcd.putString(buff, 0, 0);
-//    lcd.circle(64,64,frame%64, (frame>>6) & 1, (frame>>7) & 1, (frame>>8) & 1);
-    int tmp = mode % 20;
-    if (tmp > 11) {
-        lcd.clear(1,1,1);
-        for (int i = 0; i < 127; i++) {
-//            lcd.line(i, adcValue[i] & 0x7f, i+1, adcValue[i+1] & 0x7f, tmp&1, tmp&2, tmp&4);
-            lcd.setPixel(i, adcValue[i] & 0x7f, tmp&1, tmp&2, tmp&4);
-        }
+    int tmp = mode % 36;
+    if (tmp == 0) {
+        lcd.clear(frame & 1, frame & 2, frame & 4);
+    } else if (tmp < 3) {
+        drawBars(tmp == 2);
+    } else if (tmp < 12) {
+        drawChecker(tmp == 11 ? (frame&0x7) : (tmp - 3));
+    } else if (tmp < 28) {
+        drawAdc(tmp&1, tmp&2, tmp&4, tmp >= 20);
     } else {
-        for (int j = 0; j < 128; j++) {
-            for (int i = 0; i < 128; i++) {
-                uint8_t r, g, b;
-                switch (tmp) {
-                    case 0: r = frame & 1; g = frame & 2; b = frame & 4;
-                    break;
-                    case 1: r = (j >> 4) & 1; g = (j >> 5) & 1; b = (j >> 6) & 1;
-                    break;
-                    case 2: r = (i >> 4) & 1; g = (i >> 5) & 1; b = (i >> 6) & 1;
-                    break;
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
-                    case 10: r = g = b = ((j>>(tmp-3)) ^ (i>>(tmp-3))) & 1;
-                    break;
-                    case 11: r = g = b = ((j>>(frame&0x7)) ^ (i>>(frame&0x7))) & 1;
-                    break;
-                }
-                lcd.setPixel(i, j, r, g, b);
-            }
-        }
+        lcd.circle(64,64,frame%64, (frame>>6) & 1, (frame>>7) & 1, (frame>>8) & 1);
     }
     frame++;
   }

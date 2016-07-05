@@ -1,0 +1,13 @@
+SubDir TOP lib libdiscovery CMSIS DSP_Lib Source ;
+#SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source ARM ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source BasicMathFunctions ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source CommonTables ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source ComplexMathFunctions ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source ControllerFunctions ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source FastMathFunctions ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source FilteringFunctions ;
+#SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source GCC ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source MatrixFunctions ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source StatisticsFunctions ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source SupportFunctions ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib Source TransformFunctions ;

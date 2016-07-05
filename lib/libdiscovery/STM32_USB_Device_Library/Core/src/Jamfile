@@ -1,0 +1,12 @@
+SubDir TOP lib libdiscovery STM32_USB_Device_Library Core src ;
+SubDirHdrs $(TOP) lib device ;
+SubDirHdrs $(TOP) lib libdiscovery CMSIS Include ;
+SubDirHdrs $(TOP) lib libdiscovery CMSIS ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib libdiscovery STM32F4xx_StdPeriph_Driver inc ;
+SubDirHdrs $(TOP) lib libdiscovery STM32_USB_Device_Library Core inc ;
+
+Library libdiscovery : 
+	usbd_core.c
+	usbd_ioreq.c
+	usbd_req.c
+	;

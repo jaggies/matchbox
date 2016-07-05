@@ -1,0 +1,3 @@
+SubDir TOP lib libdiscovery CMSIS ST ;
+SubInclude TOP lib libdiscovery CMSIS ST STM32F4xx ;
+

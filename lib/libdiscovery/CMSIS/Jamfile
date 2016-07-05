@@ -1,0 +1,3 @@
+SubDir TOP lib libdiscovery CMSIS ;
+SubInclude TOP lib libdiscovery CMSIS DSP_Lib ;
+SubInclude TOP lib libdiscovery CMSIS ST ;

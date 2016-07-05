@@ -1,0 +1,3 @@
+SubDir TOP lib libdiscovery STM32_USB_Device_Library ;
+SubInclude TOP lib libdiscovery STM32_USB_Device_Library Class ;
+SubInclude TOP lib libdiscovery STM32_USB_Device_Library src Core ;

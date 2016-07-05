@@ -5,4 +5,4 @@ SubInclude TOP lib font ;
 SubInclude TOP lib gl ;
 SubInclude TOP lib matchbox ;
 SubInclude TOP lib render ;
-SubInclude TOP lib stm32 ;
+SubInclude TOP lib libdiscovery ;

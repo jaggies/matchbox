@@ -13,7 +13,9 @@ MEMMAP = $(TOP)/devices/STM32F415RG_FLASH.ld ;
 LINK = $(CC) ;
 
 # M4 with hardware floating point
-CFLAGS += -DSTM32F415xx -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 -DSTM32F415xx ;
+CFLAGS += -DARM_MATH_CM4 -D__FPU_PRESENT=1U -DSTM32F415xx -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 -DSTM32F415xx ;
+# Temporarily disable warnings about implicit assert_param()
+CFLAGS += -D"\"assert_param(a)=\"" ;
 #CFLAGS += -DUSE_FULL_ASSERT ;
 CCFLAGS += $(CFLAGS) -std=c99 ;
 C++FLAGS += $(CFLAGS) ;

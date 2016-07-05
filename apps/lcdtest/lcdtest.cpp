@@ -90,13 +90,14 @@ void StartDefaultTask(void const * argument);
 #define SW1_PIN PC13 // redefined to PC1 later
 #define SW2_PIN PA13
 
-#define POWER_PIN PD2
 //#define VERSION_01
 
 #ifdef VERSION_01
 #define LED_PIN SW1_PIN // Oops. Wired to PC13
+#define POWER_PIN PD2
 #else
 #define LED_PIN PB2
+#define POWER_PIN PA14
 #endif
 
 const float VREF = 3.3f;
@@ -108,7 +109,9 @@ static uint32_t asLine = 0;
 static uint32_t asCount = 0;
 static uint16_t adcValue[128] = { 0 };
 static uint8_t mode;
-extern char roboto_bold_10_bits[];
+static uint64_t pupCheck; // result of pull-up check
+static uint64_t shCheck; // result of short check
+static uint64_t shArray; // pins affected
 static Lcd lcd(hspi2);
 
 void toggleLed() {
@@ -210,6 +213,43 @@ extern "C" void ADC_IRQHandler(void)
     HAL_ADC_IRQHandler(&hadc1);
 }
 
+void checkIoPins(uint64_t* pullUpCheck, uint64_t* shortCheck, uint64_t* shortArray) {
+    static const int pins[] = {
+            PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PA8, PA9, PA10, PA11, PA12, PA13, PA14, PA15,
+            PB0, PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PB10, PB11, PB12, PB13, PB14, PB15,
+            PC0, PC1, PC2, PC3, PC4, PC5, PC6, PC7, PC8, PC9, PC10, PC11, PC12, PC13, PC14, PC15,
+    };
+
+    for (int i = 0; i < sizeof(pins) / sizeof(pins[0]); i++) {
+        pinInitInput(pins[i]); // init with pull-up
+    }
+
+    // Verify all pulled-up pins are logic '1'
+    *pullUpCheck = 0ULL;
+    for (int i = 0; i < Number(pins); i++) {
+        *pullUpCheck |= readPin(pins[i]) ? (1ULL << pins[i]) : 0ULL;
+    }
+
+    // Pull one pin down at a time and look for other shorted pins
+    *shortCheck = *shortArray = 0ULL;
+    for (int k = 0; k < Number(pins); k++) {
+        if (k == POWER_PIN) continue; // don't kill the power!
+        pinInitOutput(pins[k], 0); // pull it down
+        HAL_Delay(1); // wait for things to settle (10pF/10k = 100ns)
+        const int drv = pins[k];
+        for (int i = 0; i < Number(pins); i++) {
+            const int rcv = pins[i];
+            if (drv != rcv && (readPin(rcv) ? 1ULL : 0ULL) != ((*pullUpCheck >> rcv) & 1ULL)) {
+                // oops, unexpected pull down
+                *shortCheck |= 1ULL << drv; // driver
+                *shortArray |= 1ULL << rcv; // receiver
+                break;
+            }
+        }
+        pinInitInput(pins[k]); // pull it back up
+    }
+}
+
 int main(void)
 {
 
@@ -225,6 +265,9 @@ int main(void)
   /* Init GPIO subsystem */
   MX_GPIO_Init();
 
+  // Do low-level IO check
+  checkIoPins(&pupCheck, &shCheck, &shArray);
+
   // POWER_PIN is wired to the LTC2954 KILL# pin. It must be remain high or power will shut off.
   pinInitOutput(POWER_PIN, 1);
 
@@ -233,7 +276,9 @@ int main(void)
 
   MX_SPI1_Init();
   MX_SPI2_Init();
-  // MX_SDIO_SD_Init(); // Disable until rev 1.0 with pin reassignment
+#ifndef VERSION_01
+  MX_SDIO_SD_Init(); // Disable until rev 1.0 with pin reassignment
+#endif
   MX_USART1_UART_Init();
   MX_I2C1_Init();
   MX_USART2_UART_Init();
@@ -528,6 +573,11 @@ void drawAdc(uint8_t r, uint8_t g, uint8_t b, bool useLine)
 
 /* USER CODE END 4 */
 
+void waitForUSB()
+{
+    HAL_Delay(1000); // TODO
+}
+
 /* StartDefaultTask function */
 
 void StartDefaultTask(void const * argument)
@@ -559,6 +609,8 @@ void StartDefaultTask(void const * argument)
   pinInitIrq(SW1_PIN, 1);
   pinInitIrq(SW2_PIN, 1);
 
+  waitForUSB();
+
   // Print any asserts that happened before USB was initialized
   if (asFile) {
       printf("ASSERT: %s:%d (count=%d)\n", asFile, asLine, asCount);
@@ -573,7 +625,8 @@ void StartDefaultTask(void const * argument)
   lcd.clear(1,1,1);
   lcd.refresh(); // start refreshing
 
-//  printf("Hello world!!!\n");
+  printf("IOCheck: pup:%012llx sh:%012llx ary:%012llx\n", pupCheck, shCheck, shArray);
+
   int frame = 0;
   char buff[32];
   while (1) {

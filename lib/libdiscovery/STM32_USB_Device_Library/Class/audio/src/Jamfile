@@ -1,0 +1,15 @@
+SubDir TOP lib libdiscovery STM32_USB_Device_Library Class audio src ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib libdiscovery CMSIS Include ;
+SubDirHdrs $(TOP) lib libdiscovery CMSIS ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib libdiscovery STM32F4xx_StdPeriph_Driver inc ;
+SubDirHdrs $(TOP) lib libdiscovery STM32_USB_Device_Library Core inc ;
+SubDirHdrs $(TOP) lib libdiscovery STM32_USB_Device_Library Class audio inc ;
+SubDirHdrs $(TOP) lib libdiscovery STM32_USB_OTG_Driver inc ;
+
+
+Library libdiscovery : 
+	usbd_audio_core.c
+	usbd_audio_out_if.c
+	;

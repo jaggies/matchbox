@@ -1,5 +1,6 @@
 SubDir TOP lib matchbox ;
 SubDirHdrs $(TOP) lib render ;
+SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
 SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
 SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
 SubDirHdrs $(TOP) stm_generated Drivers STM32F4xx_HAL_Driver Inc ;
@@ -11,7 +12,9 @@ SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src ;
 SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src drivers ;
 SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc ;
 
+
 Library libmatchbox :
 	lcd.cpp
 	matchbox.cpp
+	syscalls.c
 	;

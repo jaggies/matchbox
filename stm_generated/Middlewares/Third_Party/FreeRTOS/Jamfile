@@ -1,2 +1,0 @@
-SubDir TOP stm_generated Middlewares Third_Party FreeRTOS ;
-SubInclude TOP stm_generated Middlewares Third_Party FreeRTOS Source ;

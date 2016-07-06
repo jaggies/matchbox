@@ -1,2 +1,0 @@
-SubDir TOP stm_generated Middlewares Third_Party FreeRTOS Source portable GCC ;
-SubInclude TOP stm_generated Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;

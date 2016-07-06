@@ -1,7 +1,0 @@
-SubDir TOP stm_generated Drivers CMSIS DSP_Lib Source CommonTables ;
-SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
-
-Library dsp :
-	arm_common_tables.c
-	arm_const_structs.c
-	;

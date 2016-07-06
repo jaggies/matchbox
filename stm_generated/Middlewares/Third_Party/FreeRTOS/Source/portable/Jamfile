@@ -1,4 +1,0 @@
-SubDir TOP stm_generated Middlewares Third_Party FreeRTOS Source portable ;
-SubInclude TOP stm_generated Middlewares Third_Party FreeRTOS Source portable GCC ;
-SubInclude TOP stm_generated Middlewares Third_Party FreeRTOS Source portable MemMang ;
-

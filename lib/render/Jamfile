@@ -1,8 +1,8 @@
 SubDir TOP lib render ;
 SubDirHdrs $(TOP) lib matchbox ;
-SubDirHdrs $(TOP) stm_generated Drivers STM32F4xx_HAL_Driver Inc ;
-SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
-SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib hal CMSIS Include ;
 
 Library librender :
 	Interpolator.cpp

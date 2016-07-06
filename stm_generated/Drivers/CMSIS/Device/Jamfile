@@ -1,2 +1,0 @@
-SubDir TOP stm_generated Drivers CMSIS Device ;
-SubInclude TOP stm_generated Drivers CMSIS Device ST ;

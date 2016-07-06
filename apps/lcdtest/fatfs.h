@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
-  * @file   fatfs.c
-  * @brief  Code for fatfs applications
+  * @file   fatfs.h
+  * @brief  Header for fatfs applications
   ******************************************************************************
   *
   * COPYRIGHT(c) 2016 STMicroelectronics
@@ -31,44 +31,35 @@
   ******************************************************************************
   */
 
-#include "cmsis_os.h"
-#include "fatfs.h"
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __fatfs_H
+#define __fatfs_H
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
-uint8_t retSD;    /* Return value for SD */
-char SD_Path[4];  /* SD logical drive path */
-uint8_t retUSER;    /* Return value for USER */
-char USER_Path[4];  /* USER logical drive path */
+#include "ff.h"
+#include "ff_gen_drv.h"
+#include "sd_diskio.h" /* defines SD_Driver as external */
+#include "user_diskio.h" /* defines USER_Driver as external */
 
-/* USER CODE BEGIN Variables */
+/* USER CODE BEGIN Includes */
 
-/* USER CODE END Variables */    
+/* USER CODE END Includes */
 
-void MX_FATFS_Init(void) 
-{
-  /*## FatFS: Link the SD driver ###########################*/
-  retSD = FATFS_LinkDriver(&SD_Driver, SD_Path);
-  /*## FatFS: Link the USER driver ###########################*/
-  retUSER = FATFS_LinkDriver(&USER_Driver, USER_Path);
+extern uint8_t retSD; /* Return value for SD */
+extern char SD_Path[4]; /* SD logical drive path */
+extern uint8_t retUSER; /* Return value for USER */
+extern char USER_Path[4]; /* USER logical drive path */
 
-  /* USER CODE BEGIN Init */
-  /* additional user code for init */     
-  /* USER CODE END Init */
+void MX_FATFS_Init(void);
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
+#ifdef __cplusplus
 }
-
-/**
-  * @brief  Gets Time from RTC 
-  * @param  None
-  * @retval Time in DWORD
-  */
-DWORD get_fattime(void)
-{
-  /* USER CODE BEGIN get_fattime */
-  return 0;
-  /* USER CODE END get_fattime */  
-}
-
-/* USER CODE BEGIN Application */
-     
-/* USER CODE END Application */
+#endif
+#endif /*__fatfs_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

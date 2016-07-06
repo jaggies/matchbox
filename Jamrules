@@ -12,11 +12,12 @@ RANLIB = $(ARCH)-ranlib ;
 MEMMAP = $(TOP)/devices/STM32F415RG_FLASH.ld ;
 LINK = $(CC) ;
 
+DEFINES = ARM_MATH_CM4 __FPU_PRESENT=1U STM32F415xx ;
+#DEFINES += USE_FULL_ASSERT ;
+#DEFINES += "\"assert_param(a)=\"" ; # Temporarily disable warnings about implicit assert_param()
+
 # M4 with hardware floating point
-CFLAGS += -DARM_MATH_CM4 -D__FPU_PRESENT=1U -DSTM32F415xx -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 -DSTM32F415xx ;
-# Temporarily disable warnings about implicit assert_param()
-#CFLAGS += -D"\"assert_param(a)=\"" ;
-#CFLAGS += -DUSE_FULL_ASSERT ;
+CFLAGS += -D$(DEFINES) -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 ;
 CCFLAGS += $(CFLAGS) -std=c99 ;
 C++FLAGS += $(CFLAGS) ;
 

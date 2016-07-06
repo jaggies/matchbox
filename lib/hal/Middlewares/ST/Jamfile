@@ -1,0 +1,5 @@
+SubDir TOP lib hal Middlewares ST ;
+#SubInclude TOP lib hal Middlewares ST STemWin ;
+#SubInclude TOP lib hal Middlewares ST STM32_Audio ;
+SubInclude TOP lib hal Middlewares ST STM32_USB_Device_Library ;
+#SubInclude TOP lib hal Middlewares ST STM32_USB_Host_Library ;

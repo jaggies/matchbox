@@ -1,0 +1,5 @@
+SubDir TOP lib hal CMSIS ;
+SubInclude TOP lib hal CMSIS DSP_Lib ;
+SubInclude TOP lib hal CMSIS Device ;
+SubInclude TOP lib hal CMSIS Lib ;
+SubInclude TOP lib hal CMSIS RTOS ;

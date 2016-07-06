@@ -1,0 +1,2 @@
+SubDir TOP lib hal Middlewares Third_Party FatFs ;
+SubInclude TOP lib hal Middlewares Third_Party FatFs src ;

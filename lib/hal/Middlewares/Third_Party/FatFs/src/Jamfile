@@ -1,0 +1,14 @@
+SubDir TOP lib hal Middlewares Third_Party FatFs src ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib hal CMSIS Include ;
+
+#SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Core Inc ;
+
+Library libfatfs : 
+	diskio.c 
+	ff.c 
+	ff_gen_drv.c
+;

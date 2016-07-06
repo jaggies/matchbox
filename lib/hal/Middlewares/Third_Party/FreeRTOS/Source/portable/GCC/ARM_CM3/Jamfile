@@ -1,0 +1,7 @@
+SubDir TOP lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM3 ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source include ;
+
+Library libfreertos : 
+	port.c
+;

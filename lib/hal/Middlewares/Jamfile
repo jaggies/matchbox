@@ -1,0 +1,3 @@
+SubDir TOP lib hal Middlewares ;
+SubInclude TOP lib hal Middlewares ST ;
+SubInclude TOP lib hal Middlewares Third_Party ;

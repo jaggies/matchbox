@@ -1,0 +1,11 @@
+SubDir TOP lib hal CMSIS DSP_Lib Source ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source BasicMathFunctions ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source CommonTables ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source ComplexMathFunctions ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source ControllerFunctions ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source FastMathFunctions ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source FilteringFunctions ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source MatrixFunctions ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source StatisticsFunctions ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source SupportFunctions ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source TransformFunctions ;

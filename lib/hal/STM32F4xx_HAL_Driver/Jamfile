@@ -1,0 +1,2 @@
+SubDir TOP lib hal STM32F4xx_HAL_Driver ;
+SubInclude TOP lib hal STM32F4xx_HAL_Driver Src ;

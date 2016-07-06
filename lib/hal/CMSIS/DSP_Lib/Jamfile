@@ -1,0 +1,2 @@
+SubDir TOP lib hal CMSIS DSP_Lib ;
+SubInclude TOP lib hal CMSIS DSP_Lib Source ;

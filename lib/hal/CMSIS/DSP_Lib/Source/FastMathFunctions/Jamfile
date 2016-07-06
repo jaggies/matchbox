@@ -1,0 +1,14 @@
+SubDir TOP lib hal CMSIS DSP_Lib Source FastMathFunctions ;
+
+SubDirHdrs $(TOP) lib hal CMSIS Include ;
+
+Library libdsp :
+	arm_cos_f32.c
+	arm_cos_q15.c
+	arm_cos_q31.c
+	arm_sin_f32.c
+	arm_sin_q15.c
+	arm_sin_q31.c
+	arm_sqrt_q15.c
+	arm_sqrt_q31.c
+;

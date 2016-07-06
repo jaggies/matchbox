@@ -1,0 +1,9 @@
+SubDir TOP lib hal CMSIS Device ;
+
+SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib hal CMSIS Include ;
+
+Library libhal :
+	startup_stm32f415xx.s
+	system_stm32f4xx.c
+	;

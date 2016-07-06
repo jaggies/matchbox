@@ -1,0 +1,8 @@
+SubDir TOP lib hal CMSIS DSP_Lib Source CommonTables ;
+
+SubDirHdrs $(TOP) lib hal CMSIS Include ;
+
+Library libdsp : 
+	arm_common_tables.c
+	arm_const_structs.c
+	;

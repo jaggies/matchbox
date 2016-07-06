@@ -1,5 +1,5 @@
 SubDir TOP ;
 SubInclude TOP apps ;
 SubInclude TOP arduino ;
-SubInclude TOP stm_generated ;
+#SubInclude TOP stm_generated ;
 SubInclude TOP lib ;

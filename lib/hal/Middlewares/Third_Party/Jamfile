@@ -1,0 +1,6 @@
+SubDir TOP lib hal Middlewares Third_Party ;
+#SubInclude TOP lib hal Middlewares Third_Party FatFs ;
+SubInclude TOP lib hal Middlewares Third_Party FreeRTOS ;
+#SubInclude TOP lib hal Middlewares Third_Party LibJPEG ;
+#SubInclude TOP lib hal Middlewares Third_Party FatFs LwIP ;
+#SubInclude TOP lib hal Middlewares Third_Party FatFs PolarSSL ;

@@ -1,0 +1,5 @@
+SubDir TOP lib hal Middlewares ST STM32_USB_Host_Library ;
+SubInclude TOP lib hal Middlewares ST STM32_USB_Host_Library Class ;
+SubInclude TOP lib hal Middlewares ST STM32_USB_Host_Library Core ;
+
+

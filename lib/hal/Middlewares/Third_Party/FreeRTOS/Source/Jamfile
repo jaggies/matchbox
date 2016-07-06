@@ -1,0 +1,17 @@
+SubDir TOP lib hal Middlewares Third_Party FreeRTOS Source ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source include ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+
+Library libfreertos : 
+	croutine.c
+	event_groups.c
+	list.c
+	queue.c
+	tasks.c
+	timers.c
+;
+
+SubInclude TOP lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+SubInclude TOP lib hal Middlewares Third_Party FreeRTOS Source portable ;

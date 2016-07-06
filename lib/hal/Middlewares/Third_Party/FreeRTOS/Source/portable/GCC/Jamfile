@@ -1,0 +1,2 @@
+SubDir TOP lib hal Middlewares Third_Party FreeRTOS Source portable GCC ;
+SubInclude TOP lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;

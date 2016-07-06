@@ -1,0 +1,2 @@
+SubDir TOP lib hal CMSIS Lib ;
+# Libraries are built in DSP_Lib

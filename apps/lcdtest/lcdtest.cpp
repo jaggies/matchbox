@@ -34,7 +34,6 @@
 #include <assert.h>
 #include "stm32f4xx.h" // chip-specific defines
 #include "stm32f4xx_hal.h"
-#include "stm32f4xx_hal_sd.h"
 #include "cmsis_os.h"
 #include "usb_device.h"
 #include "matchbox.h"
@@ -49,9 +48,6 @@
 ADC_HandleTypeDef hadc1;
 
 I2C_HandleTypeDef hi2c1;
-
-SD_HandleTypeDef hsd;
-HAL_SD_CardInfoTypedef SDCardInfo;
 
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
@@ -71,7 +67,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
-static void MX_SDIO_SD_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_USART2_UART_Init(void);
@@ -275,19 +270,12 @@ int main(void)
 
   MX_SPI1_Init();
   MX_SPI2_Init();
-#ifndef VERSION_01
-  MX_SDIO_SD_Init(); // Disable until rev 1.0 with pin reassignment
-#endif
   MX_USART1_UART_Init();
   MX_I2C1_Init();
   MX_USART2_UART_Init();
   MX_ADC1_Init();
   MX_USB_DEVICE_Init();
   usbInitialized = 1;
-
-  /* init code for FATFS */
-//  MX_FATFS_Init();
-
 
   /* USER CODE BEGIN 2 */
 
@@ -422,20 +410,6 @@ void MX_I2C1_Init(void)
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
   HAL_I2C_Init(&hi2c1);
-
-}
-
-/* SDIO init function */
-void MX_SDIO_SD_Init(void)
-{
-
-  hsd.Instance = SDIO;
-  hsd.Init.ClockEdge = SDIO_CLOCK_EDGE_RISING;
-  hsd.Init.ClockBypass = SDIO_CLOCK_BYPASS_DISABLE;
-  hsd.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;
-  hsd.Init.BusWide = SDIO_BUS_WIDE_1B;
-  hsd.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
-  hsd.Init.ClockDiv = 0;
 
 }
 

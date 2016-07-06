@@ -1,2 +1,0 @@
-SubDir TOP lib libdiscovery STM32_USB_Device_Library Core ;
-SubInclude TOP lib libdiscovery STM32_USB_Device_Library Core src ;

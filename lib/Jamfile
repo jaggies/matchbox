@@ -6,4 +6,3 @@ SubInclude TOP lib gl ;
 SubInclude TOP lib hal ;
 SubInclude TOP lib matchbox ;
 SubInclude TOP lib render ;
-#SubInclude TOP lib libdiscovery ;

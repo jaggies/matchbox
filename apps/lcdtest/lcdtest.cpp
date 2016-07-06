@@ -287,7 +287,7 @@ int main(void)
   usbInitialized = 1;
 
   /* init code for FATFS */
-  MX_FATFS_Init();
+//  MX_FATFS_Init();
 
 
   /* USER CODE BEGIN 2 */

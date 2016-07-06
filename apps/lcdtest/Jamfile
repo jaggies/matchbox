@@ -15,10 +15,23 @@ SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Class CD
 SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Core Inc ;
 SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Class CDC Inc ;
 
-LINKLIBS on lcdtest = -Wl,--whole-archive -lstm32_hal -lc -lfat -lmatchbox -lfont -Wl,--no-whole-archive ;
+LINKLIBS on lcdtest = -Wl,--whole-archive -lhal -lusb -lfreertos -lc -lmatchbox -lfont -Wl,--no-whole-archive ;
 
-Depends lcdtest : librender.a libmatchbox.a libfont.a libfat.a libstm32_hal.a ;
+Depends lcdtest : librender.a libmatchbox.a libfont.a libstm32_hal.a ;
 
 Main lcdtest :
 	lcdtest.cpp
+	bsp_driver_sd.c
+	#fatfs.c
+	freertos.c
+	stm32f4xx_hal_msp.c
+	stm32f4xx_hal_timebase_TIM.c
+	stm32f4xx_it.c
+	usb_device.c
+	usb_host.c
+	usbd_cdc_if.c
+	usbd_conf.c
+	usbd_desc.c
+	usbh_conf.c
+	user_diskio.c
 	;

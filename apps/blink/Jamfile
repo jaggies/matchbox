@@ -11,5 +11,5 @@ Depends blink : libhal.a ;
 
 Main blink :
 	blink.c
-	syscalls.c
+	stm32f4xx_it.c
 	;

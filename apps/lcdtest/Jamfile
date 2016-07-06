@@ -1,19 +1,16 @@
 SubDir TOP apps lcdtest ;
 SubDirHdrs $(TOP) lib matchbox ;
+SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;
-SubDirHdrs $(TOP) stm_generated Inc ;
-SubDirHdrs $(TOP) stm_generated Drivers STM32F4xx_HAL_Driver Inc ;
-SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src ;
-SubDirHdrs $(TOP) stm_generated Drivers CMSIS Device ST STM32F4xx Include ;
-SubDirHdrs $(TOP) stm_generated Drivers CMSIS Include ;
-SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FatFs src drivers ;
-SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
-SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FreeRTOS Source include ;
-SubDirHdrs $(TOP) stm_generated Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
-SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Core Inc ;
-SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
-SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Core Inc ;
-SubDirHdrs $(TOP) stm_generated Middlewares ST STM32_USB_Host_Library Class CDC Inc ;
+SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib hal CMSIS Include ;
+SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Core Inc ;
+SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
+SubDirHdrs $(TOP) lib hal STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FatFs src ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source include ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 
 LINKLIBS on lcdtest = -Wl,--whole-archive -lhal -lusb -lfreertos -lc -lmatchbox -lfont -Wl,--no-whole-archive ;
 
@@ -22,16 +19,12 @@ Depends lcdtest : librender.a libmatchbox.a libfont.a libstm32_hal.a ;
 Main lcdtest :
 	lcdtest.cpp
 	bsp_driver_sd.c
-	#fatfs.c
 	freertos.c
 	stm32f4xx_hal_msp.c
 	stm32f4xx_hal_timebase_TIM.c
 	stm32f4xx_it.c
 	usb_device.c
-	usb_host.c
 	usbd_cdc_if.c
 	usbd_conf.c
 	usbd_desc.c
-	usbh_conf.c
-	user_diskio.c
 	;

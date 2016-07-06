@@ -36,7 +36,6 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_sd.h"
 #include "cmsis_os.h"
-#include "fatfs.h"
 #include "usb_device.h"
 #include "matchbox.h"
 #include "font.h"

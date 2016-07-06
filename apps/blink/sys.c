@@ -4,22 +4,21 @@
  *  Created on: Jul 5, 2016
  *      Author: jmiller
  */
+#include <errno.h>
 
-void _exit(int status)
+int _getpid(void)
 {
-    while (1);
+    return 1;
 }
 
-void _kill(int pid)
+int _kill(int pid, int sig)
 {
-
+    errno = EINVAL;
+    return -1;
 }
 
-int _getpid()
+void _exit (int status)
 {
-    return 0;
+    _kill(status, -1);
+    while (1) {}
 }
-
-
-
-

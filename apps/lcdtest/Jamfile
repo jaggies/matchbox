@@ -24,7 +24,6 @@ Main lcdtest :
 	stm32f4xx_hal_timebase_TIM.c
 	stm32f4xx_it.c
 	usb_device.c
-	usbd_cdc_if.c
 	usbd_conf.c
 	usbd_desc.c
 	;

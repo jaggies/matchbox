@@ -1,2 +1,0 @@
-SubDir TOP stm_generated Middlewares ST STM32_USB_Host_Library Core ;
-SubInclude TOP stm_generated Middlewares ST STM32_USB_Host_Library Core Src ;

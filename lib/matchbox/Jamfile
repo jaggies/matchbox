@@ -15,4 +15,8 @@ Library libmatchbox :
 	matchbox.cpp
 	syscalls.c
 	usbd_cdc_if.c
+	usb_device.c
+	usbd_cdc_if.c
+	usbd_conf.c
+	usbd_desc.c
 	;

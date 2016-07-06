@@ -18,12 +18,7 @@ Depends lcdtest : librender.a libmatchbox.a libfont.a libstm32_hal.a ;
 
 Main lcdtest :
 	lcdtest.cpp
-	bsp_driver_sd.c
-	freertos.c
 	stm32f4xx_hal_msp.c
 	stm32f4xx_hal_timebase_TIM.c
 	stm32f4xx_it.c
-	usb_device.c
-	usbd_conf.c
-	usbd_desc.c
 	;

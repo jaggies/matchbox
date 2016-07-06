@@ -1,6 +1,0 @@
-SubDir TOP lib libdiscovery ;
-SubInclude TOP lib libdiscovery CMSIS ;
-SubInclude TOP lib libdiscovery STM32F4xx_StdPeriph_Driver ;
-SubInclude TOP lib libdiscovery STM32_USB_Device_Library ;
-#SubInclude TOP lib libdiscovery STM32_USB_HOST_Library ;
-#SubInclude TOP lib libdiscovery STM32_USB_OTG_Driver ;

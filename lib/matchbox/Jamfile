@@ -12,7 +12,7 @@ SubDirHdrs $(TOP) lib render ;
 
 Library libmatchbox :
 	lcd.cpp
-	matchbox.cpp
+	gpio.cpp
 	hal_msp.c
 	hal_timebase.c
 	handlers.cpp

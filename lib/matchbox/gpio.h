@@ -5,8 +5,8 @@
  *      Author: jmiller
  */
 
-#ifndef MATCHBOX_H_
-#define MATCHBOX_H_
+#ifndef GPIO_H_
+#define GPIO_H_
 
 #include <stdint.h>
 
@@ -34,4 +34,4 @@ uint16_t toIoPin(uint16_t pin);
 
 #define Number(a) (sizeof(a) / sizeof(a[0]))
 
-#endif /* MATCHBOX_H_ */
+#endif /* GPIO_H_ */

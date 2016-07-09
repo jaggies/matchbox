@@ -13,7 +13,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include "font.h"
-#include "matchbox.h"
+#include "gpio.h"
 #include "lcd.h"
 
 //#define SOFT_SPI

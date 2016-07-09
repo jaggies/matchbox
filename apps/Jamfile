@@ -1,4 +1,3 @@
 SubDir TOP apps ;
 SubInclude TOP apps blink ;
-SubInclude TOP apps gen ;
 SubInclude TOP apps lcdtest ;

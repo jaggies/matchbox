@@ -1,8 +1,19 @@
-#include <stdio.h>
+/*
+ * blink.c
+ *
+ *  Created on: Jul 5, 2016
+ *      Author: jmiller
+ */
+
 #include <stm32f4xx_hal.h>
 
-/** System Clock Configuration
-*/
+// This symbol needs to be overloaded here to allow HAL to handle the system timer.
+void SysTick_Handler(void)
+{
+  HAL_IncTick();
+  HAL_SYSTICK_IRQHandler();
+}
+
 void SystemClock_Config(void)
 {
 

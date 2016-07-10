@@ -230,11 +230,12 @@ void drawChecker(int scale)
 void drawAdc(uint8_t r, uint8_t g, uint8_t b, bool useLine)
 {
     lcd->clear(1,1,1);
+    int top = adcCount;
     if (useLine) {
         for (int x0 = 0; x0 < 127; x0++) {
-            int y0 = adcValue[x0] & 0x7f;
-            int x1 = x0+1;
-            int y1 = adcValue[x1] & 0x7f;
+            int y0 = adcValue[(x0 + top) & 0x7f] & 0x7f;
+            int x1 = x0 + 1;
+            int y1 = adcValue[(x1 + top) & 0x7f] & 0x7f;
             lcd->line(x0, y0, x1, y1, r, g, b);
         }
     } else {
@@ -298,8 +299,13 @@ void StartDefaultTask(void const * argument)
   printf("heap_top: %p\n", &heap_top);
   printf("lcd: %p\n", lcd);
   printf("mb: %p\n", mb);
-
   printf("IOCheck: pup:%012llx sh:%012llx ary:%012llx\n", pupCheck, shCheck, shArray);
+
+//  for (int i = 0; i < 96; i++) {
+//      char *p = (char*) malloc(1024);
+//      printf("mem %p\n", p);
+//      free(p);
+//  }
 
   int frame = 0;
   char buff[32];
@@ -309,7 +315,8 @@ void StartDefaultTask(void const * argument)
     lcd->putString(buff, 0, 0);
     int tmp = mode % 36;
     if (tmp == 0) {
-        lcd->clear(frame & 1, frame & 2, frame & 4);
+        int k = frame >> 7;
+        lcd->clear(k & 1, k & 2, k & 4);
     } else if (tmp < 3) {
         drawBars(tmp == 2);
     } else if (tmp < 12) {

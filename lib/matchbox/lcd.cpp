@@ -155,10 +155,20 @@ void Lcd::refreshLineSpi() {
 
 void
 Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
+    uint8_t p[3];
+    // TODO: handle monochrome displays and dithering...
+    uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) &p[0], 0); // addr of first pixel
+    for (int i = 0; i < _channels * 8; i+=_channels) {
+        *pixel++ = r ? 1 : 0;
+        *pixel++ = g ? 1 : 0;
+        *pixel++ = b ? 1 : 0;
+    }
     for (int j = 0; j < _yres; j++) {
-        for (int i = 0; i < _xres; i++) {
-            // TODO: optimize this
-            setPixel(i, j, r, g, b);
+        uint8_t* pixels = &_frameBuffer[j].data[0];
+        for (int i = 0; i < _line_size/3; i++) {
+            *pixels++ = p[0];
+            *pixels++ = p[1];
+            *pixels++ = p[2];
         }
     }
 }
@@ -169,38 +179,18 @@ void Lcd::line(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b) 
 	const int stepX = x0 < x1 ? 1 : -1;
 	const int stepY = y0 < y1 ? 1 : -1;
 	int err = dx - dy;
-	// required to set first pixel
-	bool xchanged = true;
-	bool ychanged = true;
-	int span = 1;
-	while (true) {
-		const bool end = x0 == x1 && y0 == y1;
-		if (dx > dy) {
-			if (ychanged || end) {
-				rect(x0, y0, x0 - (span-1)*stepX, y0, r, g, b);
-				span = 0;
-				ychanged = false;
-			}
-		} else {
-			if (xchanged || end) {
-				rect(x0, y0, x0, y0 - (span-1)*stepY, r, g, b);
-				span = 0;
-				xchanged = false;
-			}
-		}
-		if (end) break;
+    uint32_t pixaddr = x0 * _channels;
+	while (x0 != x1 && y0 != y1) {
+		setPixel(x0, y0, r, g, b); // TODO: optimize with bit banding
 		int e2 = err << 1;
 		if (e2 <  dx) {
 		   err += dx;
 		   y0 += stepY;
-		   ychanged = true;
 		}
 		if (e2 > -dy) {
 		   err -= dy;
 		   x0 += stepX;
-		   xchanged = true;
 		}
-		span++;
 	}
 }
 

@@ -16,20 +16,11 @@
 #include "lcd.h"
 
 //#define VERSION_01 // Define for CPU hardware version 0.1
-MatchBox *mb;
+static MatchBox *mb;
+static Lcd* lcd;
 
-ADC_HandleTypeDef hadc1;
-I2C_HandleTypeDef hi2c1;
-SPI_HandleTypeDef hspi2;
-UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart2;
 osThreadId defaultTaskHandle;
 
-static void MX_SPI2_Init(void);
-static void MX_USART1_UART_Init(void);
-static void MX_I2C1_Init(void);
-static void MX_USART2_UART_Init(void);
-static void MX_ADC1_Init(void);
 void StartDefaultTask(void const * argument);
 
 #define SW1_PIN PC13 // redefined to PC1 later
@@ -55,7 +46,6 @@ static uint8_t mode;
 static uint64_t pupCheck; // result of pull-up check
 static uint64_t shCheck; // result of short check
 static uint64_t shArray; // pins affected
-static Lcd lcd(hspi2);
 
 void toggleLed() {
     static uint8_t data;
@@ -137,9 +127,8 @@ extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
     if (hspi == mb->getSpi1()) {
         printf("%s: SPI1!!\n", __func__);
-    } else if (hspi == &hspi2) {
-//        printf("%s: LCD should refresh!\n", __func__);
-        lcd.refresh();
+    } else if (hspi == mb->getSpi2()) {
+        lcd->refresh();
     } else {
         printf("%s: Invalid SPI %p\n", __func__, hspi);
     }
@@ -148,12 +137,12 @@ extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 extern "C" void SPI2_IRQHandler()
 {
     HAL_NVIC_ClearPendingIRQ(SPI2_IRQn);
-    HAL_SPI_IRQHandler(&hspi2);
+    HAL_SPI_IRQHandler(mb->getSpi2());
 }
 
 extern "C" void ADC_IRQHandler(void)
 {
-    HAL_ADC_IRQHandler(&hadc1);
+    HAL_ADC_IRQHandler(mb->getAdc1());
 }
 
 void checkIoPins(uint64_t* pullUpCheck, uint64_t* shortCheck, uint64_t* shortArray) {
@@ -196,6 +185,7 @@ void checkIoPins(uint64_t* pullUpCheck, uint64_t* shortCheck, uint64_t* shortArr
 int main(void)
 {
   mb = new MatchBox();
+  lcd = new Lcd(*(mb->getSpi2()));
 
 //  // Do low-level IO check
 //  checkIoPins(&pupCheck, &shCheck, &shArray);
@@ -203,11 +193,6 @@ int main(void)
   // POWER_PIN is wired to the LTC2954 KILL# pin. It must be remain high or power will shut off.
   pinInitOutput(POWER_PIN, 1);
 
-  MX_SPI2_Init();
-  MX_USART1_UART_Init();
-  MX_I2C1_Init();
-  MX_USART2_UART_Init();
-  MX_ADC1_Init();
   MX_USB_DEVICE_Init();
   usbInitialized = 1;
 
@@ -224,114 +209,13 @@ int main(void)
   return 0;
 }
 
-/* ADC1 init function */
-void MX_ADC1_Init(void)
-{
-
-  ADC_ChannelConfTypeDef sConfig;
-
-    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-    */
-  hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc1.Init.ScanConvMode = DISABLE;
-  hadc1.Init.ContinuousConvMode = ENABLE;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
-  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfDiscConversion = 0;
-  hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DMAContinuousRequests = ENABLE;
-  hadc1.Init.EOCSelection = DISABLE;
-  HAL_ADC_Init(&hadc1);
-
-    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-    */
-  sConfig.Channel = ADC_CHANNEL_15;
-  sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
-  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-
-}
-
-/* I2C1 init function */
-void MX_I2C1_Init(void)
-{
-
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  HAL_I2C_Init(&hi2c1);
-
-}
-
-/* SPI2 init function */
-void MX_SPI2_Init(void)
-{
-
-  hspi2.Instance = SPI2;
-  hspi2.Init.Mode = SPI_MODE_MASTER;
-  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16; // _16 = ~2.25MHz
-  hspi2.Init.FirstBit = SPI_FIRSTBIT_LSB;
-  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi2.Init.CRCPolynomial = 10;
-  HAL_SPI_Init(&hspi2);
-
-}
-
-/* USART1 init function */
-void MX_USART1_UART_Init(void)
-{
-
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  HAL_UART_Init(&huart1);
-
-}
-
-/* USART2 init function */
-void MX_USART2_UART_Init(void)
-{
-
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  HAL_UART_Init(&huart2);
-
-}
-
 void drawBars(int vertical)
 {
     for (int j = 0; j < 128; j++) {
         for (int i = 0; i < 128; i++) {
             uint8_t r, g, b;
             int index = vertical ? j : i;
-            lcd.setPixel(i,j, (index >> 4) & 1, (index >> 5) & 1, (index >> 6) & 1);
+            lcd->setPixel(i,j, (index >> 4) & 1, (index >> 5) & 1, (index >> 6) & 1);
         }
     }
 }
@@ -341,24 +225,24 @@ void drawChecker(int scale)
     for (int j = 0; j < 128; j++) {
         for (int i = 0; i < 128; i++) {
             uint8_t pix = ((j>>(scale)) ^ (i>>(scale))) & 1;
-            lcd.setPixel(i,j, pix, pix, pix);
+            lcd->setPixel(i,j, pix, pix, pix);
         }
     }
 }
 
 void drawAdc(uint8_t r, uint8_t g, uint8_t b, bool useLine)
 {
-    lcd.clear(1,1,1);
+    lcd->clear(1,1,1);
     if (useLine) {
         for (int x0 = 0; x0 < 127; x0++) {
             int y0 = adcValue[x0] & 0x7f;
             int x1 = x0+1;
             int y1 = adcValue[x1] & 0x7f;
-            lcd.line(x0, y0, x1, y1, r, g, b);
+            lcd->line(x0, y0, x1, y1, r, g, b);
         }
     } else {
         for (int i = 0; i < 128; i++) {
-            lcd.setPixel(i, adcValue[i] & 0x7f, r, g, b);
+            lcd->setPixel(i, adcValue[i] & 0x7f, r, g, b);
         }
     }
 }
@@ -404,12 +288,19 @@ void StartDefaultTask(void const * argument)
       asCount = 0;
   }
 
-  HAL_ADC_Start_IT(&hadc1);
+  HAL_ADC_Start_IT(mb->getAdc1());
 
   // Init LCD
-  lcd.begin();
-  lcd.clear(1,1,1);
-  lcd.refresh(); // start refreshing
+  lcd->begin();
+  lcd->clear(1,1,1);
+  lcd->refresh(); // start refreshing
+
+  extern char heap_low;
+  extern char heap_top;
+  printf("heap_low: %p\n", &heap_low);
+  printf("heap_top: %p\n", &heap_top);
+  printf("lcd: %p\n", lcd);
+  printf("mb: %p\n", mb);
 
   printf("IOCheck: pup:%012llx sh:%012llx ary:%012llx\n", pupCheck, shCheck, shArray);
 
@@ -418,10 +309,10 @@ void StartDefaultTask(void const * argument)
   while (1) {
     toggleLed();
     sprintf(buff, "Frame%04d", frame);
-    lcd.putString(buff, 0, 0);
+    lcd->putString(buff, 0, 0);
     int tmp = mode % 36;
     if (tmp == 0) {
-        lcd.clear(frame & 1, frame & 2, frame & 4);
+        lcd->clear(frame & 1, frame & 2, frame & 4);
     } else if (tmp < 3) {
         drawBars(tmp == 2);
     } else if (tmp < 12) {
@@ -429,7 +320,7 @@ void StartDefaultTask(void const * argument)
     } else if (tmp < 28) {
         drawAdc(tmp&1, tmp&2, tmp&4, tmp >= 20);
     } else {
-        lcd.circle(64,64,frame%64, (frame>>6) & 1, (frame>>7) & 1, (frame>>8) & 1);
+        lcd->circle(64,64,frame%64, (frame>>6) & 1, (frame>>7) & 1, (frame>>8) & 1);
     }
     frame++;
   }

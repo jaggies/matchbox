@@ -9,7 +9,6 @@
 #include "stm32f4xx.h" // chip-specific defines
 #include "stm32f4xx_hal.h"
 #include "cmsis_os.h"
-#include "usb_device.h"
 #include "gpio.h"
 #include "matchbox.h"
 #include "font.h"
@@ -186,15 +185,13 @@ int main(void)
 {
   mb = new MatchBox();
   lcd = new Lcd(*(mb->getSpi2()));
+  usbInitialized = 1;
 
 //  // Do low-level IO check
 //  checkIoPins(&pupCheck, &shCheck, &shArray);
 
   // POWER_PIN is wired to the LTC2954 KILL# pin. It must be remain high or power will shut off.
   pinInitOutput(POWER_PIN, 1);
-
-  MX_USB_DEVICE_Init();
-  usbInitialized = 1;
 
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);

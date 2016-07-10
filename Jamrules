@@ -10,7 +10,7 @@ C++ = $(GCC_PATH)-g++ ;
 LD = $(GCC_PATH)-ld ;
 RANLIB = $(ARCH)-ranlib ;
 MEMMAP = $(TOP)/devices/STM32F415RG_FLASH.ld ;
-LINK = $(CC) ;
+LINK = $(C++) ;
 
 DEFINES = ARM_MATH_CM4 __FPU_PRESENT=1U STM32F415xx ;
 #DEFINES += USE_FULL_ASSERT ;

@@ -16,6 +16,7 @@ Library libmatchbox :
 	hal_msp.c
 	hal_timebase.c
 	handlers.cpp
+	matchbox.cpp
 	syscalls.c
 	usb_device.c
 	usbd_cdc_if.c

@@ -7,7 +7,9 @@
 #include "stm32f4xx.h" // chip-specific defines
 #include "stm32f4xx_hal.h"
 #include "cmsis_os.h"
-#include "usb_device.h"
+#include "usbd_desc.h"
+#include "usbd_cdc.h"
+#include "usbd_cdc_if.h"
 #include "matchbox.h"
 
 SPI_HandleTypeDef MatchBox::hspi1;
@@ -16,6 +18,7 @@ UART_HandleTypeDef MatchBox::huart1;
 UART_HandleTypeDef MatchBox::huart2;
 ADC_HandleTypeDef MatchBox::hadc1;
 I2C_HandleTypeDef MatchBox::hi2c1;
+USBD_HandleTypeDef hUsbDeviceFS; // TODO: make member
 
 MatchBox::MatchBox() {
     HAL_Init();
@@ -27,6 +30,7 @@ MatchBox::MatchBox() {
     i2c1Init();
     usart1Init();
     usart2Init();
+    usbDeviceInit();
 }
 
 MatchBox::~MatchBox() {
@@ -181,4 +185,13 @@ void MatchBox::usart2Init(void)
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
   HAL_UART_Init(&huart2);
+}
+
+void MatchBox::usbDeviceInit(void)
+{
+  /* Init Device Library,Add Supported Class and Start the library*/
+  USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
+  USBD_RegisterClass(&hUsbDeviceFS, &USBD_CDC);
+  USBD_CDC_RegisterInterface(&hUsbDeviceFS, &USBD_Interface_fops_FS);
+  USBD_Start(&hUsbDeviceFS);
 }

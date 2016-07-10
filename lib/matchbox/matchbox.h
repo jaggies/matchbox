@@ -8,6 +8,8 @@
 #ifndef MATCHBOX_H_
 #define MATCHBOX_H_
 
+#include "usbd_core.h"
+
 class MatchBox {
     public:
         MatchBox();
@@ -24,6 +26,7 @@ class MatchBox {
         void i2c1Init(void);
         void usart1Init(void);
         void usart2Init(void);
+        void usbDeviceInit(void);
 
         // TODO: make these local once malloc bug is fixed
         static SPI_HandleTypeDef hspi1;
@@ -32,6 +35,7 @@ class MatchBox {
         static UART_HandleTypeDef huart2;
         static ADC_HandleTypeDef hadc1;
         static I2C_HandleTypeDef hi2c1;
+//        static USBD_HandleTypeDef hUsbDeviceFS;
 };
 
 #endif /* MATCHBOX_H_ */

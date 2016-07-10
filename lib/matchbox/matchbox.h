@@ -12,9 +12,12 @@ class MatchBox {
     public:
         MatchBox();
         ~MatchBox();
+        SPI_HandleTypeDef* getSpi1() { return &hspi1; }
     private:
         void gpioInit(void);
         void systemClockConfig(void);
+        void spi1Init(void);
+        SPI_HandleTypeDef hspi1;
 };
 
 #endif /* MATCHBOX_H_ */

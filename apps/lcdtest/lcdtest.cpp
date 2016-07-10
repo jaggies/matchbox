@@ -16,16 +16,15 @@
 #include "lcd.h"
 
 //#define VERSION_01 // Define for CPU hardware version 0.1
+MatchBox *mb;
 
 ADC_HandleTypeDef hadc1;
 I2C_HandleTypeDef hi2c1;
-SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 osThreadId defaultTaskHandle;
 
-static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_I2C1_Init(void);
@@ -136,7 +135,7 @@ extern "C" void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle)
 
 extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
-    if (hspi == &hspi1) {
+    if (hspi == mb->getSpi1()) {
         printf("%s: SPI1!!\n", __func__);
     } else if (hspi == &hspi2) {
 //        printf("%s: LCD should refresh!\n", __func__);
@@ -196,7 +195,7 @@ void checkIoPins(uint64_t* pullUpCheck, uint64_t* shortCheck, uint64_t* shortArr
 
 int main(void)
 {
-  MatchBox* mb = new MatchBox();
+  mb = new MatchBox();
 
 //  // Do low-level IO check
 //  checkIoPins(&pupCheck, &shCheck, &shArray);
@@ -204,7 +203,6 @@ int main(void)
   // POWER_PIN is wired to the LTC2954 KILL# pin. It must be remain high or power will shut off.
   pinInitOutput(POWER_PIN, 1);
 
-  MX_SPI1_Init();
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   MX_I2C1_Init();
@@ -272,26 +270,6 @@ void MX_I2C1_Init(void)
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
   HAL_I2C_Init(&hi2c1);
-
-}
-
-/* SPI1 init function */
-void MX_SPI1_Init(void)
-{
-
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 10;
-  HAL_SPI_Init(&hspi1);
 
 }
 

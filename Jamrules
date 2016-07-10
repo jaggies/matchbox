@@ -12,14 +12,15 @@ RANLIB = $(ARCH)-ranlib ;
 MEMMAP = $(TOP)/devices/STM32F415RG_FLASH.ld ;
 LINK = $(C++) ;
 
+OPTIM = -Os ;
 DEFINES = ARM_MATH_CM4 __FPU_PRESENT=1U STM32F415xx ;
 DEFINES += USE_FULL_ASSERT ;
 #DEFINES += "\"assert_param(a)=\"" ; # Temporarily disable warnings about implicit assert_param()
 
 # M4 with hardware floating point
-CFLAGS += -D$(DEFINES) -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 ;
+CFLAGS = $(OPTIM) -D$(DEFINES) -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 ;
 CCFLAGS += $(CFLAGS) -std=c99 ;
-C++FLAGS += $(CFLAGS) ;
+C++FLAGS += $(CFLAGS) -fno-rtti -fno-exceptions ;
 
 #LDFLAGS += -nostdlib -nostartfiles -ffreestanding -mfloat-abi=hard ;
 LDFLAGS += -mfpu=fpv4-sp-d16 -mthumb -mfloat-abi=hard ; #/ --specs=nosys.specs ;
@@ -27,14 +28,4 @@ LDFLAGS += -mfpu=fpv4-sp-d16 -mthumb -mfloat-abi=hard ; #/ --specs=nosys.specs ;
 CC += $(CFLAGS) $(COPT) ;
 C++ += $(CFLAGS) ;
 LINK += $(LDFLAGS) -L $(ALL_LOCATE_TARGET) -T $(MEMMAP) -Wl,--gc-sections -mcpu=cortex-m4 ;
-
-
-#INCLUDE = 
-#../Inc/ 
-#../Drivers/STM32F4xx_HAL_Driver/Inc
-#../Middlewares/Third_Party/FatFs/src/
-#../Drivers/CMSIS/Device/ST/STM32F4xx/Include/
-#../Drivers/CMSIS/Include/
-#../Middlewares/Third_Party/FatFs/src/drivers/ ;
-
 

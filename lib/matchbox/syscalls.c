@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include "cmsis_os.h"
-#include "usbd_cdc_if.h"
+#include "usbserial.h"
 
 #undef errno
 extern int errno;
@@ -103,12 +103,14 @@ int _read(int file, char *ptr, int len)
     return result == USBD_OK ? len : 0;
 }
 
+extern int8_t usb_transmit(uint8_t* buf, uint16_t len);
+
 int _write(int file, char *data, int len)
 {
     int bytes_written;
     int result = 0;
     if (file == STDOUT_FILENO || file == STDERR_FILENO) {
-        while (USBD_BUSY == (result = CDC_Transmit_FS(data, len))) {
+        while (USBD_BUSY == usb_transmit(data, len)) {
             osThreadYield();
         }
     } else {

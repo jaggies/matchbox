@@ -9,10 +9,8 @@
 #include "cmsis_os.h"
 #include "usbd_desc.h"
 #include "usbd_cdc.h"
-#include "usbd_cdc_if.h"
+#include "usbserial.h"
 #include "matchbox.h"
-
-USBD_HandleTypeDef hUsbDeviceFS; // TODO: make member
 
 MatchBox::MatchBox() {
     HAL_Init();
@@ -24,7 +22,7 @@ MatchBox::MatchBox() {
     i2c1Init();
     usart1Init();
     usart2Init();
-    usbDeviceInit();
+    UsbSerial::getInstance(); // force initialization here
 }
 
 MatchBox::~MatchBox() {
@@ -175,11 +173,4 @@ void MatchBox::usart2Init(void) {
     huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
     huart2.Init.OverSampling = UART_OVERSAMPLING_16;
     HAL_UART_Init(&huart2);
-}
-
-void MatchBox::usbDeviceInit(void) {
-    USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
-    USBD_RegisterClass(&hUsbDeviceFS, &USBD_CDC);
-    USBD_CDC_RegisterInterface(&hUsbDeviceFS, &USBD_Interface_fops_FS);
-    USBD_Start(&hUsbDeviceFS);
 }

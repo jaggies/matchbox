@@ -26,7 +26,6 @@ class MatchBox {
         void i2c1Init(void);
         void usart1Init(void);
         void usart2Init(void);
-        void usbDeviceInit(void);
 
         SPI_HandleTypeDef hspi1;
         SPI_HandleTypeDef hspi2;
@@ -34,7 +33,6 @@ class MatchBox {
         UART_HandleTypeDef huart2;
         ADC_HandleTypeDef hadc1;
         I2C_HandleTypeDef hi2c1;
-//        static USBD_HandleTypeDef hUsbDeviceFS;
 };
 
 #endif /* MATCHBOX_H_ */

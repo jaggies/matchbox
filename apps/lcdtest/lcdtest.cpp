@@ -36,15 +36,18 @@ void StartDefaultTask(void const * argument);
 const float VREF = 3.3f;
 const float VREF_CALIBRATION = 4.65f / 4.63f; // measured value, probably due to R15/R16 tolerance
 
-static int usbInitialized = 0;
-static uint8_t* asFile = 0;
-static uint32_t asLine = 0;
-static uint32_t asCount = 0;
 static uint16_t adcValue[128] = { 0 };
 static uint8_t mode;
 static uint64_t pupCheck; // result of pull-up check
 static uint64_t shCheck; // result of short check
 static uint64_t shArray; // pins affected
+
+#ifdef USE_FULL_ASSERT
+extern "C" void assert_failed(uint8_t* file, uint32_t line)
+{
+    printf("ASSERT: %s: line %d\n", file, line);
+}
+#endif
 
 void toggleLed() {
     static uint8_t data;
@@ -185,7 +188,6 @@ int main(void)
 {
   mb = new MatchBox();
   lcd = new Lcd(*(mb->getSpi2()));
-  usbInitialized = 1;
 
 //  // Do low-level IO check
 //  checkIoPins(&pupCheck, &shCheck, &shArray);
@@ -245,11 +247,6 @@ void drawAdc(uint8_t r, uint8_t g, uint8_t b, bool useLine)
     }
 }
 
-void waitForUSB()
-{
-    HAL_Delay(1000); // TODO
-}
-
 void StartDefaultTask(void const * argument)
 {
   pinInitOutput(LED_PIN, 1);
@@ -277,15 +274,6 @@ void StartDefaultTask(void const * argument)
   pinInitIrq(SW1_PIN, 1);
   pinInitIrq(SW2_PIN, 1);
 
-  waitForUSB();
-
-  // Print any asserts that happened before USB was initialized
-  if (asFile) {
-      printf("ASSERT: %s:%d (count=%d)\n", asFile, asLine, asCount);
-      asFile = 0;
-      asCount = 0;
-  }
-
   HAL_ADC_Start_IT(mb->getAdc1());
 
   // Init LCD
@@ -293,19 +281,13 @@ void StartDefaultTask(void const * argument)
   lcd->clear(1,1,1);
   lcd->refresh(); // start refreshing
 
-  extern char heap_low;
-  extern char heap_top;
-  printf("heap_low: %p\n", &heap_low);
-  printf("heap_top: %p\n", &heap_top);
-  printf("lcd: %p\n", lcd);
-  printf("mb: %p\n", mb);
-  printf("IOCheck: pup:%012llx sh:%012llx ary:%012llx\n", pupCheck, shCheck, shArray);
-
-//  for (int i = 0; i < 96; i++) {
-//      char *p = (char*) malloc(1024);
-//      printf("mem %p\n", p);
-//      free(p);
-//  }
+//  extern char heap_low;
+//  extern char heap_top;
+//  printf("heap_low: %p\n", &heap_low);
+//  printf("heap_top: %p\n", &heap_top);
+//  printf("lcd: %p\n", lcd);
+//  printf("mb: %p\n", mb);
+//  printf("IOCheck: pup:%012llx sh:%012llx ary:%012llx\n", pupCheck, shCheck, shArray);
 
   int frame = 0;
   char buff[32];
@@ -328,33 +310,5 @@ void StartDefaultTask(void const * argument)
     }
     frame++;
   }
-  /* USER CODE END 5 */
 }
-
-#ifdef USE_FULL_ASSERT
-
-/**
-   * @brief Reports the name of the source file and the source line number
-   * where the assert_param error has occurred.
-   * @param file: pointer to the source file name
-   * @param line: assert_param error line source number
-   * @retval None
-   */
-extern "C" void assert_failed(uint8_t* file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-    ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-    if (usbInitialized) {
-        printf("ASSERT: %s: line %d\n", file, line);
-    } else {
-        // print it later
-        asFile = file;
-        asLine = line;
-        asCount++;
-    }
-  /* USER CODE END 6 */
-}
-
-#endif
 

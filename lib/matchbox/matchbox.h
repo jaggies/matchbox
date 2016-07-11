@@ -28,13 +28,12 @@ class MatchBox {
         void usart2Init(void);
         void usbDeviceInit(void);
 
-        // TODO: make these local once malloc bug is fixed
-        static SPI_HandleTypeDef hspi1;
-        static SPI_HandleTypeDef hspi2;
-        static UART_HandleTypeDef huart1;
-        static UART_HandleTypeDef huart2;
-        static ADC_HandleTypeDef hadc1;
-        static I2C_HandleTypeDef hi2c1;
+        SPI_HandleTypeDef hspi1;
+        SPI_HandleTypeDef hspi2;
+        UART_HandleTypeDef huart1;
+        UART_HandleTypeDef huart2;
+        ADC_HandleTypeDef hadc1;
+        I2C_HandleTypeDef hi2c1;
 //        static USBD_HandleTypeDef hUsbDeviceFS;
 };
 

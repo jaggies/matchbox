@@ -12,12 +12,6 @@
 #include "usbd_cdc_if.h"
 #include "matchbox.h"
 
-SPI_HandleTypeDef MatchBox::hspi1;
-SPI_HandleTypeDef MatchBox::hspi2;
-UART_HandleTypeDef MatchBox::huart1;
-UART_HandleTypeDef MatchBox::huart2;
-ADC_HandleTypeDef MatchBox::hadc1;
-I2C_HandleTypeDef MatchBox::hi2c1;
 USBD_HandleTypeDef hUsbDeviceFS; // TODO: make member
 
 MatchBox::MatchBox() {
@@ -48,8 +42,8 @@ void MatchBox::gpioInit(void)
 
 void MatchBox::systemClockConfig(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct;
-  RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   __HAL_RCC_PWR_CLK_ENABLE();
 
@@ -84,6 +78,7 @@ void MatchBox::systemClockConfig(void)
 /* SPI1 init function */
 void MatchBox::spi1Init(void)
 {
+  memset(&hspi1, 0, sizeof(hspi1));
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
@@ -99,9 +94,9 @@ void MatchBox::spi1Init(void)
   HAL_SPI_Init(&hspi1);
 }
 
-/* SPI2 init function */
 void MatchBox::spi2Init(void)
 {
+  memset(&hspi2, 0, sizeof(hspi2));
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES;
@@ -119,9 +114,9 @@ void MatchBox::spi2Init(void)
 
 void MatchBox::adc1Init(void)
 {
-  ADC_ChannelConfTypeDef sConfig;
   /**Configure the global features of the ADC
    * (Clock, Resolution, Data Alignment and number of conversion) */
+  memset(&hadc1, 0, sizeof(hadc1));
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
@@ -139,6 +134,8 @@ void MatchBox::adc1Init(void)
 
   /**Configure selected ADC regular channel, corresponding rank in the sequencer and
    * its sample time.  */
+  ADC_ChannelConfTypeDef sConfig;
+  memset(&sConfig, 0, sizeof(sConfig));
   sConfig.Channel = ADC_CHANNEL_15;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
@@ -147,6 +144,7 @@ void MatchBox::adc1Init(void)
 
 void MatchBox::i2c1Init(void)
 {
+  memset(&hi2c1, 0, sizeof(hi2c1));
   hi2c1.Instance = I2C1;
   hi2c1.Init.ClockSpeed = 100000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
@@ -159,9 +157,9 @@ void MatchBox::i2c1Init(void)
   HAL_I2C_Init(&hi2c1);
 }
 
-/* USART1 init function */
 void MatchBox::usart1Init(void)
 {
+  memset(&huart1, 0, sizeof(huart1));
   huart1.Instance = USART1;
   huart1.Init.BaudRate = 115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
@@ -173,9 +171,9 @@ void MatchBox::usart1Init(void)
   HAL_UART_Init(&huart1);
 }
 
-/* USART2 init function */
 void MatchBox::usart2Init(void)
 {
+  memset(&huart2, 0, sizeof(huart2));
   huart2.Instance = USART2;
   huart2.Init.BaudRate = 115200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
@@ -189,7 +187,6 @@ void MatchBox::usart2Init(void)
 
 void MatchBox::usbDeviceInit(void)
 {
-  /* Init Device Library,Add Supported Class and Start the library*/
   USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
   USBD_RegisterClass(&hUsbDeviceFS, &USBD_CDC);
   USBD_CDC_RegisterInterface(&hUsbDeviceFS, &USBD_Interface_fops_FS);

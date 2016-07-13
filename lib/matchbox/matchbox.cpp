@@ -16,8 +16,6 @@ MatchBox::MatchBox() {
     HAL_Init();
     gpioInit();
     systemClockConfig();
-    spi1Init();
-    spi2Init();
     adc1Init();
     i2c1Init();
     usart1Init();
@@ -69,41 +67,6 @@ void MatchBox::systemClockConfig(void) {
 
     /* SysTick_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
-}
-
-/* SPI1 init function */
-void MatchBox::spi1Init(void) {
-    memset(&hspi1, 0, sizeof(hspi1));
-    hspi1.Instance = SPI1;
-    hspi1.Init.Mode = SPI_MODE_MASTER;
-    hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-    hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-    hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-    hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-    hspi1.Init.NSS = SPI_NSS_HARD_OUTPUT;
-    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-    hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-    hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-    hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-    hspi1.Init.CRCPolynomial = 10;
-    HAL_SPI_Init(&hspi1);
-}
-
-void MatchBox::spi2Init(void) {
-    memset(&hspi2, 0, sizeof(hspi2));
-    hspi2.Instance = SPI2;
-    hspi2.Init.Mode = SPI_MODE_MASTER;
-    hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-    hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-    hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-    hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-    hspi2.Init.NSS = SPI_NSS_SOFT;
-    hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16; // _16 = ~2.25MHz
-    hspi2.Init.FirstBit = SPI_FIRSTBIT_LSB;
-    hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-    hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-    hspi2.Init.CRCPolynomial = 10;
-    HAL_SPI_Init(&hspi2);
 }
 
 void MatchBox::adc1Init(void) {

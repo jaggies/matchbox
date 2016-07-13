@@ -13,6 +13,7 @@
 #include "matchbox.h"
 #include "font.h"
 #include "lcd.h"
+#include "util.h"
 
 //#define VERSION_01 // Define for CPU hardware version 0.1
 static MatchBox *mb;
@@ -125,23 +126,6 @@ extern "C" void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle)
     adcCount = adcCount > 127 ? 0 : adcCount;
 }
 
-extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-    if (hspi == mb->getSpi1()) {
-        printf("%s: SPI1!!\n", __func__);
-    } else if (hspi == mb->getSpi2()) {
-        lcd->refresh();
-    } else {
-        printf("%s: Invalid SPI %p\n", __func__, hspi);
-    }
-}
-
-extern "C" void SPI2_IRQHandler()
-{
-    HAL_NVIC_ClearPendingIRQ(SPI2_IRQn);
-    HAL_SPI_IRQHandler(mb->getSpi2());
-}
-
 extern "C" void ADC_IRQHandler(void)
 {
     HAL_ADC_IRQHandler(mb->getAdc1());
@@ -187,7 +171,8 @@ void checkIoPins(uint64_t* pullUpCheck, uint64_t* shortCheck, uint64_t* shortArr
 int main(void)
 {
   mb = new MatchBox();
-  lcd = new Lcd(*(mb->getSpi2()));
+  Spi* spi2 = new Spi(Spi::SP2);
+  lcd = new Lcd(*spi2);
 
 //  // Do low-level IO check
 //  checkIoPins(&pupCheck, &shCheck, &shArray);
@@ -264,9 +249,6 @@ void StartDefaultTask(void const * argument)
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
-  HAL_NVIC_SetPriority(SPI2_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
-  HAL_NVIC_EnableIRQ(SPI2_IRQn);
-
   // Done in usbd_conf.c
   //HAL_NVIC_SetPriority(OTG_FS_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   //HAL_NVIC_EnableIRQ(OTG_FS_IRQn);
@@ -279,7 +261,6 @@ void StartDefaultTask(void const * argument)
   // Init LCD
   lcd->begin();
   lcd->clear(1,1,1);
-  lcd->refresh(); // start refreshing
 
 //  extern char heap_low;
 //  extern char heap_top;

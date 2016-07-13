@@ -8,6 +8,9 @@
 #ifndef SPI_H_
 #define SPI_H_
 
+#include "stm32f4xx_hal_dma.h"
+#include "stm32f4xx_hal_spi.h"
+
 extern "C" void SPI1_IRQHandler();
 extern "C" void SPI2_IRQHandler();
 extern "C" void SPI3_IRQHandler();
@@ -28,7 +31,7 @@ class Spi {
         typedef void (*TxRxCallback)(void *args);
 
         Spi(Bus bus, Mode mode = Master, Direction dir = TxRx, DataSize = S8, Polarity pol = LOW,
-                Phase phase = Rising, FirstBit bit = MSB);
+                Phase phase = Rising, FirstBit bit = LSB);
         ~Spi();
 
         Status transmit(uint8_t* data, uint16_t n, TransmitCallback cb = 0, void* args = 0);

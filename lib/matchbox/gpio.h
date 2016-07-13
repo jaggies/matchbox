@@ -32,6 +32,4 @@ uint16_t toIoPin(uint16_t pin);
 }
 #endif
 
-#define Number(a) (sizeof(a) / sizeof(a[0]))
-
 #endif /* GPIO_H_ */

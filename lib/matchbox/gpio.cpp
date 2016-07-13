@@ -11,6 +11,7 @@
 #include "stm32f4xx_hal_sd.h"
 #include "cmsis_os.h"
 #include "gpio.h"
+#include "util.h"
 
 static GPIO_TypeDef* _bus[] = {
         GPIOA, GPIOB, GPIOC, GPIOD, GPIOE

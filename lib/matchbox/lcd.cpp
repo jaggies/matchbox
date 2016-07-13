@@ -17,141 +17,48 @@
 #include "lcd.h"
 #include "util.h"
 
-//#define SOFT_SPI
-volatile int dly;
-void delay(int n)
-{
-    dly = n;
-    while (dly--);
-}
-
-static inline uint8_t bitSwap(uint8_t x)
-{
-    uint8_t res = 0;
-    for (int i = 0; i < 8; i++) {
-        res = (res << 1) | (x & 1);
-        x >>= 1;
-    }
-    return res;
-}
-
-Lcd::Lcd(SPI_HandleTypeDef& spi, uint8_t en, uint8_t sclk, uint8_t si, uint8_t scs, uint8_t extc,
-        uint8_t disp) : _spi(spi), _en(en), _sclk(sclk), _si(si), _scs(scs), _extc(extc),
-        _disp(disp), _clear(1), _row(0), _frame(0), _dither(8, 1), _currentFont(0),
+Lcd::Lcd(Spi& spi, uint8_t en, uint8_t scs, uint8_t extc,
+        uint8_t disp) : _spi(spi), _en(en), _scs(scs), _extc(extc),
+        _disp(disp), _clear(1), _row(0), _frame(0), _currentFont(0),
         _xres(LCD_XRES), _yres(LCD_YRES), _channels(LCD_CHAN), _line_size(LCD_XRES*LCD_CHAN/8)
 {
     _currentFont = getFont("roboto_bold_10");
 }
 
 void Lcd::begin() {
-#ifdef SOFT_SPI
-    uint8_t pins[] = {_en, _sclk, _si, _scs, _extc, _disp };
-    uint8_t defaults[] = { 1, 0, 0, 0, 0, 1 };
-#else
     // Skip sclk and si since SPI initializes them for alternate functionality (spi)
     uint8_t pins[] = {_en, _scs, _extc, _disp };
     uint8_t defaults[] = { 1, 0, 0, 1 };
-#endif
     for (int i = 0; i < Number(pins); i++) {
         pinInitOutput(pins[i], defaults[i]);
     }
     bzero(&_frameBuffer, sizeof(_frameBuffer));
+    refreshFrame(); // start SPI transfer chain
 }
 
-void Lcd::sendByte(uint8_t b) {
-#ifdef SOFT_SPI
-    for (int i = 0; i < 8; i++) {
-        writePin(_sclk, 0);
-        writePin(_si, (b >> i) & 1);
-        writePin(_sclk, 1);
-    }
-    writePin(_sclk, 0);
-#else
-    HAL_StatusTypeDef status = HAL_SPI_Transmit(&_spi, &b, 1, 1000);
-    if (status != HAL_OK) {
-        printf("sendByte(): error = %d\n", status);
-    }
-#endif
-}
-
-void Lcd::sendBytes(uint8_t* data, uint16_t count) {
-#ifdef SOFT_SPI
-    for (uint16_t i = 0; i < count; i++) {
-        sendByte(data[i]);
-    }
-#else
-//    HAL_StatusTypeDef status = HAL_SPI_Transmit(&_spi, data, count, 1000);
-    HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&_spi, data, count);
-    if (status != HAL_OK) {
-        printf("sendBytes(): error = %d\n", status);
-    }
-#endif
+// Called when SPI finishes transfering the current frame
+void Lcd::refreshFrameCallback(void* arg) {
+    Lcd* thisPtr = (Lcd*) arg;
+    thisPtr->refreshFrame(); // frame done, do it again! TODO: Maybe limit this to 30Hz
 }
 
 // Single line format : SCS CMD ROW <data0..n> 0 0 SCS#
 // Multi-line format : SCS CMD ROW <data0..n> IGNORED ROW <data0..127> ... SCS#
-void Lcd::refreshLine(int row) {
-    sendByte(_frameBuffer[row].cmd);
-    sendByte(_frameBuffer[row].row); // first row is 1, not 0 and bitswapped :/
-    sendBytes(_frameBuffer[row].data, _line_size);
-}
-
-void Lcd::refresh() {
-    refreshFrameSpi();
-}
-
-// Manually update the display
 void Lcd::refreshFrame() {
-    writePin(_scs, 1);
-    for (int i = 0; i < _yres; i++) {
-        _frameBuffer[i].cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
-        _frameBuffer[i].row = i + 1;
-        refreshLine(i);
-    }
-    writePin(_scs, 0);
-    writePin(_extc, (_frame++) & 0x01);
-    _clear = 0;
-}
-
-void Lcd::refreshFrameSpi() {
-    // Toggle common driver once per frame
-    writePin(_extc, (_frame++) & 0x01);
-
+    writePin(_extc, (_frame++) & 0x01); // Toggle common driver once per frame
     writePin(_scs, 0); // cs disabled
-    uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+    const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
     for (int i = 0; i < _yres; i++) {
         _frameBuffer[i].cmd = cmd;
         _frameBuffer[i].row = i + 1;
     }
     writePin(_scs, 1); // cs enabled
-    HAL_StatusTypeDef status = HAL_SPI_Transmit_IT(&_spi, (uint8_t*)&_frameBuffer[0],
-            sizeof(_frameBuffer));
-    assert(HAL_OK == status);
-    _clear = 0;
-}
-
-void Lcd::refreshLineSpi() {
-    static uint8_t clear = 0; // TODO
-    HAL_StatusTypeDef status;
-    if (_row == 0) {
-        writePin(_scs, 1);
-    } else if (_row == 128) {
-        uint8_t zero = 0;
-        status = HAL_SPI_Transmit(&_spi, &zero, 1, 1000);
-        assert(HAL_OK == status);
-        _row = 0;
-        _frame++;
-        writePin(_scs, 0);
-        delay(100);
-        writePin(_scs, 1);
+    Spi::Status status = _spi.transmit((uint8_t*)&_frameBuffer[0], sizeof(_frameBuffer),
+            refreshFrameCallback, this);
+    if (Spi::OK != status) {
+        printf("Failed to refresh with status=%d\n", status);
     }
-
-    // Send one line
-    _frameBuffer[_row].cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (clear ? 0x20 : 0));
-    _frameBuffer[_row].row = _row + 1; // first row starts at 1
-    status = HAL_SPI_Transmit_IT(&_spi, (uint8_t*) &_frameBuffer[_row], _line_size);
-    assert(HAL_OK == status);
-    _row++;
+    _clear = 0;
 }
 
 void

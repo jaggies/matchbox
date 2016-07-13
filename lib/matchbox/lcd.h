@@ -9,9 +9,7 @@
 #define LCD_H_
 
 #include <stdint.h>
-#include "stm32f4xx_hal_dma.h"
-#include "stm32f4xx_hal_spi.h"
-#include "OrderedDither.h"
+#include "spi.h"
 #include "font.h"
 
 // TODO: Move these to a config file
@@ -30,10 +28,8 @@
 class Lcd {
 	public:
         enum FontSize { FONT_SMALL, FONT_MEDIUM, FONT_LARGE };
-        Lcd(SPI_HandleTypeDef& spi,
+        Lcd(Spi& spi,
                 uint8_t en = LCD_PEN_PIN,
-                uint8_t sclk = LCD_SCLK_PIN,
-                uint8_t si = LCD_SI_PIN,
                 uint8_t scs = LCD_SCS_PIN,
                 uint8_t extc = LCD_EXTC_PIN,
                 uint8_t disp = LCD_DISP_PIN);
@@ -57,28 +53,16 @@ class Lcd {
 		        uint8_t data[LCD_LINE_SIZE];
 		};
 
-		void sendByte(uint8_t b);
-		void sendBytes(uint8_t* data, uint16_t count);
-		void refreshLineSpi();
-		void refreshFrameSpi();
-		void refreshLine();
-        void refreshLine(int row);
+		static void refreshFrameCallback(void* arg);
+		static void refreshLineCallback(void* arg);
 		void refreshFrame();
 
-		// SPI bus
-		SPI_HandleTypeDef& _spi;
-
-		// IRQ/DMA handler data
+		Spi& _spi;
 		uint8_t _frame; // refresh frame count
 		uint8_t _row; // refresh rown count
-
-		// Inlining these methods really speed things up but cost lots of space...
-		int dither(int x, int y, int r, int g, int b);
-		void color(int color);
-		const int _xres, _yres, _channels, _line_size;
-		const uint8_t _en, _sclk, _si, _scs, _extc, _disp;
+		const uint16_t _xres, _yres, _channels, _line_size;
+		const uint8_t _en, _scs, _extc, _disp;
 		uint8_t _clear;
-		OrderedDither _dither;
 		const Font* _currentFont;
 		struct Line _frameBuffer[LCD_YRES];
 };

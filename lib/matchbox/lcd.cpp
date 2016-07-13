@@ -15,6 +15,7 @@
 #include "font.h"
 #include "gpio.h"
 #include "lcd.h"
+#include "util.h"
 
 //#define SOFT_SPI
 volatile int dly;

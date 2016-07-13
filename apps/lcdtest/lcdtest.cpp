@@ -246,13 +246,6 @@ void StartDefaultTask(void const * argument)
   HAL_NVIC_SetPriority(ADC_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   HAL_NVIC_EnableIRQ(ADC_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-
-  // Done in usbd_conf.c
-  //HAL_NVIC_SetPriority(OTG_FS_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
-  //HAL_NVIC_EnableIRQ(OTG_FS_IRQn);
-
   pinInitIrq(SW1_PIN, 1);
   pinInitIrq(SW2_PIN, 1);
 
@@ -262,12 +255,6 @@ void StartDefaultTask(void const * argument)
   lcd->begin();
   lcd->clear(1,1,1);
 
-//  extern char heap_low;
-//  extern char heap_top;
-//  printf("heap_low: %p\n", &heap_low);
-//  printf("heap_top: %p\n", &heap_top);
-//  printf("lcd: %p\n", lcd);
-//  printf("mb: %p\n", mb);
 //  printf("IOCheck: pup:%012llx sh:%012llx ary:%012llx\n", pupCheck, shCheck, shArray);
 
   int frame = 0;
@@ -292,4 +279,3 @@ void StartDefaultTask(void const * argument)
     frame++;
   }
 }
-

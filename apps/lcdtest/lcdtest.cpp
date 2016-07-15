@@ -38,34 +38,6 @@ void toggleLed() {
     writePin(LED_PIN, (data++) & 1);
 }
 
-typedef void (*fPtr)(void);
-
-void maybeJumpToBootloader() {
-    const fPtr bootLoader = (fPtr) *(uint32_t*) 0x1fff0004;
-
-    // Jump to bootloader if PC13 is low at reset
-    pinInitInput(SW1_PIN);
-    if (!readPin(SW1_PIN)) {
-        pinInitOutput(LED_PIN, 1);
-        for (int i = 0; i < 40; i++) {
-            writePin(LED_PIN, i % 2);
-            HAL_Delay(50);
-        }
-        SysTick->CTRL = 0; // Reset Systick timer
-        SysTick->LOAD = 0;
-        SysTick->VAL = 0;
-        HAL_DeInit();
-        HAL_RCC_DeInit();
-        //__set_PRIMASK(1); // Disable interrupts - causes STM32f415 to fail entering DFU mode
-        __HAL_RCC_GPIOC_CLK_DISABLE();
-        __HAL_RCC_GPIOA_CLK_DISABLE();
-        __HAL_RCC_GPIOB_CLK_DISABLE();
-        __HAL_RCC_GPIOD_CLK_DISABLE();
-        __set_MSP(0x20001000); // reset stack pointer to bootloader default
-        bootLoader(); while (1);
-    }
-}
-
 extern "C" void EXTI1_IRQHandler(void)
 {
     __HAL_GPIO_EXTI_CLEAR_IT(toIoPin(SW1_PIN));

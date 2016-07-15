@@ -171,9 +171,6 @@ void checkIoPins(uint64_t* pullUpCheck, uint64_t* shortCheck, uint64_t* shortArr
 int main(void)
 {
   mb = new MatchBox();
-  Spi* spi2 = new Spi(Spi::SP2);
-  lcd = new Lcd(*spi2);
-
 //  // Do low-level IO check
 //  checkIoPins(&pupCheck, &shCheck, &shArray);
 
@@ -234,6 +231,8 @@ void drawAdc(uint8_t r, uint8_t g, uint8_t b, bool useLine)
 
 void StartDefaultTask(void const * argument)
 {
+  Spi* spi2 = new Spi(Spi::SP2);
+  lcd = new Lcd(*spi2);
   pinInitOutput(LED_PIN, 1);
   //printf("Stack ptr %08x\n", __get_MSP());
 

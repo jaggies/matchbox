@@ -11,6 +11,7 @@ SubDirHdrs $(TOP) lib hal CMSIS Include ;
 SubDirHdrs $(TOP) lib render ;
 
 Library libmatchbox :
+	adc.cpp
 	lcd.cpp
 	gpio.cpp
 	hal_msp.c

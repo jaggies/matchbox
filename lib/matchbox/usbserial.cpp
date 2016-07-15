@@ -8,6 +8,14 @@
 
 UsbSerial* UsbSerial::_instance;
 
+// TODO: Remove this stub!
+extern "C" void write(int, uint8_t*, uint32_t);
+static void doReceive(uint8_t* buff, uint32_t* len)
+{
+//    printf("rx:%p len=%d", buff, *len);
+    write(1, buff, *len);
+}
+
 extern "C" {
     extern int8_t usb_transmit(uint8_t* buf, uint16_t len);
     extern USBD_DescriptorsTypeDef FS_Desc;
@@ -116,7 +124,7 @@ int8_t UsbSerial::control(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
 int8_t UsbSerial::receive(uint8_t* buf, uint32_t *len) {
     USBD_CDC_SetRxBuffer(&_usbDevice, &buf[0]);
     USBD_CDC_ReceivePacket(&_usbDevice);
-    // doReceive(buf, len); // TODO
+    doReceive(buf, len); // TODO
     return USBD_OK;
 }
 

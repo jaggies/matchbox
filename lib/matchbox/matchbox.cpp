@@ -4,8 +4,8 @@
  *  Created on: Jul 10, 2016
  *      Author: jmiller
  */
+#include <string.h>
 #include "stm32f4xx.h" // chip-specific defines
-#include "stm32f4xx_hal.h"
 #include "cmsis_os.h"
 #include "usbd_desc.h"
 #include "usbd_cdc.h"
@@ -53,6 +53,7 @@ MatchBox::MatchBox() {
     gpioInit();
     maybeJumpToBootloader();
     systemClockConfig();
+    usartInit();
     UsbSerial::getInstance(); // force initialization here
 }
 
@@ -104,3 +105,17 @@ void MatchBox::systemClockConfig(void) {
     /* SysTick_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
 }
+
+void MatchBox::usartInit() {
+   bzero(&huart1, sizeof(huart1));
+   huart1.Instance = USART1;
+   huart1.Init.BaudRate = 115200;
+   huart1.Init.WordLength = UART_WORDLENGTH_8B;
+   huart1.Init.StopBits = UART_STOPBITS_1;
+   huart1.Init.Parity = UART_PARITY_NONE;
+   huart1.Init.Mode = UART_MODE_TX_RX;
+   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+   HAL_UART_Init(&huart1);
+}
+

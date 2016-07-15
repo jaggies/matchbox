@@ -51,6 +51,7 @@ class Spi {
         void handleIrq();
     private:
         SPI_HandleTypeDef _spi;
+        Bus _bus;
         TransmitCallback _txCallback;
         ReceiveCallback _rxCallback;
         TxRxCallback _txrxCallback;

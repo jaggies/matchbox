@@ -15,15 +15,14 @@
 
 static SPI_TypeDef* const _busMap[] = { SPI1, SPI2, SPI3 };
 static const IRQn_Type irqMap[] = { SPI1_IRQn, SPI2_IRQn, SPI3_IRQn };
-static const uint32_t _dirMap[] = {
-    SPI_DIRECTION_2LINES, SPI_DIRECTION_2LINES_RXONLY, SPI_DIRECTION_1LINE
-};
+static const uint32_t _dirMap[] = { SPI_DIRECTION_2LINES, SPI_DIRECTION_2LINES_RXONLY,
+        SPI_DIRECTION_1LINE };
 
 // Used to quickly map an irq to an instance of Spi object
 static Spi* spiMap[3] = { 0, 0, 0 };
 
 Spi::Spi(Bus bus, Mode mode, Direction d, DataSize sz, Polarity pol, Phase ph, FirstBit fb)
-        : _txCallback(0), _rxCallback(0), _txrxCallback(0), _txArgs(0), _rxArgs(0), _txrxArgs(0) {
+        : _bus(bus), _txCallback(0), _rxCallback(0), _txrxCallback(0), _txArgs(0), _rxArgs(0), _txrxArgs(0) {
     bzero(&_spi, sizeof(_spi));
     _spi.Instance = _busMap[bus];
     _spi.Init.Mode = mode == Master ? SPI_MODE_MASTER : SPI_MODE_SLAVE;
@@ -49,13 +48,8 @@ Spi::Spi(Bus bus, Mode mode, Direction d, DataSize sz, Polarity pol, Phase ph, F
 
 Spi::~Spi() {
     HAL_SPI_DeInit(&_spi);
-//    HAL_NVIC_DisableIRQ(irqMap[bus]);
-    for (int i = 0; i < Number(spiMap); i++) {
-        if (spiMap[i] == this) {
-            spiMap[i] = NULL;
-            break;
-        }
-    }
+    HAL_NVIC_DisableIRQ(irqMap[_bus]);
+    spiMap[_bus] = NULL; // mark unused
 }
 
 inline void Spi::transmitComplete() {

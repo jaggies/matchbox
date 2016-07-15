@@ -6,34 +6,16 @@
  */
 
 #include <assert.h>
-#include "stm32f4xx.h" // chip-specific defines
-#include "stm32f4xx_hal.h"
-#include "cmsis_os.h"
-#include "gpio.h"
 #include "matchbox.h"
-#include "font.h"
 #include "lcd.h"
 #include "adc.h"
-#include "util.h"
 
-//#define VERSION_01 // Define for CPU hardware version 0.1
 osThreadId defaultTaskHandle;
+static uint8_t mode;
 
 void StartDefaultTask(void const * argument);
 
-const float VREF = 3.3f;
-const float VREF_CALIBRATION = 4.65f / 4.63f; // measured value, probably due to R15/R16 tolerance
-
-static uint8_t mode;
-
-#ifdef USE_FULL_ASSERT
-extern "C" void assert_failed(uint8_t* file, uint32_t line)
-{
-    printf("ASSERT: %s: line %d\n", file, line);
-}
-#endif
-
-void toggleLed() {
+static void toggleLed() {
     static uint8_t data;
     writePin(LED_PIN, (data++) & 1);
 }
@@ -50,11 +32,6 @@ extern "C" void EXTI15_10_IRQHandler(void)
     __HAL_GPIO_EXTI_CLEAR_IT(toIoPin(SW2_PIN));
     HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
     mode++;
-}
-
-inline float vccVoltage(uint16_t value) {
-    // measured voltage is half due to voltage divider
-    return VREF * VREF_CALIBRATION * (2*value) / 4095.0f;
 }
 
 int main(void)
@@ -74,7 +51,7 @@ int main(void)
   return 0;
 }
 
-void drawBars(Lcd& lcd, int vertical)
+static void drawBars(Lcd& lcd, int vertical)
 {
     for (int j = 0; j < 128; j++) {
         for (int i = 0; i < 128; i++) {
@@ -85,7 +62,7 @@ void drawBars(Lcd& lcd, int vertical)
     }
 }
 
-void drawChecker(Lcd& lcd, int scale)
+static void drawChecker(Lcd& lcd, int scale)
 {
     for (int j = 0; j < 128; j++) {
         for (int i = 0; i < 128; i++) {
@@ -95,7 +72,7 @@ void drawChecker(Lcd& lcd, int scale)
     }
 }
 
-void drawAdc(Lcd& lcd, const uint16_t* values, int n, uint8_t r, uint8_t g, uint8_t b, bool useLine)
+static void drawAdc(Lcd& lcd, const uint16_t* values, int n, uint8_t r, uint8_t g, uint8_t b, bool useLine)
 {
     if (useLine) {
         for (int x0 = 0; x0 < n; x0++) {
@@ -111,7 +88,7 @@ void drawAdc(Lcd& lcd, const uint16_t* values, int n, uint8_t r, uint8_t g, uint
     }
 }
 
-void adcCallback(const uint16_t* values, int n, void* arg) {
+static void adcCallback(const uint16_t* values, int n, void* arg) {
     Lcd& lcd = *(Lcd*) arg;
     int tmp = mode % 36;
     if (tmp >= 12 && tmp < 28) {
@@ -131,16 +108,14 @@ void StartDefaultTask(void const * argument)
   Adc adc(Adc::AD1, 128);
 
   pinInitOutput(LED_PIN, 1);
-  //printf("Stack ptr %08x\n", __get_MSP());
 
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-
+  pinInitIrq(SW1_PIN, 1);
   HAL_NVIC_SetPriority(EXTI1_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
   HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
-  pinInitIrq(SW1_PIN, 1);
   pinInitIrq(SW2_PIN, 1);
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
   // Init LCD
   lcd.begin();

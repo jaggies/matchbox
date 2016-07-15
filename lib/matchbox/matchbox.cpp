@@ -11,6 +11,7 @@
 #include "usbd_cdc.h"
 #include "usbserial.h"
 #include "matchbox.h"
+#include "gpio.h"
 
 MatchBox::MatchBox() {
     HAL_Init();
@@ -26,12 +27,15 @@ MatchBox::~MatchBox() {
 }
 
 void MatchBox::gpioInit(void) {
-    /* GPIO Ports Clock Enable */
+    // GPIO Ports Clock Enable
     __HAL_RCC_GPIOC_CLK_ENABLE();
     __HAL_RCC_GPIOH_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
+
+    // POWER_PIN is wired to the LTC2954 KILL# pin. It must be remain high or power will shut off.
+    pinInitOutput(POWER_PIN, 1);
 }
 
 void MatchBox::systemClockConfig(void) {

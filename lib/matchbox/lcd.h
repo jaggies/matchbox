@@ -65,6 +65,7 @@ class Lcd {
 		uint8_t _clear;
 		const Font* _currentFont;
 		struct Line _frameBuffer[LCD_YRES];
+		const uint8_t _sync1, _sync2; // sync bytes for LCD to simplify SPI stream
 };
 
 #define BITBAND_SRAM_REF 0x20000000

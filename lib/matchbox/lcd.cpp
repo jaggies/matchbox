@@ -20,7 +20,8 @@
 Lcd::Lcd(Spi& spi, uint8_t en, uint8_t scs, uint8_t extc,
         uint8_t disp) : _spi(spi), _en(en), _scs(scs), _extc(extc),
         _disp(disp), _clear(1), _row(0), _frame(0), _currentFont(0),
-        _xres(LCD_XRES), _yres(LCD_YRES), _channels(LCD_CHAN), _line_size(LCD_XRES*LCD_CHAN/8)
+        _xres(LCD_XRES), _yres(LCD_YRES), _channels(LCD_CHAN), _line_size(LCD_XRES*LCD_CHAN/8),
+        _sync1(0), _sync2(0)
 {
     _currentFont = getFont("roboto_bold_10");
 }
@@ -53,7 +54,8 @@ void Lcd::refreshFrame() {
         _frameBuffer[i].row = i + 1;
     }
     writePin(_scs, 1); // cs enabled
-    Spi::Status status = _spi.transmit((uint8_t*)&_frameBuffer[0], sizeof(_frameBuffer),
+    Spi::Status status = _spi.transmit((uint8_t*)&_frameBuffer[0],
+            sizeof(_frameBuffer) + 2 /* sync bytes */,
             refreshFrameCallback, this);
     if (Spi::OK != status) {
         printf("Failed to refresh with status=%d\n", status);

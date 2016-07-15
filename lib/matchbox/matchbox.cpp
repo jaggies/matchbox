@@ -16,7 +16,6 @@ MatchBox::MatchBox() {
     HAL_Init();
     gpioInit();
     systemClockConfig();
-    adc1Init();
     i2c1Init();
     usart1Init();
     usart2Init();
@@ -67,35 +66,6 @@ void MatchBox::systemClockConfig(void) {
 
     /* SysTick_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
-}
-
-void MatchBox::adc1Init(void) {
-    /**Configure the global features of the ADC
-     * (Clock, Resolution, Data Alignment and number of conversion) */
-    memset(&hadc1, 0, sizeof(hadc1));
-    hadc1.Instance = ADC1;
-    hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
-    hadc1.Init.Resolution = ADC_RESOLUTION_12B;
-    hadc1.Init.ScanConvMode = DISABLE;
-    hadc1.Init.ContinuousConvMode = ENABLE;
-    hadc1.Init.DiscontinuousConvMode = DISABLE;
-    hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-    hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
-    hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-    hadc1.Init.NbrOfDiscConversion = 0;
-    hadc1.Init.NbrOfConversion = 1;
-    hadc1.Init.DMAContinuousRequests = ENABLE;
-    hadc1.Init.EOCSelection = DISABLE;
-    HAL_ADC_Init(&hadc1);
-
-    /**Configure selected ADC regular channel, corresponding rank in the sequencer and
-     * its sample time.  */
-    ADC_ChannelConfTypeDef sConfig;
-    memset(&sConfig, 0, sizeof(sConfig));
-    sConfig.Channel = ADC_CHANNEL_15;
-    sConfig.Rank = 1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
-    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 }
 
 void MatchBox::i2c1Init(void) {

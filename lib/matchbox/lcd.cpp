@@ -48,11 +48,6 @@ void Lcd::refreshFrameCallback(void* arg) {
 void Lcd::refreshFrame() {
     writePin(_extc, (_frame++) & 0x01); // Toggle common driver once per frame
     writePin(_scs, 0); // cs disabled
-    const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
-    for (int i = 0; i < _yres; i++) {
-        _frameBuffer[i].cmd = cmd;
-        _frameBuffer[i].row = i + 1;
-    }
     writePin(_scs, 1); // cs enabled
     Spi::Status status = _spi.transmit((uint8_t*)&_frameBuffer[0],
             sizeof(_frameBuffer) + 2 /* sync bytes */,
@@ -80,6 +75,12 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
             *pixels++ = p[1];
             *pixels++ = p[2];
         }
+    }
+    // Initialize the cmd/row data. If this gets clobbered, the LCD won't update.
+    const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+    for (int i = 0; i < _yres; i++) {
+        _frameBuffer[i].cmd = cmd;
+        _frameBuffer[i].row = i + 1;
     }
 }
 

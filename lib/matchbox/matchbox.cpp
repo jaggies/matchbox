@@ -14,6 +14,28 @@
 #include "gpio.h"
 
 typedef void (*fPtr)(void);
+typedef struct _ClockConfig {
+    public:
+        uint32_t pllm;
+        uint32_t plln;
+        uint32_t pllp;
+        uint32_t pllq;
+        uint32_t ahbdiv;
+        uint32_t apb1div;
+        uint32_t apb2div;
+        uint32_t latency;
+} ClockConfig;
+
+static const ClockConfig config[] = {
+    { 8,  96, RCC_PLLP_DIV6, 4, RCC_SYSCLK_DIV2, RCC_HCLK_DIV1, RCC_HCLK_DIV1, FLASH_LATENCY_0 },
+    { 8,  72, RCC_PLLP_DIV4, 3, RCC_SYSCLK_DIV2, RCC_HCLK_DIV1, RCC_HCLK_DIV1, FLASH_LATENCY_0 },
+    { 8,  72, RCC_PLLP_DIV4, 3, RCC_SYSCLK_DIV1, RCC_HCLK_DIV1, RCC_HCLK_DIV1, FLASH_LATENCY_1 },
+    { 8,  72, RCC_PLLP_DIV2, 3, RCC_SYSCLK_DIV1, RCC_HCLK_DIV2, RCC_HCLK_DIV1, FLASH_LATENCY_2 },
+    { 8, 120, RCC_PLLP_DIV2, 5, RCC_SYSCLK_DIV1, RCC_HCLK_DIV4, RCC_HCLK_DIV2, FLASH_LATENCY_3 },
+    { 8, 168, RCC_PLLP_DIV2, 7, RCC_SYSCLK_DIV1, RCC_HCLK_DIV4, RCC_HCLK_DIV1, FLASH_LATENCY_5 },
+    { 16, 360, RCC_PLLP_DIV2, 8, RCC_SYSCLK_DIV1, RCC_HCLK_DIV4, RCC_HCLK_DIV1, FLASH_LATENCY_5 },
+    { 12, 288, RCC_PLLP_DIV2, 8, RCC_SYSCLK_DIV1, RCC_HCLK_DIV4, RCC_HCLK_DIV4, FLASH_LATENCY_5 }
+};
 
 #ifdef USE_FULL_ASSERT
 extern "C" void assert_failed(uint8_t* file, uint32_t line)
@@ -48,7 +70,7 @@ static void maybeJumpToBootloader() {
     }
 }
 
-MatchBox::MatchBox() {
+MatchBox::MatchBox(ClockSpeed clkSpeed) : _clkSpeed(clkSpeed) {
     HAL_Init();
     gpioInit();
     maybeJumpToBootloader();
@@ -84,19 +106,19 @@ void MatchBox::systemClockConfig(void) {
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
     RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-    RCC_OscInitStruct.PLL.PLLM = 8;
-    RCC_OscInitStruct.PLL.PLLN = 72;
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-    RCC_OscInitStruct.PLL.PLLQ = 3;
+    RCC_OscInitStruct.PLL.PLLM = config[_clkSpeed].pllm;
+    RCC_OscInitStruct.PLL.PLLN = config[_clkSpeed].plln;
+    RCC_OscInitStruct.PLL.PLLP = config[_clkSpeed].pllp;
+    RCC_OscInitStruct.PLL.PLLQ = config[_clkSpeed].pllq;
     HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1
             | RCC_CLOCKTYPE_PCLK2;
     RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-    HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
+    RCC_ClkInitStruct.AHBCLKDivider = config[_clkSpeed].ahbdiv;
+    RCC_ClkInitStruct.APB1CLKDivider = config[_clkSpeed].apb1div;
+    RCC_ClkInitStruct.APB2CLKDivider = config[_clkSpeed].apb2div;
+    HAL_RCC_ClockConfig(&RCC_ClkInitStruct, config[_clkSpeed].latency);
 
     HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
 

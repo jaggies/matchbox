@@ -9,6 +9,7 @@
 #include "matchbox.h"
 #include "lcd.h"
 #include "adc.h"
+#include "button.h"
 
 osThreadId defaultTaskHandle;
 static uint8_t mode;
@@ -18,20 +19,6 @@ void StartDefaultTask(void const * argument);
 static void toggleLed() {
     static uint8_t data;
     writePin(LED_PIN, (data++) & 1);
-}
-
-extern "C" void EXTI1_IRQHandler(void)
-{
-    __HAL_GPIO_EXTI_CLEAR_IT(toIoPin(SW1_PIN));
-    HAL_NVIC_ClearPendingIRQ(EXTI1_IRQn);
-    printf("IRQ1!\n");
-}
-
-extern "C" void EXTI15_10_IRQHandler(void)
-{
-    __HAL_GPIO_EXTI_CLEAR_IT(toIoPin(SW2_PIN));
-    HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
-    mode++;
 }
 
 int main(void)
@@ -101,21 +88,25 @@ static void adcCallback(const uint16_t* values, int n, void* arg) {
     }
 }
 
+void buttonHandler(uint32_t pin, void* data) {
+    int &mode = *(int*) data;
+    switch (pin) {
+        case SW2_PIN:
+            mode++;
+            break;
+        default:
+            printf("Pin not handled: %d\n", pin);
+    }
+}
+
 void StartDefaultTask(void const * argument)
 {
   Spi spi2(Spi::SP2);
   Lcd lcd(spi2);
   Adc adc(Adc::AD1, 128);
+  Button sw2(SW2_PIN, buttonHandler, &mode);
 
   pinInitOutput(LED_PIN, 1);
-
-  pinInitIrq(SW1_PIN, 1);
-  HAL_NVIC_SetPriority(EXTI1_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
-  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
-
-  pinInitIrq(SW2_PIN, 1);
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15 /* low preempt priority */, 0 /* high sub-priority*/);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
   // Init LCD
   lcd.begin();

@@ -68,6 +68,7 @@ void printPinNames(uint64_t pins, uint64_t expected) {
 }
 
 void StartDefaultTask(void const * argument) {
+    printf("HCLK: %d\n", HAL_RCC_GetHCLKFreq());
     printf("pups: %012llx (", pups);
     printPinNames(pups, 1);
     printf(")\n");

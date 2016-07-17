@@ -74,16 +74,16 @@ void Spi::handleIrq() {
     HAL_SPI_IRQHandler(&_spi);
 }
 
-Spi::Status Spi::transmit(uint8_t* data, uint16_t n, TransmitCallback cb, void* args) {
+Spi::Status Spi::transmit(const uint8_t* data, uint16_t n, TransmitCallback cb, void* args) {
     HAL_StatusTypeDef status;
     if (!data) return ILLEGAL;
     if (n < 1) return OK; // nothing to do
     if (cb) { // Use async spi transfer
         _txCallback = cb;
         _txArgs = args;
-        return (Spi::Status) HAL_SPI_Transmit_IT(&_spi, data, n);
+        return (Spi::Status) HAL_SPI_Transmit_IT(&_spi, const_cast<uint8_t*>(data), n);
     } else { // Use blocking spi transfer
-        return (Spi::Status) HAL_SPI_Transmit(&_spi, data, n, DEFAULT_TIMEOUT);
+        return (Spi::Status) HAL_SPI_Transmit(&_spi, const_cast<uint8_t*>(data), n, DEFAULT_TIMEOUT);
     }
 }
 
@@ -100,15 +100,15 @@ Spi::Status Spi::receive(uint8_t* data, uint16_t n, ReceiveCallback cb, void* ar
 
 }
 
-Spi::Status Spi::txrx(uint8_t* txData, uint8_t* rxData, uint16_t n, TxRxCallback cb, void* args) {
+Spi::Status Spi::txrx(const uint8_t* txData, uint8_t* rxData, uint16_t n, TxRxCallback cb, void* args) {
     if (!txData || !rxData) return ILLEGAL;
     if (n < 1) return OK; // nothing to do
     if (cb) { // Use async spi transfer
         _txrxCallback = cb;
         _txrxArgs = args;
-        return (Spi::Status) HAL_SPI_TransmitReceive_IT(&_spi, txData, rxData, n);
+        return (Spi::Status) HAL_SPI_TransmitReceive_IT(&_spi, const_cast<uint8_t*>(txData), rxData, n);
     } else { // Use blocking spi transfer
-        return (Spi::Status) HAL_SPI_TransmitReceive(&_spi, txData, rxData, n, DEFAULT_TIMEOUT);
+        return (Spi::Status) HAL_SPI_TransmitReceive(&_spi, const_cast<uint8_t*>(txData), rxData, n, DEFAULT_TIMEOUT);
     }
 }
 

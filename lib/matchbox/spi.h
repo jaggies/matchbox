@@ -34,9 +34,9 @@ class Spi {
                 Phase phase = Rising, FirstBit bit = LSB);
         ~Spi();
 
-        Status transmit(uint8_t* data, uint16_t n, TransmitCallback cb = 0, void* args = 0);
+        Status transmit(const uint8_t* data, uint16_t n, TransmitCallback cb = 0, void* args = 0);
         Status receive(uint8_t* data, uint16_t n, ReceiveCallback cb = 0, void* args = 0);
-        Status txrx(uint8_t* tx, uint8_t* rx, uint16_t n, TxRxCallback cb = 0, void* args = 0);
+        Status txrx(const uint8_t* tx, uint8_t* rx, uint16_t n, TxRxCallback cb = 0, void* args = 0);
 
     private:
         friend void SPI1_IRQHandler();

@@ -1,4 +1,5 @@
 SubDir TOP apps ;
 SubInclude TOP apps blink ;
+SubInclude TOP apps experimental ;
 SubInclude TOP apps lcdtest ;
 SubInclude TOP apps pincheck ;

@@ -57,9 +57,9 @@ class Edge {
 inline static void drawTrapezoid(Lcd& lcd, Edge& edge1, Edge& edge2, int ymin, int ymax)
 {
 	const int bottom = 0;
-	const int top = lcd.cols();
+	const int top = lcd.getWidth();
 	const int leftLimit = 0;
-	const int rightLimit = lcd.cols();
+	const int rightLimit = lcd.getHeight();
 	if (ymin < bottom) {
 		const int offset = bottom - ymin;
 		edge1.advance(offset);

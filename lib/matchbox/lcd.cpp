@@ -91,7 +91,7 @@ void Lcd::line(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b) 
 	const int stepY = y0 < y1 ? 1 : -1;
 	int err = dx - dy;
     uint32_t pixaddr = x0 * _channels;
-	while (x0 != x1 && y0 != y1) {
+	while (x0 != x1 || y0 != y1) {
 		setPixel(x0, y0, r, g, b); // TODO: optimize with bit banding
 		int e2 = err << 1;
 		if (e2 <  dx) {

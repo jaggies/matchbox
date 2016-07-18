@@ -28,11 +28,16 @@
 class Lcd {
 	public:
         enum FontSize { FONT_SMALL, FONT_MEDIUM, FONT_LARGE };
-        Lcd(Spi& spi,
-                uint8_t en = LCD_PEN_PIN,
-                uint8_t scs = LCD_SCS_PIN,
-                uint8_t extc = LCD_EXTC_PIN,
-                uint8_t disp = LCD_DISP_PIN);
+        struct Config {
+                Config() :
+                    doubleBuffer(0), en(LCD_PEN_PIN), scs(LCD_SCS_PIN), extc(LCD_EXTC_PIN),
+                    disp(LCD_DISP_PIN) { }
+                int doubleBuffer :1;
+                // control pins
+                uint8_t en, scs, extc, disp;
+        };
+        Lcd(Spi& spi, const Config& config = Config());
+
 		void begin(void);
 		void clear(uint8_t r, uint8_t g, uint8_t b);
 		void setPixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
@@ -41,9 +46,15 @@ class Lcd {
 		void rect(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b, bool fill = true);
 		int putChar(uint8_t c, int x, int y);
 		void putString(const char *str, int x, int y);
+		void swapBuffers() {
+            _doSwap = true; /* handled in refresh */
+            while (_doSwap) {
+                // wait for ack from interrupt handler
+            }
+		}
 
-		int rows() const { return _yres; }
-		int cols() const { return _xres; }
+		int getHeight() const { return _yres; }
+		int getWidth() const { return _xres; }
 		void refresh();
 
 	private:
@@ -53,19 +64,25 @@ class Lcd {
 		        uint8_t data[LCD_LINE_SIZE];
 		};
 
+		struct Frame {
+		        Frame() : sync1(0), sync2(0) { }
+		        Line line[LCD_YRES];
+		        const uint8_t sync1, sync2; // final sync bytes to simplify SPI streaming
+		};
+
 		static void refreshFrameCallback(void* arg);
 		static void refreshLineCallback(void* arg);
 		void refreshFrame();
 
 		Spi& _spi;
+		Config _config;
 		uint8_t _frame; // refresh frame count
-		uint8_t _row; // refresh rown count
 		const uint16_t _xres, _yres, _channels, _line_size;
-		const uint8_t _en, _scs, _extc, _disp;
 		uint8_t _clear;
 		const Font* _currentFont;
-		struct Line _frameBuffer[LCD_YRES];
-		const uint8_t _sync1, _sync2; // sync bytes for LCD to simplify SPI stream
+		Frame* _writeBuffer;
+		Frame* _refreshBuffer;
+		volatile bool _doSwap; // trigger swapBuffer on next frame refresh
 };
 
 #define BITBAND_SRAM_REF 0x20000000
@@ -77,7 +94,7 @@ inline void Lcd::setPixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t 
 {
 #ifdef DO_BITBAND
     uint32_t pixaddr = x * _channels;
-    uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) &_frameBuffer[y].data[0], pixaddr);
+    uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int)&_writeBuffer->line[y].data[0], pixaddr);
     *pixel++ = r ? 1 : 0;
     *pixel++ = g ? 1 : 0;
     *pixel = b ? 1 : 0;

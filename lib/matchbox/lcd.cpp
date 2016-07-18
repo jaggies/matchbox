@@ -17,23 +17,23 @@
 #include "lcd.h"
 #include "util.h"
 
-Lcd::Lcd(Spi& spi, uint8_t en, uint8_t scs, uint8_t extc,
-        uint8_t disp) : _spi(spi), _en(en), _scs(scs), _extc(extc),
-        _disp(disp), _clear(1), _row(0), _frame(0), _currentFont(0),
+Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
+        _clear(1), _frame(0), _currentFont(getFont("roboto_bold_10")),
         _xres(LCD_XRES), _yres(LCD_YRES), _channels(LCD_CHAN), _line_size(LCD_XRES*LCD_CHAN/8),
-        _sync1(0), _sync2(0)
+        _refreshBuffer(new Frame()), _doSwap(true)
 {
-    _currentFont = getFont("roboto_bold_10");
+    bool doubleBuffer = config.doubleBuffer;
+    _writeBuffer = doubleBuffer ? new Frame() : _refreshBuffer;
 }
 
 void Lcd::begin() {
     // Skip sclk and si since SPI initializes them for alternate functionality (spi)
-    uint8_t pins[] = {_en, _scs, _extc, _disp };
+    uint8_t pins[] = {_config.en, _config.scs, _config.extc, _config.disp };
     uint8_t defaults[] = { 1, 0, 0, 1 };
     for (int i = 0; i < Number(pins); i++) {
         pinInitOutput(pins[i], defaults[i]);
     }
-    bzero(&_frameBuffer, sizeof(_frameBuffer));
+    bzero(_refreshBuffer, sizeof(*_refreshBuffer));
     refreshFrame(); // start SPI transfer chain
 }
 
@@ -46,11 +46,14 @@ void Lcd::refreshFrameCallback(void* arg) {
 // Single line format : SCS CMD ROW <data0..n> 0 0 SCS#
 // Multi-line format : SCS CMD ROW <data0..n> IGNORED ROW <data0..127> ... SCS#
 void Lcd::refreshFrame() {
-    writePin(_extc, (_frame++) & 0x01); // Toggle common driver once per frame
-    writePin(_scs, 0); // cs disabled
-    writePin(_scs, 1); // cs enabled
-    Spi::Status status = _spi.transmit((uint8_t*)&_frameBuffer[0],
-            sizeof(_frameBuffer) + 2 /* sync bytes */,
+    if (_doSwap) {
+        std::swap(_refreshBuffer, _writeBuffer);
+    }
+    _doSwap = false;
+    writePin(_config.extc, (_frame++) & 0x01); // Toggle common driver once per frame
+    writePin(_config.scs, 0); // cs disabled
+    writePin(_config.scs, 1); // cs enabled
+    Spi::Status status = _spi.transmit((uint8_t*)_refreshBuffer, sizeof(*_refreshBuffer),
             refreshFrameCallback, this);
     if (Spi::OK != status) {
         printf("Failed to refresh with status=%d\n", status);
@@ -69,7 +72,7 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
         *pixel++ = b ? 1 : 0;
     }
     for (int j = 0; j < _yres; j++) {
-        uint8_t* pixels = &_frameBuffer[j].data[0];
+        uint8_t* pixels = &_writeBuffer->line[j].data[0];
         for (int i = 0; i < _line_size/3; i++) {
             *pixels++ = p[0];
             *pixels++ = p[1];
@@ -79,8 +82,8 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     // Initialize the cmd/row data. If this gets clobbered, the LCD won't update.
     const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
     for (int i = 0; i < _yres; i++) {
-        _frameBuffer[i].cmd = cmd;
-        _frameBuffer[i].row = i + 1;
+        _writeBuffer->line[i].cmd = cmd;
+        _writeBuffer->line[i].row = i + 1;
     }
 }
 
@@ -192,4 +195,3 @@ void Lcd::putString(const char *str, int x, int y) {
 		x += putChar(ch, x, y);
 	}
 }
-

@@ -6,6 +6,7 @@
  */
 
 #include <assert.h>
+#include <string.h> // memcpy()
 #include "matchbox.h"
 #include "lcd.h"
 #include "adc.h"
@@ -47,6 +48,7 @@ static void drawBars(Lcd& lcd, int vertical)
             lcd.setPixel(i,j, (index >> 4) & 1, (index >> 5) & 1, (index >> 6) & 1);
         }
     }
+    lcd.swapBuffers();
 }
 
 static void drawChecker(Lcd& lcd, int scale)
@@ -57,10 +59,12 @@ static void drawChecker(Lcd& lcd, int scale)
             lcd.setPixel(i,j, pix, pix, pix);
         }
     }
+    lcd.swapBuffers();
 }
 
 static void drawAdc(Lcd& lcd, const uint16_t* values, int n, uint8_t r, uint8_t g, uint8_t b, bool useLine)
 {
+    static int f = 0;
     if (useLine) {
         for (int x0 = 0; x0 < n; x0++) {
             int y0 = values[x0 & 0x7f] & 0x7f;
@@ -73,19 +77,15 @@ static void drawAdc(Lcd& lcd, const uint16_t* values, int n, uint8_t r, uint8_t 
             lcd.setPixel(i, values[i] & 0x7f, r, g, b);
         }
     }
+    if (!(f++%16)) { // Persist some samples before clearing
+        lcd.swapBuffers();
+        lcd.clear(1,1,1);
+    }
 }
 
 static void adcCallback(const uint16_t* values, int n, void* arg) {
-    Lcd& lcd = *(Lcd*) arg;
-    int tmp = mode % 36;
-    if (tmp >= 12 && tmp < 28) {
-        static int f = 0;
-        // Persist some samples before clearing
-        if (!(f++%16)) {
-            lcd.clear(1,1,1);
-        }
-        drawAdc(lcd, values, n, mode&1, mode&2, mode&4, (mode %36) >= 20);
-    }
+    uint16_t* buffer = (uint16_t*) arg;
+    memcpy(buffer, values, n * sizeof(uint16_t));
 }
 
 void buttonHandler(uint32_t pin, void* data) {
@@ -103,8 +103,9 @@ void StartDefaultTask(void const * argument)
 {
   Spi spi2(Spi::SP2);
   Lcd lcd(spi2);
-  Adc adc(Adc::AD1, 128);
+  Adc adc(Adc::AD1, lcd.getWidth());
   Button sw2(SW2_PIN, buttonHandler, &mode);
+  uint16_t samples[lcd.getWidth()];
 
   pinInitOutput(LED_PIN, 1);
 
@@ -112,27 +113,28 @@ void StartDefaultTask(void const * argument)
   lcd.begin();
   lcd.clear(1,1,1);
 
-  adc.start(adcCallback, &lcd);
+  adc.start(adcCallback, &samples[0]);
 
   int frame = 0;
   char buff[32];
   while (1) {
     toggleLed();
-    sprintf(buff, "Frame%04d", frame);
-    lcd.putString(buff, 0, 0);
     int tmp = mode % 36;
     if (tmp == 0) {
-        int k = frame >> 7;
+        int k = frame >> 5;
         lcd.clear(k & 1, k & 2, k & 4);
+        lcd.swapBuffers();
     } else if (tmp < 3) {
         drawBars(lcd, tmp == 2);
     } else if (tmp < 12) {
         drawChecker(lcd, tmp == 11 ? (frame&0x7) : (tmp - 3));
     } else if (tmp < 28) {
-        // handled by drawAdc()
+        drawAdc(lcd, samples, lcd.getWidth(), mode&1, mode&2, mode&4, (mode %36) >= 20);
     } else {
         lcd.circle(64,64,frame%64, (frame>>6) & 1, (frame>>7) & 1, (frame>>8) & 1);
     }
+    sprintf(buff, "Frame%04d", frame);
+    lcd.putString(buff, 0, 0);
     frame++;
   }
 }

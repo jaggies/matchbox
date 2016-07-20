@@ -102,7 +102,7 @@ void buttonHandler(uint32_t pin, void* data) {
 
 void StartDefaultTask(void const * argument)
 {
-  Spi spi2(Spi::SP2);
+  Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST));
   Lcd::Config config;
   config.doubleBuffer = 1;
   Lcd lcd(spi2, config);

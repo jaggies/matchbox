@@ -17,21 +17,41 @@ extern "C" void SPI3_IRQHandler();
 
 class Spi {
     public:
-        static const int DEFAULT_TIMEOUT = 1000; // ms
+        static const int DEFAULT_TIMEOUT = 1000; // timeout for sync transfer, in milliseconds
+        enum Status { OK = 0U, ERROR, BUSY, TIMEOUT, ILLEGAL};
+
         enum Bus { SP1 = 0, SP2 = 1, SP3 = 2 };
         enum Mode { Master = 0, Slave = 1 };
         enum Direction { TxRx = 0, RxOnly, BiDi };
-        enum DataSize { S8, S16 };
+        enum Size { S8, S16 };
         enum Polarity { LOW, HIGH };
         enum Phase { Rising, Falling };
-        enum FirstBit { MSB, LSB };
-        enum Status { OK = 0U, ERROR, BUSY, TIMEOUT, ILLEGAL};
+        enum Order { MSB_FIRST, LSB_FIRST };
+
+        class Config {
+            public:
+                Config() : mode(Master), dir(TxRx), size(S8), polarity(LOW),
+                        phase(Rising), order(MSB_FIRST) { }
+                Config& setMode(Mode m) { mode = m; return *this; }
+                Config& setDirection(Direction d) { dir = d; return *this; }
+                Config& setSize(Size sz) { size = sz; return *this; }
+                Config& setPolarity(Polarity p) { polarity = p; return *this; }
+                Config& setPhase(Phase p) { phase = p; return *this; }
+                Config& setOrder(Order ord) { order = ord; return *this; }
+
+                Mode mode;
+                Direction dir;
+                Size size;
+                Polarity polarity;
+                Phase phase;
+                Order order;
+        };
+
         typedef void (*TransmitCallback)(void *args);
         typedef void (*ReceiveCallback)(void *args);
         typedef void (*TxRxCallback)(void *args);
 
-        Spi(Bus bus, Mode mode = Master, Direction dir = TxRx, DataSize = S8, Polarity pol = LOW,
-                Phase phase = Rising, FirstBit bit = LSB);
+        Spi(Bus bus, const Config& config);
         ~Spi();
 
         Status transmit(const uint8_t* data, uint16_t n, TransmitCallback cb = 0, void* args = 0);

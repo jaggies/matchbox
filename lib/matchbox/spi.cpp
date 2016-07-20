@@ -21,18 +21,19 @@ static const uint32_t _dirMap[] = { SPI_DIRECTION_2LINES, SPI_DIRECTION_2LINES_R
 // Used to quickly map an irq to an instance of Spi object
 static Spi* spiMap[3] = { 0, 0, 0 };
 
-Spi::Spi(Bus bus, Mode mode, Direction d, DataSize sz, Polarity pol, Phase ph, FirstBit fb)
-        : _bus(bus), _txCallback(0), _rxCallback(0), _txrxCallback(0), _txArgs(0), _rxArgs(0), _txrxArgs(0) {
+Spi::Spi(Bus bus, const Config& config)
+        : _bus(bus), _txCallback(0), _rxCallback(0), _txrxCallback(0), _txArgs(0),
+          _rxArgs(0), _txrxArgs(0) {
     bzero(&_spi, sizeof(_spi));
     _spi.Instance = _busMap[bus];
-    _spi.Init.Mode = mode == Master ? SPI_MODE_MASTER : SPI_MODE_SLAVE;
-    _spi.Init.Direction = _dirMap[d];
-    _spi.Init.DataSize = sz == S8 ? SPI_DATASIZE_8BIT : SPI_DATASIZE_16BIT;
-    _spi.Init.CLKPolarity = pol == LOW ? SPI_POLARITY_LOW : SPI_POLARITY_HIGH;
-    _spi.Init.CLKPhase = ph == Rising ? SPI_PHASE_1EDGE : SPI_PHASE_2EDGE;
+    _spi.Init.Mode = config.mode == Master ? SPI_MODE_MASTER : SPI_MODE_SLAVE;
+    _spi.Init.Direction = _dirMap[config.dir];
+    _spi.Init.DataSize = config.size == S8 ? SPI_DATASIZE_8BIT : SPI_DATASIZE_16BIT;
+    _spi.Init.CLKPolarity = config.polarity == LOW ? SPI_POLARITY_LOW : SPI_POLARITY_HIGH;
+    _spi.Init.CLKPhase = config.phase == Rising ? SPI_PHASE_1EDGE : SPI_PHASE_2EDGE;
     _spi.Init.NSS = SPI_NSS_HARD_OUTPUT;
     _spi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16; // TODO
-    _spi.Init.FirstBit = fb == MSB ? SPI_FIRSTBIT_MSB : SPI_FIRSTBIT_LSB;
+    _spi.Init.FirstBit = config.order == MSB_FIRST ? SPI_FIRSTBIT_MSB : SPI_FIRSTBIT_LSB;
     _spi.Init.TIMode = SPI_TIMODE_DISABLE;
     _spi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
     _spi.Init.CRCPolynomial = 10;

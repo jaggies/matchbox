@@ -3,3 +3,6 @@ build
 .DS_Store
 projects/stm168MHzWUSB/
 apps/experimental/
+.cproject
+.project
+apps/bletest/

@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include "arduino.h"
 
-extern "C" {
-extern void setup();
-extern void loop();
-}
+// Instantiations of static classes
+Eeprom EEPROM;
+ArduinoSerial Serial;
+SPIClass SPI;
 
 __attribute((weak))
 void setup() {

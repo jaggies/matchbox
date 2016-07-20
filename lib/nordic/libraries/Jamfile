@@ -1,0 +1,3 @@
+SubDir TOP lib nordic libraries ;
+
+SubInclude TOP lib nordic libraries BLE ;

@@ -3,7 +3,12 @@
 /* This value should be set to the starting address of the bootloader on your
  * device. On Arduino platforms using the ATMega328(p), 0x7000 is correct.
  */
+#if defined(__AVR__)
 #define BOOTLOADER_START_ADDR 0x7000
+#elif defined(__STM32__)
+#define E2END (4*1024) // STM32 has 4kB of backup SRAM
+#define BOOTLOADER_START_ADDR 0x1fff0004
+#endif
 
 /* This way of jumping to bootloader is inspired by bootloaders written by
  * Dean Camera.

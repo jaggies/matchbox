@@ -14,6 +14,7 @@ Library libmatchbox :
 	adc.cpp
 	button.cpp
 	fifo.cpp
+	eeprom.cpp
 	gpio.cpp
 	hal_msp.c
 	hal_timebase.c

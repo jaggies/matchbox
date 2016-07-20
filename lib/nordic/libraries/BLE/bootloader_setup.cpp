@@ -1,5 +1,9 @@
+#if defined(__AVR__)
 #include <avr/wdt.h>
 #include <EEPROM.h>
+#elif defined(__STM32__)
+#include "arduino.h" // compatibility library
+#endif
 #include "bootloader_setup.h"
 
 /* This variable is put in .noinit which means it is not initialized
@@ -26,6 +30,7 @@ static uint16_t crc_16_ccitt(uint16_t crc, uint8_t * data_in, uint16_t len)
 
 void bootloader_jump_check (void)
 {
+#if defined(__AVR__)
   uint8_t wdt_flag = MCUSR & (1 << WDRF);
 
   MCUSR &= ~(1 << WDRF);
@@ -36,6 +41,7 @@ void bootloader_jump_check (void)
 
     ((void (*)(void)) BOOTLOADER_START_ADDR) ();
   }
+#endif
 }
 
 void bootloader_jump(aci_state_t *state)
@@ -49,7 +55,9 @@ void bootloader_jump(aci_state_t *state)
   /* Set the special bootloader key value */
   boot_key = BOOTLOADER_KEY;
 
+#if defined(__AVR__)
   wdt_enable(WDTO_15MS);
+#endif
   while(1);
 }
 

@@ -27,7 +27,7 @@
 #include "hal_platform.h"
 #include "hal_aci_tl.h"
 #include "aci_queue.h"
-#if ( !defined(__SAM3X8E__) && !defined(__PIC32MX__) )
+#if ( !defined(__SAM3X8E__) && !defined(__PIC32MX__) && !defined(__STM32__))
 #include <avr/sleep.h>
 #endif
 /*
@@ -42,6 +42,8 @@ The outgoing command and the incoming event needs to be converted
     //For ChipKit as the transmission has to be reversed, the next definitions have to be added
     #define REVERSE_BITS(byte) (((reverse_lookup[(byte & 0x0F)]) << 4) + reverse_lookup[((byte & 0xF0) >> 4)])
     static const uint8_t reverse_lookup[] = { 0, 8,  4, 12, 2, 10, 6, 14,1, 9, 5, 13,3, 11, 7, 15 };
+#elif defined(__STM32__) 
+#include "arduino.h"
 #endif
 
 static void m_aci_data_print(hal_aci_data_t *p_data);
@@ -258,7 +260,7 @@ void hal_aci_tl_debug_print(bool enable)
 
 void hal_aci_tl_pin_reset(void)
 {
-    if (UNUSED != a_pins_local_ptr->reset_pin)
+    if (UNUSED_PIN != a_pins_local_ptr->reset_pin)
     {
         pinMode(a_pins_local_ptr->reset_pin, OUTPUT);
 
@@ -366,7 +368,7 @@ void hal_aci_tl_init(aci_pins_t *a_pins, bool debug)
   pinMode(a_pins->rdyn_pin,		INPUT_PULLUP);
   pinMode(a_pins->reqn_pin,		OUTPUT);
 
-  if (UNUSED != a_pins->active_pin)
+  if (UNUSED_PIN != a_pins->active_pin)
   {
     pinMode(a_pins->active_pin,	INPUT);
   }

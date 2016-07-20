@@ -5,4 +5,5 @@ SubInclude TOP lib font ;
 SubInclude TOP lib gl ;
 SubInclude TOP lib hal ;
 SubInclude TOP lib matchbox ;
+SubInclude TOP lib nordic ;
 SubInclude TOP lib render ;

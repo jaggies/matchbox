@@ -29,9 +29,13 @@ class Lcd {
 	public:
         enum FontSize { FONT_SMALL, FONT_MEDIUM, FONT_LARGE };
         struct Config {
-                Config() :
-                    doubleBuffer(0), en(LCD_PEN_PIN), scs(LCD_SCS_PIN), extc(LCD_EXTC_PIN),
-                    disp(LCD_DISP_PIN) { }
+                Config() : doubleBuffer(0), en(LCD_PEN_PIN), scs(LCD_SCS_PIN), extc(LCD_EXTC_PIN),
+                        disp(LCD_DISP_PIN) { }
+                Config& setDoubleBuffered(bool db) { doubleBuffer = db ? 1 : 0; return *this; }
+                Config& setPowerEnable(int pin) { en = pin; return *this; }
+                Config& setChipSelect(int pin) { scs = pin; return *this; }
+                Config& setExtC(int pin) { extc = pin; return *this; }
+                Config& setDisplayEnable(int pin) { disp = pin; return *this; }
                 int doubleBuffer :1;
                 // control pins
                 uint8_t en, scs, extc, disp;

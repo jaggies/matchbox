@@ -23,31 +23,32 @@ inline uint32_t irqNumber(uint32_t pin) {
 Pin* Pin::_pins[16];
 
 Pin::Pin(int pin, const Config& config, Callback cb, void* arg)
-        :_pin(pin), _config(config), _callback(cb), _arg(arg) {
+        :_pin(pin), _callback(cb), _arg(arg) {
+    GPIO_InitTypeDef gpio = {0};
     switch (config.mode) {
-        case MODE_INPUT: _gpiox.Mode = GPIO_MODE_INPUT; break;
-        case MODE_OUTPUT: _gpiox.Mode = GPIO_MODE_OUTPUT_PP; break;
-        case MODE_ALTERNATE: _gpiox.Mode = GPIO_MODE_AF_PP; break;
-        case MODE_ANALOG: _gpiox.Mode = GPIO_MODE_ANALOG; break;
+        case MODE_INPUT: gpio.Mode = GPIO_MODE_INPUT; break;
+        case MODE_OUTPUT: gpio.Mode = GPIO_MODE_OUTPUT_PP; break;
+        case MODE_ALTERNATE: gpio.Mode = GPIO_MODE_AF_PP; break;
+        case MODE_ANALOG: gpio.Mode = GPIO_MODE_ANALOG; break;
     }
     if (_callback) { // enable interrupts
         switch (config.edge) {
-            case EDGE_NONE: _gpiox.Mode |= 0; break; // disabled
-            case EDGE_RISING: _gpiox.Mode |= GPIO_MODE_IT_RISING; break;
-            case EDGE_FALLING: _gpiox.Mode |= GPIO_MODE_IT_FALLING; break;
-            case EDGE_RISING_FALLING: _gpiox.Mode |= GPIO_MODE_IT_RISING_FALLING; break;
+            case EDGE_NONE: gpio.Mode |= 0; break; // disabled
+            case EDGE_RISING: gpio.Mode |= GPIO_MODE_IT_RISING; break;
+            case EDGE_FALLING: gpio.Mode |= GPIO_MODE_IT_FALLING; break;
+            case EDGE_RISING_FALLING: gpio.Mode |= GPIO_MODE_IT_RISING_FALLING; break;
         }
     }
-    _gpiox.Pull = config.pull == PULL_NONE ? GPIO_NOPULL
+    gpio.Pull = config.pull == PULL_NONE ? GPIO_NOPULL
             : (config.pull == GPIO_PULLUP ? PULL_UP : PULL_DOWN);
-    _gpiox.Pin = toIoPin(pin);
+    gpio.Pin = toIoPin(pin);
     switch(config.speed) {
-        case SPEED_LOW: _gpiox.Speed = GPIO_SPEED_FREQ_LOW; break;
-        case SPEED_MEDIUM: _gpiox.Speed = GPIO_SPEED_FREQ_MEDIUM; break;
-        case SPEED_HIGH: _gpiox.Speed = GPIO_SPEED_FREQ_HIGH; break;
-        case SPEED_VERY_HIGH: _gpiox.Speed = GPIO_SPEED_FREQ_VERY_HIGH; break;
+        case SPEED_LOW: gpio.Speed = GPIO_SPEED_FREQ_LOW; break;
+        case SPEED_MEDIUM: gpio.Speed = GPIO_SPEED_FREQ_MEDIUM; break;
+        case SPEED_HIGH: gpio.Speed = GPIO_SPEED_FREQ_HIGH; break;
+        case SPEED_VERY_HIGH: gpio.Speed = GPIO_SPEED_FREQ_VERY_HIGH; break;
     }
-    HAL_GPIO_Init(toBus(pin), &_gpiox);
+    HAL_GPIO_Init(toBus(pin), &gpio);
 
     const int irqno = irqNumber(pin);
     const IRQn_Type irq = irqMap[irqno];

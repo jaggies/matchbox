@@ -60,10 +60,10 @@ void pinInitIrq(uint16_t pin, uint16_t falling) {
     HAL_GPIO_Init(bus, &GPIO_InitStruct);
 }
 
-void writePin(uint16_t pin, uint16_t value) {
+void writePin(uint16_t pin, bool set) {
     GPIO_TypeDef* bus = toBus(pin);
     if (bus) {
-        HAL_GPIO_WritePin(toBus(pin), toIoPin(pin), value ? GPIO_PIN_SET : GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(toBus(pin), toIoPin(pin), set ? GPIO_PIN_SET : GPIO_PIN_RESET);
     }
 }
 

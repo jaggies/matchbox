@@ -16,10 +16,6 @@ static const IRQn_Type irqMap[] = {
     EXTI15_10_IRQn, EXTI15_10_IRQn, EXTI15_10_IRQn, EXTI15_10_IRQn, EXTI15_10_IRQn, EXTI15_10_IRQn,
 };
 
-inline uint32_t irqNumber(uint32_t pin) {
-    return pin & 0x0f;
-}
-
 Pin* Pin::_pins[16];
 
 Pin::Pin(int pin, const Config& config, Callback cb, void* arg)

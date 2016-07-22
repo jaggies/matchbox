@@ -10,7 +10,7 @@
 #include "matchbox.h"
 #include "lcd.h"
 #include "adc.h"
-#include "button.h"
+#include "pin.h"
 
 osThreadId defaultTaskHandle;
 static uint8_t mode;

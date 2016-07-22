@@ -12,6 +12,8 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 class Pin {
     public:
+        typedef void (*Callback)(uint32_t pin, void* data);
+
         enum Edge { EDGE_NONE=0, EDGE_RISING, EDGE_FALLING, EDGE_RISING_FALLING }; //NONE==disabled
         enum Mode { MODE_INPUT=0, MODE_OUTPUT, MODE_ANALOG, MODE_ALTERNATE};
         enum Pull { PULL_NONE=0, PULL_UP, PULL_DOWN };
@@ -33,7 +35,7 @@ class Pin {
                 Pull pull;
                 Speed speed;
         };
-        typedef void (*Callback)(uint32_t pin, void* data);
+
         Pin(int pin, const Config& config, Callback cb = 0, void* args = 0);
         ~Pin();
 
@@ -43,11 +45,9 @@ class Pin {
         friend void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
         inline void handleIrq() { if (_callback) _callback(_pin, _arg); }
         uint32_t _pin;
-        Config _config;
         Callback _callback;
         void *_arg;
         static Pin* _pins[16];
-        GPIO_InitTypeDef _gpiox;
 };
 
 // Button is a Pin with interrupts enabled on falling edge

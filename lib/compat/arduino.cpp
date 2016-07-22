@@ -1,6 +1,7 @@
+#include "cmsis_os.h"
 #include "arduino.h"
-#include "button.h"
 #include "gpio.h"
+#include "pin.h"
 
 static Button *button[16];
 
@@ -27,11 +28,11 @@ void attachInterrupt(uint8_t number, void (*isr)(void), int state) {
         button[irq] = NULL;
     }
     // TODO: This lies about the pin number.. always assumes PA0..PA15
-    button[irq] = new Button(irq, doArduinoInterrupt, isr);
+    button[irq] = new Button(irq, doArduinoInterrupt, (void*) isr);
 }
 
 void delay(unsigned long ms) {
-    HAL_Delay(ms); // TODO: Confirm this works
+    osDelay(ms); // TODO: Confirm this works
 }
 
 volatile int __delay;
@@ -53,12 +54,20 @@ void pinMode(uint8_t pin, uint8_t mode) {
     const bool isInput = (mode == INPUT) || (mode == INPUT_PULLUP) || (mode == INPUT_PULLDOWN);
     GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
     GPIO_InitStruct.Pin = toIoPin(pin);
-    GPIO_InitStruct.Mode = mode == OUTPUT ? GPIO_MODE_OUTPUT_PP : GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = ((isInput && mode == INPUT) || mode == OUTPUT) ? GPIO_NOPULL
-            : (mode == INPUT_PULLUP ? GPIO_PULLUP : GPIO_PULLDOWN);
-    GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-    GPIO_TypeDef* bus = toBus(pin); // PA, PB, etc.
-    HAL_GPIO_Init(bus, &GPIO_InitStruct);
+    switch (mode) {
+        case INPUT_PULLDOWN:
+        case INPUT_PULLUP:
+        case INPUT:
+            GPIO_InitStruct.Pull = mode == INPUT ? GPIO_NOPULL
+                    : (mode == INPUT_PULLUP ? GPIO_PULLUP : GPIO_PULLDOWN);
+            GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+            break;
+        case OUTPUT:
+            GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+            break;
+    }
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(toBus(pin), &GPIO_InitStruct);
 }
 
 void digitalWrite(uint8_t pin, uint8_t value) {

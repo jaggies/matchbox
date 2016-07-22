@@ -30,6 +30,7 @@ void writePin(uint16_t pin, bool set);
 int readPin(uint16_t pin);
 uint16_t toIoPin(uint16_t pin);
 GPIO_TypeDef* toBus(uint16_t pin);
+inline uint32_t irqNumber(uint32_t pin) { return pin & 0x0f; }
 
 # ifdef __cplusplus
 }

@@ -12,9 +12,9 @@ SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source include ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 
-LINKLIBS on hello = -Wl,--whole-archive -lhal -lusb -lfreertos -lc -lmatchbox -lfont -Wl,--no-whole-archive ;
+LINKLIBS on hello = -Wl,--whole-archive -lmatchbox -lusb -lfreertos -lhal -Wl,--no-whole-archive ;
 
-Depends hello : librender.a libmatchbox.a libfont.a libhal.a ;
+Depends hello : libmatchbox.a libusb.a libfreertos.a libhal.a ;
 
 Main hello :
 	hello.cpp

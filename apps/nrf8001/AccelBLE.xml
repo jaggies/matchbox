@@ -237,7 +237,7 @@
         <InitialTxPower>3</InitialTxPower>
         <HfClkSource>0</HfClkSource>
         <DcDcConverter>0</DcDcConverter>
-        <ActiveSignalModeIndex>0</ActiveSignalModeIndex>
+        <ActiveSignalModeIndex>1</ActiveSignalModeIndex>
         <ActiveSignalToTickDistance>0</ActiveSignalToTickDistance>
         <DynamicWindowLimitingEnabled>false</DynamicWindowLimitingEnabled>
     </Hardwaresettings>

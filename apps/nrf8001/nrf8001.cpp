@@ -9,6 +9,8 @@
 #include <matchbox.h>
 #include <pin.h>
 #include <spi.h>
+#include <adc.h>
+#include <fifo.h>
 #include "services.h" // configuration file for nrf8001
 
 osThreadId defaultTaskHandle;
@@ -27,6 +29,13 @@ struct Channel {
         char data[18];
         uint16_t packetLow; // lower 16 bits of current packet
 };
+
+static void adcCallback(const uint16_t* values, int n, void* arg) {
+    int i = 0;
+    Fifo<uint8_t, int8_t, 32>& fifo = *(Fifo<uint8_t, int8_t, 32>*)arg;
+    while (i++ < n && fifo.add(*values >> 4))
+        ;
+}
 
 int main(void) {
     MatchBox* mb = new MatchBox(MatchBox::C72MHz);
@@ -61,30 +70,35 @@ static struct aci_state_t aci_state;
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     nrf8001Setup();
+    Adc adc(Adc::AD1, 1);
+    Fifo<uint8_t, int8_t, 32> adcFifo;
+    adc.start(adcCallback, (void*) &adcFifo);
     int count = 0;
     Status status = {0};
-    Channel chan = {0};
+    Channel chan0 = {0};
+    Channel chan1 = {0};
+    int dataCount = 0; // number of items in data channel
     while (1) {
         aci_loop();
         if (aci_state.bonded) {
-            if (aci_state.data_credit_available > 0 && status.packetHigh != (count>>16)) {
-                if (lib_aci_is_pipe_available(&aci_state, PIPE_SENSORSERVICE_STATUS_TX)) {
+            if (status.packetHigh != (count>>16)) {
+                // sending status when it changes is higher priority than data
+                if (sendData(PIPE_SENSORSERVICE_STATUS_TX, status)) {
                     status.packetHigh = count >> 16;
-                    sendData(PIPE_SENSORSERVICE_STATUS_TX, status);
                 }
-            }
-            if (aci_state.data_credit_available > 0) {
-                chan.packetLow = count & 0xffff;
-                if (lib_aci_is_pipe_available(&aci_state, PIPE_SENSORSERVICE_CHANNEL0_TX)) {
-                    sprintf(chan.data, "chan0=%08x\0", count);
-                    if (sendData(PIPE_SENSORSERVICE_CHANNEL0_TX, chan)) {
+            } else {
+                uint8_t data;
+                while (dataCount < sizeof(chan0.data) && adcFifo.remove(&data)) {
+                    chan0.data[dataCount++] = data;
+                }
+                if (dataCount == sizeof(chan0.data)) {
+                    // full packet, send it
+                    chan0.packetLow = count & 0xffff;
+                    if (sendData(PIPE_SENSORSERVICE_CHANNEL0_TX, chan0)) {
                         led.write(count++ & 1);
+                        dataCount = 0;
                     }
                 }
-//                if (lib_aci_is_pipe_available(&aci_state, PIPE_SENSORSERVICE_CHANNEL0_TX)) {
-//                    sprintf(chan.data, "chan1=%08x", count);
-//                    sendData(PIPE_SENSORSERVICE_CHANNEL1_TX, chan);
-//                }
             }
         }
     }
@@ -266,11 +280,10 @@ void aci_loop() {
 
 template<class K> bool sendData(int pipe, const K& data) {
     bool status = false;
-    if (lib_aci_is_pipe_available(&aci_state, pipe)) {
-        if ((status = lib_aci_send_data(pipe, (uint8_t*) &data, sizeof(data)))) {
+    if (aci_state.data_credit_available > 0 && lib_aci_is_pipe_available(&aci_state, pipe)) {
+        if (lib_aci_send_data(pipe, (uint8_t*) &data, sizeof(data))) {
             aci_state.data_credit_available--;
-        } else {
-            if (DEBUG) printf("Failed to send data");
+            return true;
         }
     }
     return status;

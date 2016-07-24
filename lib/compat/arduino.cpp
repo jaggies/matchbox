@@ -32,7 +32,7 @@ void attachInterrupt(uint8_t number, void (*isr)(void), int state) {
 }
 
 void delay(unsigned long ms) {
-    osDelay(ms); // TODO: Confirm this works
+    osDelay(ms);
 }
 
 volatile int __delay;
@@ -51,22 +51,21 @@ void detachInterrupt(uint8_t irq) {
 
 void pinMode(uint8_t pin, uint8_t mode) {
     pin = pinMap[pin];
-    const bool isInput = (mode == INPUT) || (mode == INPUT_PULLUP) || (mode == INPUT_PULLDOWN);
     GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
     GPIO_InitStruct.Pin = toIoPin(pin);
     switch (mode) {
         case INPUT_PULLDOWN:
         case INPUT_PULLUP:
         case INPUT:
+            GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
             GPIO_InitStruct.Pull = mode == INPUT ? GPIO_NOPULL
                     : (mode == INPUT_PULLUP ? GPIO_PULLUP : GPIO_PULLDOWN);
-            GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
             break;
         case OUTPUT:
             GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
             break;
     }
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(toBus(pin), &GPIO_InitStruct);
 }
 

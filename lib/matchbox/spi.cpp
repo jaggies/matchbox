@@ -31,7 +31,8 @@ Spi::Spi(Bus bus, const Config& config)
     _spi.Init.DataSize = config.size == S8 ? SPI_DATASIZE_8BIT : SPI_DATASIZE_16BIT;
     _spi.Init.CLKPolarity = config.polarity == LOW ? SPI_POLARITY_LOW : SPI_POLARITY_HIGH;
     _spi.Init.CLKPhase = config.phase == Rising ? SPI_PHASE_1EDGE : SPI_PHASE_2EDGE;
-    _spi.Init.NSS = SPI_NSS_HARD_OUTPUT;
+    _spi.Init.NSS = config.ss == SOFTWARE ? SPI_NSS_SOFT
+            : (config.ss == HARD_OUTPUT ? SPI_NSS_HARD_OUTPUT : SPI_NSS_HARD_INPUT);
     _spi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16; // TODO
     _spi.Init.FirstBit = config.order == MSB_FIRST ? SPI_FIRSTBIT_MSB : SPI_FIRSTBIT_LSB;
     _spi.Init.TIMode = SPI_TIMODE_DISABLE;

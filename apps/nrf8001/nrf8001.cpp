@@ -51,8 +51,8 @@ static services_pipe_type_mapping_t services_pipe_type_mapping[NUMBER_OF_PIPES] 
 static services_pipe_type_mapping_t * services_pipe_type_mapping = NULL;
 #endif
 
-const uint16_t MIN_INTERVAL = 20; // *1.5ms
-const uint16_t MAX_INTERVAL = 30; // *1.5ms
+const uint16_t MIN_INTERVAL = 5; // *1.5ms
+const uint16_t MAX_INTERVAL = 1000; // *1.5ms
 const uint16_t SLAVE_LATENCY = 0; // #intervals nRF8001 can't transmit (higher = more power saving)
 const uint16_t SLAVE_TIMEOUT = 60000; // 600 * 10ms = 6000ms = 6s
 static const hal_aci_data_t setup_msgs[NB_SETUP_MESSAGES] = SETUP_MESSAGES_CONTENT;
@@ -73,7 +73,7 @@ void StartDefaultTask(void const * argument) {
                     sendData(PIPE_SENSORSERVICE_STATUS_TX, status);
                 }
             }
-            if (aci_state.data_credit_available > 1) {
+            if (aci_state.data_credit_available > 0) {
                 chan.packetLow = count & 0xffff;
                 if (lib_aci_is_pipe_available(&aci_state, PIPE_SENSORSERVICE_CHANNEL0_TX)) {
                     sprintf(chan.data, "chan0=%08x\0", count);
@@ -81,10 +81,10 @@ void StartDefaultTask(void const * argument) {
                         led.write(count++ & 1);
                     }
                 }
-                if (lib_aci_is_pipe_available(&aci_state, PIPE_SENSORSERVICE_CHANNEL0_TX)) {
-                    sprintf(chan.data, "chan1=%08x", count);
-                    sendData(PIPE_SENSORSERVICE_CHANNEL1_TX, chan);
-                }
+//                if (lib_aci_is_pipe_available(&aci_state, PIPE_SENSORSERVICE_CHANNEL0_TX)) {
+//                    sprintf(chan.data, "chan1=%08x", count);
+//                    sendData(PIPE_SENSORSERVICE_CHANNEL1_TX, chan);
+//                }
             }
         }
     }
@@ -266,7 +266,7 @@ void aci_loop() {
 
 template<class K> bool sendData(int pipe, const K& data) {
     bool status = false;
-    if (lib_aci_is_pipe_available(&aci_state, pipe) && (aci_state.data_credit_available >= 1)) {
+    if (lib_aci_is_pipe_available(&aci_state, pipe)) {
         if ((status = lib_aci_send_data(pipe, (uint8_t*) &data, sizeof(data)))) {
             aci_state.data_credit_available--;
         } else {

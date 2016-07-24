@@ -165,6 +165,124 @@
             <PeriodForProperties/>
         </Characteristic>
     </Service>
+    <Service Type="local" PrimaryService="true">
+        <Name>Current Time</Name>
+        <Uuid>1805</Uuid>
+        <Characteristic>
+            <Name>Current Time</Name>
+            <Uuid>2a2b</Uuid>
+            <DefaultValue></DefaultValue>
+            <UsePresentationFormat>0</UsePresentationFormat>
+            <MaxDataLength>10</MaxDataLength>
+            <AttributeLenType>1</AttributeLenType>
+            <ForceOpen>false</ForceOpen>
+            <ForceEncryption>false</ForceEncryption>
+            <Properties>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <Write>false</Write>
+                <Notify>true</Notify>
+                <Indicate>false</Indicate>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <SetPipe>true</SetPipe>
+            <AckIsAuto>false</AckIsAuto>
+            <PresentationFormatDescriptor Value="0000" Exponent="0" Format="1" NameSpace="01" Unit="0000"/>
+            <PeriodForReadingThisCharacteristic>0</PeriodForReadingThisCharacteristic>
+            <PeriodForProperties/>
+        </Characteristic>
+    </Service>
+    <Service Type="local" PrimaryService="true">
+        <Name>Nordic UART over BTLE</Name>
+        <Uuid BaseUUID="6e400000b5a3f393e0a9e50e24dcca9e" BaseUUIDName="Custom UART">0001</Uuid>
+        <Characteristic>
+            <Name>UART RX</Name>
+            <Uuid BaseUUID="6e400000b5a3f393e0a9e50e24dcca9e" BaseUUIDName="Custom UART">0002</Uuid>
+            <DefaultValue></DefaultValue>
+            <UsePresentationFormat>0</UsePresentationFormat>
+            <MaxDataLength>20</MaxDataLength>
+            <AttributeLenType>2</AttributeLenType>
+            <ForceOpen>false</ForceOpen>
+            <ForceEncryption>false</ForceEncryption>
+            <Properties>
+                <WriteWithoutResponse>true</WriteWithoutResponse>
+                <Write>false</Write>
+                <Notify>false</Notify>
+                <Indicate>false</Indicate>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <SetPipe>false</SetPipe>
+            <AckIsAuto>false</AckIsAuto>
+            <PresentationFormatDescriptor Value="0000" Exponent="0" Format="1" NameSpace="01" Unit="0000"/>
+            <PeriodForReadingThisCharacteristic>0</PeriodForReadingThisCharacteristic>
+            <PeriodForProperties/>
+        </Characteristic>
+        <Characteristic>
+            <Name>UART TX</Name>
+            <Uuid BaseUUID="6e400000b5a3f393e0a9e50e24dcca9e" BaseUUIDName="Custom UART">0003</Uuid>
+            <DefaultValue></DefaultValue>
+            <UsePresentationFormat>0</UsePresentationFormat>
+            <MaxDataLength>20</MaxDataLength>
+            <AttributeLenType>2</AttributeLenType>
+            <ForceOpen>false</ForceOpen>
+            <ForceEncryption>false</ForceEncryption>
+            <Properties>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <Write>false</Write>
+                <Notify>true</Notify>
+                <Indicate>false</Indicate>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <SetPipe>false</SetPipe>
+            <AckIsAuto>false</AckIsAuto>
+            <PresentationFormatDescriptor Value="0000" Exponent="0" Format="1" NameSpace="01" Unit="0000"/>
+            <PeriodForReadingThisCharacteristic>0</PeriodForReadingThisCharacteristic>
+            <PeriodForProperties/>
+        </Characteristic>
+        <Characteristic>
+            <Name>UART Link Timing Current</Name>
+            <Uuid BaseUUID="6e400000b5a3f393e0a9e50e24dcca9e" BaseUUIDName="Custom UART">0005</Uuid>
+            <DefaultValue>FFFFFFFFFFFF</DefaultValue>
+            <UsePresentationFormat>0</UsePresentationFormat>
+            <MaxDataLength>6</MaxDataLength>
+            <AttributeLenType>1</AttributeLenType>
+            <ForceOpen>false</ForceOpen>
+            <ForceEncryption>false</ForceEncryption>
+            <Properties>
+                <WriteWithoutResponse>true</WriteWithoutResponse>
+                <Write>false</Write>
+                <Notify>true</Notify>
+                <Indicate>false</Indicate>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <SetPipe>false</SetPipe>
+            <AckIsAuto>false</AckIsAuto>
+            <PresentationFormatDescriptor Value="0000" Exponent="0" Format="1" NameSpace="01" Unit="0000"/>
+            <PeriodForReadingThisCharacteristic>0</PeriodForReadingThisCharacteristic>
+            <PeriodForProperties/>
+        </Characteristic>
+        <Characteristic>
+            <Name>UART Control Point</Name>
+            <Uuid BaseUUID="6e400000b5a3f393e0a9e50e24dcca9e" BaseUUIDName="Custom UART">0004</Uuid>
+            <DefaultValue></DefaultValue>
+            <UsePresentationFormat>0</UsePresentationFormat>
+            <MaxDataLength>9</MaxDataLength>
+            <AttributeLenType>2</AttributeLenType>
+            <ForceOpen>false</ForceOpen>
+            <ForceEncryption>false</ForceEncryption>
+            <Properties>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <Write>false</Write>
+                <Notify>false</Notify>
+                <Indicate>false</Indicate>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <SetPipe>true</SetPipe>
+            <AckIsAuto>false</AckIsAuto>
+            <PresentationFormatDescriptor Value="0000" Exponent="0" Format="1" NameSpace="01" Unit="0000"/>
+            <PeriodForReadingThisCharacteristic>0</PeriodForReadingThisCharacteristic>
+            <PeriodForProperties/>
+        </Characteristic>
+    </Service>
     <Gapsettings>
         <Name>MatchBox</Name>
         <DeviceNameWriteLength>8</DeviceNameWriteLength>
@@ -179,7 +297,7 @@
         <MinimumKeySize>7</MinimumKeySize>
         <MaximumKeySize>16</MaximumKeySize>
         <AdvertisingDataBondedBitmap>0</AdvertisingDataBondedBitmap>
-        <AdvertisingDataGeneralBitmap>10</AdvertisingDataGeneralBitmap>
+        <AdvertisingDataGeneralBitmap>c1a</AdvertisingDataGeneralBitmap>
         <AdvertisingDataBrodcastBitmap>0</AdvertisingDataBrodcastBitmap>
         <AdvertisingDataBondedScanResponseBitmap>0</AdvertisingDataBondedScanResponseBitmap>
         <AdvertisingDataGeneralScanResponseBitmap>0</AdvertisingDataGeneralScanResponseBitmap>
@@ -222,7 +340,7 @@
     <CurrentInput>
         <BatteryCharge>750</BatteryCharge>
         <Master32KhzClockAccuracy>10</Master32KhzClockAccuracy>
-        <ConnectionInterval>10</ConnectionInterval>
+        <ConnectionInterval>7.5</ConnectionInterval>
         <PercentOfTimeSleeping>0</PercentOfTimeSleeping>
         <PercentOfTimeAdvertising>0</PercentOfTimeAdvertising>
         <AdvertisingInterval>1280</AdvertisingInterval>

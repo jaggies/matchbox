@@ -19,8 +19,17 @@ const bool DEBUG = false;
 
 template<class K> bool sendData(int pipe, const K& data);
 
+struct Status {
+        uint16_t packetHigh; // upper 16 bits of current packet
+        uint16_t sampleRate; // in Hz
+};
+struct Channel {
+        char data[18];
+        uint16_t packetLow; // lower 16 bits of current packet
+};
+
 int main(void) {
-    MatchBox* mb = new MatchBox(MatchBox::C18MHz);
+    MatchBox* mb = new MatchBox(MatchBox::C72MHz);
 
     osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
@@ -32,17 +41,6 @@ int main(void) {
     while (1)
         ;
     return 0;
-}
-
-void StartDefaultTask(void const * argument) {
-    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
-    nrf8001Setup();
-    int count = 0;
-    while (1) {
-        led.write(count++ & 1);
-        aci_loop(); //Process any ACI commands or events
-        sendData(PIPE_IMU_DATA_ACCELEROMETER_TX, count);
-    }
 }
 
 #ifdef SERVICES_PIPE_TYPE_MAPPING_CONTENT
@@ -59,6 +57,38 @@ const uint16_t SLAVE_LATENCY = 0; // #intervals nRF8001 can't transmit (higher =
 const uint16_t SLAVE_TIMEOUT = 60000; // 600 * 10ms = 6000ms = 6s
 static const hal_aci_data_t setup_msgs[NB_SETUP_MESSAGES] = SETUP_MESSAGES_CONTENT;
 static struct aci_state_t aci_state;
+
+void StartDefaultTask(void const * argument) {
+    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
+    nrf8001Setup();
+    int count = 0;
+    Status status = {0};
+    Channel chan = {0};
+    while (1) {
+        aci_loop();
+        if (aci_state.bonded) {
+            if (aci_state.data_credit_available > 0 && status.packetHigh != (count>>16)) {
+                if (lib_aci_is_pipe_available(&aci_state, PIPE_SENSORSERVICE_STATUS_TX)) {
+                    status.packetHigh = count >> 16;
+                    sendData(PIPE_SENSORSERVICE_STATUS_TX, status);
+                }
+            }
+            if (aci_state.data_credit_available > 1) {
+                chan.packetLow = count & 0xffff;
+                if (lib_aci_is_pipe_available(&aci_state, PIPE_SENSORSERVICE_CHANNEL0_TX)) {
+                    sprintf(chan.data, "chan0=%08x\0", count);
+                    if (sendData(PIPE_SENSORSERVICE_CHANNEL0_TX, chan)) {
+                        led.write(count++ & 1);
+                    }
+                }
+                if (lib_aci_is_pipe_available(&aci_state, PIPE_SENSORSERVICE_CHANNEL0_TX)) {
+                    sprintf(chan.data, "chan1=%08x", count);
+                    sendData(PIPE_SENSORSERVICE_CHANNEL1_TX, chan);
+                }
+            }
+        }
+    }
+}
 
 // Temporary buffers for sending ACI commands
 static hal_aci_evt_t aci_data;
@@ -156,13 +186,13 @@ void aci_loop() {
                 if (DEBUG) printf("Evt Connected\n");
                 timing_change_done = false;
                 aci_state.data_credit_available = aci_state.data_credit_total;
+                aci_state.bonded = true;
                 lib_aci_device_version(); // Get the device version of the nRF8001 and store it in the Hardware Revision String
             break;
 
             case ACI_EVT_PIPE_STATUS:
                 if (DEBUG) printf("Evt Pipe Status\n");
-                if (!timing_change_done
-                        && lib_aci_is_pipe_available(&aci_state, PIPE_IMU_DATA_ACCELEROMETER_TX)) {
+                if (!timing_change_done) {
                     // lib_aci_change_timing_GAP_PPCP(); // Pre-programmed parameters from nRFStudio (xml file)
                     if (!lib_aci_change_timing(MIN_INTERVAL, MAX_INTERVAL, SLAVE_LATENCY,
                             SLAVE_TIMEOUT)) {
@@ -178,6 +208,7 @@ void aci_loop() {
 
             case ACI_EVT_DISCONNECTED:
                 if (DEBUG) printf("Evt Disconnected/Advertising timed out\n");
+                aci_state.bonded = false;
                 lib_aci_connect(180/* in seconds */, 0x0100 /* advertising interval 100ms*/);
                 if (DEBUG) printf("Advertising started\n");
             break;

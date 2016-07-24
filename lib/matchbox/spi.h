@@ -27,17 +27,19 @@ class Spi {
         enum Polarity { LOW, HIGH };
         enum Phase { Rising, Falling };
         enum Order { MSB_FIRST, LSB_FIRST };
+        enum SlaveSelect { SOFTWARE, HARD_INPUT, HARD_OUTPUT };
 
         class Config {
             public:
                 Config() : mode(Master), dir(TxRx), size(S8), polarity(LOW),
-                        phase(Rising), order(MSB_FIRST) { }
+                        phase(Rising), order(MSB_FIRST), ss(HARD_OUTPUT) { }
                 Config& setMode(Mode m) { mode = m; return *this; }
                 Config& setDirection(Direction d) { dir = d; return *this; }
                 Config& setSize(Size sz) { size = sz; return *this; }
                 Config& setPolarity(Polarity p) { polarity = p; return *this; }
                 Config& setPhase(Phase p) { phase = p; return *this; }
                 Config& setOrder(Order ord) { order = ord; return *this; }
+                Config& setSlaveSelect(SlaveSelect s) { ss = s; return *this; }
 
                 Mode mode;
                 Direction dir;
@@ -45,6 +47,7 @@ class Spi {
                 Polarity polarity;
                 Phase phase;
                 Order order;
+                SlaveSelect ss;
         };
 
         typedef void (*TransmitCallback)(void *args);

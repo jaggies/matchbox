@@ -39,32 +39,25 @@ class SPISettings {
         uint8_t dataMode;
 };
 
+class Spi;
 
 class SPIClass {
-public:
-  static void begin() { }
-  static void usingInterrupt(uint8_t interruptNumber) { }
-  static void notUsingInterrupt(uint8_t interruptNumber) { }
-  inline static void beginTransaction(SPISettings settings) { }
-  inline static uint8_t transfer(uint8_t data) { return 0; }
-  inline static uint16_t transfer16(uint16_t data) { return 0; }
-  inline static void transfer(void *buf, size_t count) { }
-  inline static void endTransaction(void) { }
-  static void end();
-
-  // Deprecated.  Use beginTransaction()
-  inline static void setBitOrder(uint8_t bitOrder) { }
-
-  // Deprecated.  Use beginTransaction()
-  inline static void setDataMode(uint8_t dataMode) { }
-
-  // Deprecated.  Use beginTransaction()
-  inline static void setClockDivider(uint8_t clockDiv) { }
+    public:
+        SPIClass();
+        static void begin();
+        static void usingInterrupt(uint8_t interruptNumber);
+        static void notUsingInterrupt(uint8_t interruptNumber);
+        static void beginTransaction(SPISettings settings);
+        static uint8_t transfer(uint8_t data);
+        static uint16_t transfer16(uint16_t data);
+        static void transfer(void *buf, size_t count);
+        static void endTransaction(void);
+        static void end();
+        static void setBitOrder(uint8_t bitOrder); // Deprecated.  Use beginTransaction()
+        static void setDataMode(uint8_t dataMode); // Deprecated.  Use beginTransaction()
+        static void setClockDivider(uint8_t clockDiv); // Deprecated.  Use beginTransaction()
 };
 
 extern SPIClass SPI;
-
-
-
 
 #endif /* ARDUINO_SPI_H_ */

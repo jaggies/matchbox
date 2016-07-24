@@ -28,9 +28,9 @@ class ArduinoSerial : public ArduinoPrint {
         int available(void) { return 0; }
         int peek(void) { return 0; }
         int read(void) { return 0; }
-        int availableForWrite(void) { return 0; }
+        int availableForWrite(void) { return 10; /* ? */ }
         void flush(void) { }
-        size_t write(uint8_t) { return 0; }
+        size_t write(uint8_t c) { printf("%c", c); return 0; }
         inline size_t write(unsigned long n) {
             return write((uint8_t) n);
         }

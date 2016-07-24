@@ -42,7 +42,7 @@ The outgoing command and the incoming event needs to be converted
     //For ChipKit as the transmission has to be reversed, the next definitions have to be added
     #define REVERSE_BITS(byte) (((reverse_lookup[(byte & 0x0F)]) << 4) + reverse_lookup[((byte & 0xF0) >> 4)])
     static const uint8_t reverse_lookup[] = { 0, 8,  4, 12, 2, 10, 6, 14,1, 9, 5, 13,3, 11, 7, 15 };
-#elif defined(__STM32__) 
+#elif defined(__STM32__)
 #include "arduino.h"
 #endif
 
@@ -341,25 +341,6 @@ void hal_aci_tl_init(aci_pins_t *a_pins, bool debug)
   /* Needs to be called as the first thing for proper intialization*/
   m_aci_pins_set(a_pins);
 
-  /*
-  The SPI lines used are mapped directly to the hardware SPI
-  MISO MOSI and SCK
-  Change here if the pins are mapped differently
-
-  The SPI library assumes that the hardware pins are used
-  */
-  SPI.begin();
-  //Board dependent defines
-  #if defined (__AVR__)
-    //For Arduino use the LSB first
-    SPI.setBitOrder(LSBFIRST);
-  #elif defined(__PIC32MX__)
-    //For ChipKit use MSBFIRST and REVERSE the bits on the SPI as LSBFIRST is not supported
-    SPI.setBitOrder(MSBFIRST);
-  #endif
-  SPI.setClockDivider(a_pins->spi_clock_divider);
-  SPI.setDataMode(SPI_MODE0);
-
   /* Initialize the ACI Command queue. This must be called after the delay above. */
   aci_queue_init(&aci_tx_q);
   aci_queue_init(&aci_rx_q);
@@ -376,12 +357,35 @@ void hal_aci_tl_init(aci_pins_t *a_pins, bool debug)
   hal_aci_tl_pin_reset();
 
   /* Set the nRF8001 to a known state as required by the datasheet*/
+  pinMode(a_pins->miso_pin, OUTPUT);
+  pinMode(a_pins->mosi_pin, OUTPUT);
+  pinMode(a_pins->reqn_pin, OUTPUT);
+  pinMode(a_pins->sck_pin, OUTPUT);
   digitalWrite(a_pins->miso_pin, 0);
   digitalWrite(a_pins->mosi_pin, 0);
   digitalWrite(a_pins->reqn_pin, 1);
   digitalWrite(a_pins->sck_pin,  0);
 
-  delay(30); //Wait for the nRF8001 to get hold of its lines - the lines float for a few ms after the reset
+  /* Wait for the nRF8001 to get hold of its lines - the lines float for a few ms after the reset */
+  delay(30);
+
+  /*
+    The SPI lines used are mapped directly to the hardware SPI
+    MISO MOSI and SCK
+    Change here if the pins are mapped differently
+    The SPI library assumes that the hardware pins are used
+    */
+    SPI.begin();
+    //Board dependent defines
+    #if defined (__AVR__) || defined(__STM32__)
+      //For Arduino use the LSB first
+      SPI.setBitOrder(LSBFIRST);
+    #elif defined(__PIC32MX__)
+      //For ChipKit use MSBFIRST and REVERSE the bits on the SPI as LSBFIRST is not supported
+      SPI.setBitOrder(MSBFIRST);
+    #endif
+    SPI.setClockDivider(a_pins->spi_clock_divider);
+    SPI.setDataMode(SPI_MODE0);
 
   /* Attach the interrupt to the RDYN line as requested by the caller */
   if (a_pins->interface_is_interrupt)
@@ -423,7 +427,7 @@ bool hal_aci_tl_send(hal_aci_data_t *p_aci_cmd)
 static uint8_t spi_readwrite(const uint8_t aci_byte)
 {
 	//Board dependent defines
-#if defined (__AVR__)
+#if defined (__AVR__) || defined(__STM32__)
     //For Arduino the transmission does not have to be reversed
     return SPI.transfer(aci_byte);
 #elif defined(__PIC32MX__)

@@ -22,12 +22,16 @@ const bool DEBUG = false;
 template<class K> bool sendData(int pipe, const K& data);
 
 struct Status {
-        uint16_t packetHigh; // upper 16 bits of current packet
-        uint16_t sampleRate; // in Hz
+    Status() : packetHigh(0xffff), sampleRate(250), channels(8) { }
+    uint16_t packetHigh; // upper 16 bits of current packet
+    uint16_t sampleRate; // in Hz
+    uint8_t  channels;
 };
+
 struct Channel {
-        char data[18];
-        uint16_t packetLow; // lower 16 bits of current packet
+    Channel() : packetLow(0) { bzero(data, sizeof(data)); }
+    uint16_t packetLow; // lower 16 bits of current packet
+    char data[18];
 };
 
 static void adcCallback(const uint16_t* values, int n, void* arg) {
@@ -74,17 +78,21 @@ void StartDefaultTask(void const * argument) {
     Fifo<uint8_t, int8_t, 32> adcFifo;
     adc.start(adcCallback, (void*) &adcFifo);
     int count = 0;
-    Status status = {0};
-    Channel chan0 = {0};
-    Channel chan1 = {0};
+    Status status;
+    Channel chan0;
     int dataCount = 0; // number of items in data channel
     while (1) {
         aci_loop();
         if (aci_state.bonded) {
-            if (status.packetHigh != (count>>16)) {
+            int currentPacket = count >> 16;
+            if (status.packetHigh != currentPacket) {
                 // sending status when it changes is higher priority than data
+                uint16_t tmp = status.packetHigh; // save it in case xmit fails
+                status.packetHigh = currentPacket;
                 if (sendData(PIPE_SENSORSERVICE_STATUS_TX, status)) {
-                    status.packetHigh = count >> 16;
+                    status.packetHigh = currentPacket;
+                } else {
+                    status.packetHigh = tmp;
                 }
             } else {
                 uint8_t data;
@@ -95,8 +103,9 @@ void StartDefaultTask(void const * argument) {
                     // full packet, send it
                     chan0.packetLow = count & 0xffff;
                     if (sendData(PIPE_SENSORSERVICE_CHANNEL0_TX, chan0)) {
-                        led.write(count++ & 1);
+                        led.write(count & 1);
                         dataCount = 0;
+                        count++;
                     }
                 }
             }

@@ -221,7 +221,7 @@
             <Uuid BaseUUID="6ff90000b2be4f02bbd8e795ca3ca70c" BaseUUIDName="Generic Sensor UUID">0001</Uuid>
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
-            <MaxDataLength>20</MaxDataLength>
+            <MaxDataLength>1</MaxDataLength>
             <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <ForceEncryption>false</ForceEncryption>
@@ -236,6 +236,19 @@
             <AckIsAuto>false</AckIsAuto>
             <PresentationFormatDescriptor Value="0000" Exponent="0" Format="1" NameSpace="01" Unit="0000"/>
             <PeriodForReadingThisCharacteristic>0</PeriodForReadingThisCharacteristic>
+            <ProfileDescriptors>
+                <ProfileDescriptor Name="User Description" MaxDataLength="20" DefaultValue="737461747573" AttributeLenType="2">
+                    <ForceOpen>false</ForceOpen>
+                    <forceEncryption>false</forceEncryption>
+                    <Properties>
+                        <Write>false</Write>
+                        <Read>false</Read>
+                    </Properties>
+                    <Uuid>2901</Uuid>
+                    <SetPipe>false</SetPipe>
+                    <AckIsAuto>true</AckIsAuto>
+                </ProfileDescriptor>
+            </ProfileDescriptors>
             <PeriodForProperties/>
         </Characteristic>
         <Characteristic>
@@ -244,7 +257,7 @@
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
             <MaxDataLength>20</MaxDataLength>
-            <AttributeLenType>2</AttributeLenType>
+            <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <ForceEncryption>false</ForceEncryption>
             <Properties>
@@ -256,7 +269,7 @@
             </Properties>
             <SetPipe>false</SetPipe>
             <AckIsAuto>false</AckIsAuto>
-            <PresentationFormatDescriptor Value="0000" Exponent="0" Format="27" NameSpace="01" Unit="0000"/>
+            <PresentationFormatDescriptor Value="0000" Exponent="0" Format="6" NameSpace="01" Unit="0000"/>
             <PeriodForReadingThisCharacteristic>0</PeriodForReadingThisCharacteristic>
             <PeriodForProperties/>
         </Characteristic>
@@ -266,7 +279,7 @@
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
             <MaxDataLength>20</MaxDataLength>
-            <AttributeLenType>2</AttributeLenType>
+            <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <ForceEncryption>false</ForceEncryption>
             <Properties>
@@ -288,7 +301,7 @@
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
             <MaxDataLength>20</MaxDataLength>
-            <AttributeLenType>2</AttributeLenType>
+            <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <ForceEncryption>false</ForceEncryption>
             <Properties>
@@ -310,7 +323,7 @@
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
             <MaxDataLength>20</MaxDataLength>
-            <AttributeLenType>2</AttributeLenType>
+            <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <ForceEncryption>false</ForceEncryption>
             <Properties>
@@ -332,7 +345,7 @@
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
             <MaxDataLength>20</MaxDataLength>
-            <AttributeLenType>2</AttributeLenType>
+            <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <ForceEncryption>false</ForceEncryption>
             <Properties>
@@ -354,7 +367,7 @@
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
             <MaxDataLength>20</MaxDataLength>
-            <AttributeLenType>2</AttributeLenType>
+            <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <ForceEncryption>false</ForceEncryption>
             <Properties>
@@ -376,7 +389,7 @@
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
             <MaxDataLength>20</MaxDataLength>
-            <AttributeLenType>2</AttributeLenType>
+            <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <ForceEncryption>false</ForceEncryption>
             <Properties>
@@ -398,7 +411,7 @@
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>
             <MaxDataLength>20</MaxDataLength>
-            <AttributeLenType>2</AttributeLenType>
+            <AttributeLenType>1</AttributeLenType>
             <ForceOpen>false</ForceOpen>
             <ForceEncryption>false</ForceEncryption>
             <Properties>

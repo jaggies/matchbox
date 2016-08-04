@@ -69,9 +69,9 @@
 #define PIPE_SENSORSERVICE_CHANNEL2_TX          14
 #define PIPE_SENSORSERVICE_CHANNEL2_TX_MAX_SIZE 20
 
-/* Service: SensorService - Characteristic: Channe3 - Pipe: TX */
-#define PIPE_SENSORSERVICE_CHANNE3_TX          15
-#define PIPE_SENSORSERVICE_CHANNE3_TX_MAX_SIZE 20
+/* Service: SensorService - Characteristic: Channel3 - Pipe: TX */
+#define PIPE_SENSORSERVICE_CHANNEL3_TX          15
+#define PIPE_SENSORSERVICE_CHANNEL3_TX_MAX_SIZE 20
 
 /* Service: SensorService - Characteristic: Channel4 - Pipe: TX */
 #define PIPE_SENSORSERVICE_CHANNEL4_TX          16

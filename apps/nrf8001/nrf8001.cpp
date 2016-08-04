@@ -4,6 +4,7 @@
  *  Created on: Jul 19, 2016
  *      Author: jmiller
  */
+#include <math.h>
 #include <lib_aci.h>
 #include <aci_setup.h>
 #include <matchbox.h>
@@ -34,11 +35,25 @@ struct Channel {
     char data[18];
 };
 
+float rate = 0.0f;
 static void adcCallback(const uint16_t* values, int n, void* arg) {
-    int i = 0;
+    static uint8_t x = 0;
     Fifo<uint8_t, int8_t, 32>& fifo = *(Fifo<uint8_t, int8_t, 32>*)arg;
-    while (i++ < n && fifo.add(*values >> 4))
-        ;
+//    while (n-- && fifo.add(*values++))
+//        ;
+    if (fifo.add(x)) {
+        x++;
+    }
+    static uint32_t last = 0;
+    if (last == 0) {
+        last = HAL_GetTick();
+    } else {
+        uint32_t current = HAL_GetTick();
+        float delta = (current - last) / 1000.0f; // in ms
+        last = current;
+        const float alpha = 0.00001;
+        rate = (rate == 0.0f) ? delta : (alpha*delta + (1.0f-alpha)*rate);
+    }
 }
 
 int main(void) {
@@ -80,7 +95,12 @@ void StartDefaultTask(void const * argument) {
     int count = 0;
     Status status;
     Channel chan0;
+    Channel chan1;
+    Channel chan2;
+    Channel chan3;
+
     int dataCount = 0; // number of items in data channel
+    int ramp = 0;
     while (1) {
         aci_loop();
         if (aci_state.bonded) {
@@ -97,16 +117,26 @@ void StartDefaultTask(void const * argument) {
             } else {
                 uint8_t data;
                 while (dataCount < sizeof(chan0.data) && adcFifo.remove(&data)) {
-                    chan0.data[dataCount++] = data;
+                    chan0.data[dataCount] = data;
+//                    chan1.data[dataCount] = ramp;
+//                    chan2.data[dataCount] = 127+127*sin(2.0f * M_PI * uint(ramp) / 255);
+//                    chan3.data[dataCount] = 127+127*sin(3.0f * M_PI * uint(ramp) / 255);
+                    ramp++;
+                    dataCount++;
                 }
                 if (dataCount == sizeof(chan0.data)) {
                     // full packet, send it
                     chan0.packetLow = count & 0xffff;
                     if (sendData(PIPE_SENSORSERVICE_CHANNEL0_TX, chan0)) {
+//                        printf("rate: %f\n", 1.0f / rate);
                         led.write(count & 1);
                         dataCount = 0;
                         count++;
                     }
+                    // chan1.packetLow = chan2.packetLow = chan3.packetLow = count & 0xffff;
+                    // sendData(PIPE_SENSORSERVICE_CHANNEL2_TX, chan2);
+                    // sendData(PIPE_SENSORSERVICE_CHANNEL2_TX, chan2);
+                    // sendData(PIPE_SENSORSERVICE_CHANNEL3_TX, chan3);
                 }
             }
         }

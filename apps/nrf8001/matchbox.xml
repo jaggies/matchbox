@@ -318,7 +318,7 @@
             <PeriodForProperties/>
         </Characteristic>
         <Characteristic>
-            <Name>Channe3</Name>
+            <Name>Channel3</Name>
             <Uuid BaseUUID="6ff90000b2be4f02bbd8e795ca3ca70c" BaseUUIDName="Generic Sensor UUID">0103</Uuid>
             <DefaultValue></DefaultValue>
             <UsePresentationFormat>0</UsePresentationFormat>

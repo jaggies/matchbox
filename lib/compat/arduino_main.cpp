@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <spi.h>
 #include "arduino.h"
 
 // Instantiations of static classes

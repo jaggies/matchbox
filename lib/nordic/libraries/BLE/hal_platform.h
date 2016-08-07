@@ -31,14 +31,19 @@
     //For Arduino this AVR specific library has to be used for reading from Flash memory
     #include <avr/pgmspace.h>
     #include "Arduino.h"
-
-#elif defined(__PIC32MX__)
+#elif defined(__PIC32MX__) || defined(__STM32__)
     //For Chipkit add the following libraries.
     #include <stdint.h>
     #include <stdbool.h>
     #include <string.h>
-    #include <wiring.h>
-    #include <WProgram.h>
+    #if defined(__PIC32MX__)
+        #include <wiring.h>
+        #include <WProgram.h>
+    #elif defined(__STM32__)
+        #include "arduino.h"
+        inline void interrupts() { __enable_irq(); }
+        inline void noInterrupts() { __disable_irq(); }
+    #endif
 
 	//For making the Serial.Print compatible between Arduino and Chipkit
 	#define F(X) (X)
@@ -68,42 +73,6 @@
 
 	//Redefine the function for reading from flash in ChipKit
 	#define memcpy_P        memcpy
-#elif defined(__STM32__)
-    #include <stdint.h>
-    #include <stdbool.h>
-    #include <string.h>
-    #include "arduino.h"
-
-    // For making the Serial.Print compatible between Arduino and STM32
-    #define F(X) (X)
-
-    //For ChipKit neither PROGMEM or PSTR are needed for PIC32
-    #define PROGMEM
-    #define PSTR(s) (s)
-
-    #define pgm_read_byte(x)            (*((char *)x))
-    #define pgm_read_byte_near(x)   (*((char *)x))
-    #define pgm_read_byte_far(x)        (*((char *)x))
-    #define pgm_read_word(x)            (*((short *)x))
-    #define pgm_read_word_near(x)   (*((short *)x))
-    #define pgm_read_workd_far(x)   (*((short *)x))
-
-    #define prog_void       const void
-    #define prog_char       const char
-    #define prog_uchar      const unsigned char
-    #define prog_int8_t     const int8_t
-    #define prog_uint8_t    const uint8_t
-    #define prog_int16_t    const int16_t
-    #define prog_uint16_t   const uint16_t
-    #define prog_int32_t    const int32_t
-    #define prog_uint32_t   const uint32_t
-    #define prog_int64_t    const int64_t
-    #define prog_uint64_t   const uint64_t
-
-    //Redefine the function for reading from flash in ChipKit
-    #define memcpy_P        memcpy
-    inline void interrupts() { __enable_irq(); }
-    inline void noInterrupts() { __disable_irq(); }
-#endif
+#endif // __PIC32MX__ or __STM32__
 
 #endif /* PLATFORM_H__ */

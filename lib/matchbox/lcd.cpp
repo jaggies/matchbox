@@ -28,8 +28,13 @@ Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
 
 void Lcd::begin() {
     // Skip sclk and si since SPI initializes them for alternate functionality (spi)
+#ifdef BLE_PRESENT // BLE uses extc for MISO. Use software refresh
+    uint8_t pins[] = {_config.en, _config.scs };
+    uint8_t defaults[] = { 1, 0 };
+#else
     uint8_t pins[] = {_config.en, _config.scs, _config.extc, _config.disp };
     uint8_t defaults[] = { 1, 0, 0, 1 };
+#endif
     for (int i = 0; i < Number(pins); i++) {
         pinInitOutput(pins[i], defaults[i]);
     }

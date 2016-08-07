@@ -1,0 +1,23 @@
+SubDir TOP apps nrfclass ;
+SubDirHdrs $(TOP) lib matchbox ;
+SubDirHdrs $(TOP) lib compat ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib render ;
+SubDirHdrs $(TOP) lib nordic libraries BLE ;
+SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib hal CMSIS Include ;
+SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Core Inc ;
+SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
+SubDirHdrs $(TOP) lib hal STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FatFs src ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source include ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+
+LINKLIBS on nrfclass = -Wl,--whole-archive -lhal -lusb -lnordic -lfreertos -lc -lmatchbox -larduino -Wl,--no-whole-archive ;
+
+Depends nrfclass : libmatchbox.a libhal.a libnordic.a libarduino.a ;
+
+Main nrfclass :
+	nrfclass.cpp
+	;

@@ -12,7 +12,7 @@ SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
 SubDirHdrs $(TOP) lib hal CMSIS Include ;
 SubDirHdrs $(TOP) lib render ;
 
-Library libble :
+Library libnordic :
 	aci_queue.cpp
 	aci_setup.cpp
 	acilib.cpp

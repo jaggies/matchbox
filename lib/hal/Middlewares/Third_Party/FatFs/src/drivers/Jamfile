@@ -1,20 +1,18 @@
-SubDir TOP lib hal Middlewares Third_Party FatFs src ;
+SubDir TOP lib hal Middlewares Third_Party FatFs src drivers ;
 
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib hal STM32F4xx_HAL_Driver Inc ;
 SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
 SubDirHdrs $(TOP) lib hal CMSIS Include ;
-SubDirHdrs $(TOP) lib hal BSP STM32F4-MatchBox ;
-SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Host_Library Core Inc ;
+SubDirHdrs $(TOP) lib hal Middlewares Third_Party FatFs src ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source include ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+SubDirHdrs $(TOP) lib hal BSP STM32F4-MatchBox ;
 
 Library libfatfs : 
-	diskio.c 
-	ff.c 
-	ff_gen_drv.c
+	sd_diskio.c
+	#sdram_diskio.c
+	#sram_diskio.c
+	#usbh_diskio.c
 ;
-
-SubInclude TOP lib hal Middlewares Third_Party FatFs src option ;
-SubInclude TOP lib hal Middlewares Third_Party FatFs src drivers ;

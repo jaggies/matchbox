@@ -22,7 +22,7 @@ Adc::Adc(Device device, int sampleCount) :
     // Configure  global features of the ADC (Clock, Resolution, Data Alignment and #conversion)
     bzero(&_adc, sizeof(_adc));
     _adc.Instance = _deviceMap[device];
-    _adc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+    _adc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV8;
     _adc.Init.Resolution = ADC_RESOLUTION_12B;
     _adc.Init.ScanConvMode = DISABLE;
     _adc.Init.ContinuousConvMode = ENABLE;

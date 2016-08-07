@@ -12,5 +12,6 @@ SubDirHdrs $(TOP) lib hal CMSIS Include ;
 
 Library libarduino :
 	arduino_main.cpp
+	arduino_spi.cpp
 	arduino.cpp
 	;

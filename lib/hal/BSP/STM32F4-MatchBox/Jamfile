@@ -1,0 +1,10 @@
+SubDir TOP lib hal BSP STM32F4-MatchBox ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal CMSIS Include ;
+SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib hal STM32F4xx_HAL_Driver Inc ;
+
+Library libhal : 
+	matchbox_sd.c
+	;

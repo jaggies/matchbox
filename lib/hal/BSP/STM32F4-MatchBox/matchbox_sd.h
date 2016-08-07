@@ -34,7 +34,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MATCHBOX_SD_H
@@ -42,35 +42,35 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 
 /** @addtogroup BSP
   * @{
-  */ 
+  */
 
 /** @addtogroup STM324xG_EVAL
   * @{
   */
-    
+
 /** @defgroup STM324xG_EVAL_SD STM324xG EVAL SD
   * @{
-  */    
+  */
 
 /** @defgroup STM324xG_EVAL_SD_Exported_Types STM324xG EVAL SD Exported Types
   * @{
   */
 
-/** 
-  * @brief SD Card information structure 
-  */   
+/**
+  * @brief SD Card information structure
+  */
 #define SD_CardInfo HAL_SD_CardInfoTypedef
-   
-/** 
-  * @brief  SD status structure definition  
-  */     
+
+/**
+  * @brief  SD status structure definition
+  */
 #define MSD_OK         0x00
 #define MSD_ERROR      0x01
 
@@ -80,23 +80,23 @@
 
 /** @defgroup STM324xG_EVAL_SD_Exported_Constants STM324xG EVAL SD Exported Constants
   * @{
-  */ 
-#define SD_DETECT_PIN                    GPIO_PIN_13
-#define SD_DETECT_GPIO_PORT              GPIOH
+  */
+#define SD_DETECT_PIN                    GPIO_PIN_8
+#define SD_DETECT_GPIO_PORT              GPIOB
 #define __SD_DETECT_GPIO_CLK_ENABLE()    __GPIOH_CLK_ENABLE()
-#define SD_DETECT_IRQn                   EXTI15_10_IRQn
+#define SD_DETECT_IRQn                   EXTI9_5_IRQn
 
 #define SD_DATATIMEOUT           ((uint32_t)100000000)
 
 #define SD_PRESENT               ((uint8_t)0x01)
 #define SD_NOT_PRESENT           ((uint8_t)0x00)
-   
+
 /* DMA definitions for SD DMA transfer */
 #define __DMAx_TxRx_CLK_ENABLE            __DMA2_CLK_ENABLE
 #define SD_DMAx_Tx_CHANNEL                DMA_CHANNEL_4
 #define SD_DMAx_Rx_CHANNEL                DMA_CHANNEL_4
-#define SD_DMAx_Tx_STREAM                 DMA2_Stream6  
-#define SD_DMAx_Rx_STREAM                 DMA2_Stream3  
+#define SD_DMAx_Tx_STREAM                 DMA2_Stream6
+#define SD_DMAx_Rx_STREAM                 DMA2_Stream3
 #define SD_DMAx_Tx_IRQn                   DMA2_Stream6_IRQn
 #define SD_DMAx_Rx_IRQn                   DMA2_Stream3_IRQn
 #define SD_DMAx_Tx_IRQHandler             DMA2_Stream6_IRQHandler
@@ -106,18 +106,18 @@
 /**
   * @}
   */
-  
+
 /** @defgroup STM324xG_EVAL_SD_Exported_Macro STM324xG EVAL SD Exported Macro
   * @{
-  */ 
+  */
 
 /**
   * @}
   */
-  
+
 /** @defgroup STM324xG_EVAL_SD_Exported_Functions STM324xG EVAL SD Exported Functions
   * @{
-  */  
+  */
 uint8_t BSP_SD_Init(void);
 uint8_t BSP_SD_ITConfig(void);
 void    BSP_SD_DetectIT(void);
@@ -132,23 +132,23 @@ void    BSP_SD_DMA_Tx_IRQHandler(void);
 void    BSP_SD_DMA_Rx_IRQHandler(void);
 HAL_SD_TransferStateTypedef BSP_SD_GetStatus(void);
 void    BSP_SD_GetCardInfo(HAL_SD_CardInfoTypedef *CardInfo);
-uint8_t BSP_SD_IsDetected(void);   
+uint8_t BSP_SD_IsDetected(void);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
-  
+  */
+
 /**
   * @}
-  */ 
-  
+  */
+
 /**
   * @}
-  */ 
+  */
 
 #ifdef __cplusplus
 }

@@ -6,3 +6,4 @@ SubInclude TOP apps pincheck ;
 SubInclude TOP apps bletest ;
 SubInclude TOP apps nrfclass ;
 SubInclude TOP apps lcdtest ;
+SubInclude TOP apps sdio ;

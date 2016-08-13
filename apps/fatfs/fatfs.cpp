@@ -12,17 +12,10 @@
 #include "ff_gen_drv.h"
 #include "sd_diskio.h"
 #include "pin.h"
+#include "util.h"
 
 osThreadId defaultTaskHandle;
 void StartDefaultTask(void const * argument);
-
-#if defined(DEBUG)
-#define debug(a...) printf(a)
-#else
-#define debug(a...)
-#endif
-
-#define error(a...) printf(a)
 
 int main(void) {
     MatchBox* mb = new MatchBox(MatchBox::C72MHz);

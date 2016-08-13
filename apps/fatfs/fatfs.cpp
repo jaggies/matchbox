@@ -6,6 +6,7 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 #include "matchbox.h"
 #include "ff.h"
 #include "ff_gen_drv.h"
@@ -56,7 +57,7 @@ void StartDefaultTask(void const * argument) {
     led.write(0); // off by default
 
     if (0 == FATFS_LinkDriver(&SD_Driver, &path[0])) {
-        if (FR_OK == (status = f_mount(&FatFs, "", 1))) {
+        if (FR_OK == (status = f_mount(&FatFs, "", 0))) {
             static const char msg[] = "Matchbox was able to write file. Yay!";
             static const char* filename = "matchbox.txt";
             debug("Successfully mounted volume\n");
@@ -82,24 +83,42 @@ void StartDefaultTask(void const * argument) {
     }
 
     FIL dataFile = {0};
-    if (FR_OK == (status = f_open(&dataFile, "test.dat", FA_WRITE | FA_CREATE_ALWAYS))) {
-        debug("Successfully opened data file\n");
-        UINT written = 0;
-    } else {
-        error("Failed to open data file: status=%d\n", status);
+
+    // Find unused filename
+    int i = 0;
+    char * fname = NULL;
+    while (1) {
+        char buff[32];
+        FILINFO info = { 0 };
+        sprintf(buff, "file%04d.dat", i++);
+        if (f_stat(buff, &info) != FR_OK) {
+            // file not found, use it
+            fname = strndup(buff, sizeof(buff));
+            break;
+        }
     }
 
-    debug("Looping...\n");
+    while (1) {
+        if (FR_OK == (status = f_open(&dataFile, fname, FA_WRITE | FA_CREATE_ALWAYS))) {
+            debug("Successfully opened data file\n");
+            UINT written = 0;
+            break;
+        } else {
+            error("Failed to open data file: status=%d\n", status);
+            osDelay(1000);
+        }
+    };
 
-    char block[256];
-    for (int i = 0; i < sizeof(block); i++) {
-        block[i] = i;
-    }
+    printf("Writing %s\n", fname);
+    free(fname);
+
+    char block[512];
     while (1) {
         UINT written = 0;
+        memset(block, count, sizeof(block));
         if (FR_OK != (status = f_write(&dataFile, block, sizeof(block), &written))) {
-            error("Failed to write %d bytes: status=%d, written=%d, count = %d\n",
-                    sizeof(block), status, written, count);
+            error("Failed to write %d bytes: status=%d, written=%d, count = %d, ftell=%d\n",
+                    sizeof(block), status, written, count, f_tell(&dataFile));
             led.write(1); // stuck at on if there's an error
         } else {
             if (!(count%4096)) {
@@ -109,6 +128,6 @@ void StartDefaultTask(void const * argument) {
             led.write(count++ & 1);
         }
         f_sync(&dataFile);
-        osDelay(10);
+        osDelay(1);
     }
 }

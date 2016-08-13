@@ -56,7 +56,7 @@
 /   3: f_lseek() function is removed in addition to 2. */
 
 
-#define	_USE_STRFUNC            2	/* 0:Disable or 1-2:Enable */
+#define	_USE_STRFUNC            1	/* 0:Disable or 1-2:Enable */
 /* This option switches string functions, f_gets(), f_putc(), f_puts() and
 /  f_printf().
 /
@@ -78,7 +78,7 @@
 /* This option switches fast seek feature. (0:Disable or 1:Enable) */
 
 
-#define _USE_LABEL              0
+#define _USE_LABEL              1
 /* This option switches volume label functions, f_getlabel() and f_setlabel().
 /  (0:Disable or 1:Enable) */
 
@@ -87,7 +87,7 @@
 /* This option switches f_forward() function. (0:Disable or 1:Enable)
 /  To enable it, also _FS_TINY need to be set to 1. */
 
-#define _USE_BUFF_WO_ALIGNMENT  0
+#define _USE_BUFF_WO_ALIGNMENT  1
 /* This option is available only for usbh diskio interface and allow to disable
 /  the management of the unaligned buffer.
 /  When STM32 USB OTG HS or FS IP is used with internal DMA enabled, this define

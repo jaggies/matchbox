@@ -20,4 +20,12 @@
     return res;
 }
 
+#if defined(DEBUG)
+#define debug(a...) printf(a)
+#else
+#define debug(a...)
+#endif
+
+#define error(a...) printf(a)
+
 #endif /* UTIL_H_ */

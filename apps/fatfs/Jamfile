@@ -17,7 +17,7 @@ SubDirHdrs $(TOP) lib hal Middlewares Third_Party FatFs src drivers ;
 
 LINKLIBS on fatfs = -Wl,--whole-archive -lmatchbox -lusb -lfatfs -lfreertos -lhal -Wl,--no-whole-archive ;
 
-Depends fatfs : libmatchbox.a libusb.a libfreertos.a libhal.a ;
+Depends fatfs : libfatfs.a libmatchbox.a libusb.a libfreertos.a libhal.a ;
 
 Main fatfs :
 	fatfs.cpp

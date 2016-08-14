@@ -82,59 +82,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "matchbox_sd.h"
 
-/** @addtogroup BSP
-  * @{
-  */
-
-/** @addtogroup STM324xG_EVAL
-  * @{
-  */
-
-/** @defgroup matchbox_sd STM324xG EVAL SD
-  * @{
-  */
-
-/** @defgroup matchbox_sd_Private_Types_Definitions STM324xG EVAL SD Private Types Definitions
-  * @{
-  */
-/**
-  * @}
-  */
-
-/** @defgroup matchbox_sd_Private_Defines STM324xG EVAL SD Private Defines
-  * @{
-  */
-/**
-  * @}
-  */
-
-/** @defgroup matchbox_sd_Private_Macros STM324xG EVAL SD Private Macros
-  * @{
-  */
-/**
-  * @}
-  */
-
-/** @defgroup matchbox_sd_Private_Variables STM324xG EVAL SD Private Variables
-  * @{
-  */
 static SD_HandleTypeDef uSdHandle;
 static SD_CardInfo uSdCardInfo;
-/**
-  * @}
-  */
-
-/** @defgroup matchbox_sd_Private_Function_Prototypes STM324xG EVAL SD Private Function Prototypes
-  * @{
-  */
 static void SD_MspInit(void);
-/**
-  * @}
-  */
-
-/** @defgroup matchbox_sd_Private_Functions STM324xG EVAL SD Private Functions
-  * @{
-  */
+void SDIO_IRQHandler(void) {
+    printf("%s\n", __func__);
+    HAL_SD_IRQHandler(&uSdHandle);
+}
 
 /**
   * @brief  Initializes the SD card device.
@@ -521,21 +475,3 @@ void BSP_SD_GetCardInfo(HAL_SD_CardInfoTypedef *CardInfo)
   /* Get SD card Information */
   HAL_SD_Get_CardInfo(&uSdHandle, CardInfo);
 }
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

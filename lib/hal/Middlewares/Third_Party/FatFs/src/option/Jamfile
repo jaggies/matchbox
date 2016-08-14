@@ -9,6 +9,7 @@ SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source include ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
 SubDirHdrs $(TOP) lib hal BSP STM32F4-MatchBox ;
+SubDirHdrs $(TOP) lib matchbox ;
 
 Library libfatfs : 
 	#cc932.c

@@ -21,6 +21,7 @@ Library libmatchbox :
 	handlers.cpp
 	lcd.cpp
 	matchbox.cpp
+	matchbox_sd.c
 	syscalls.c
 	spi.cpp
 	usbserial_desc.c

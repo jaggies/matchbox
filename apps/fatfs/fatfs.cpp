@@ -108,7 +108,9 @@ void StartDefaultTask(void const * argument) {
     char block[512];
     while (1) {
         UINT written = 0;
-        memset(block, count, sizeof(block));
+        for (int i = 0; i < sizeof(block); i++) {
+            block[i] = rand() & 0xff;
+        }
         if (FR_OK != (status = f_write(&dataFile, block, sizeof(block), &written))) {
             error("Failed to write %d bytes: status=%d, written=%d, count = %d, ftell=%d\n",
                     sizeof(block), status, written, count, f_tell(&dataFile));

@@ -408,7 +408,7 @@ static void SD_MspInit(void)
   /* SD Card detect pin configuration */
   GPIO_Init_Structure.Mode      = GPIO_MODE_INPUT;
   GPIO_Init_Structure.Pull      = GPIO_PULLUP;
-  GPIO_Init_Structure.Speed     = GPIO_SPEED_HIGH;
+  GPIO_Init_Structure.Speed     = GPIO_SPEED_LOW;
   GPIO_Init_Structure.Pin       = SD_DETECT_PIN;
   HAL_GPIO_Init(SD_DETECT_GPIO_PORT, &GPIO_Init_Structure);
 

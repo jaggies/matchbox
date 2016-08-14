@@ -17,6 +17,8 @@
 #include "lcd.h"
 #include "util.h"
 
+#define BLE_PRESENT
+
 Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
         _clear(1), _frame(0), _currentFont(getFont("roboto_bold_10")),
         _xres(LCD_XRES), _yres(LCD_YRES), _channels(LCD_CHAN), _line_size(LCD_XRES*LCD_CHAN/8),
@@ -55,7 +57,9 @@ void Lcd::refreshFrame() {
         std::swap(_refreshBuffer, _writeBuffer);
     }
     _doSwap = false;
+#ifndef BLE_PRESENT
     writePin(_config.extc, (_frame++) & 0x01); // Toggle common driver once per frame
+#endif
     writePin(_config.scs, 0); // cs disabled
     writePin(_config.scs, 1); // cs enabled
     Spi::Status status = _spi.transmit((uint8_t*)_refreshBuffer, sizeof(*_refreshBuffer),

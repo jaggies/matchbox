@@ -40,7 +40,7 @@ class Fifo {
 
 		inline bool isEmpty() const { return _head == _tail; }
 
-		inline S count() const { return abs(_head - _tail); }
+		inline S count() const { return _head >= _tail ? (_head - _tail) : (N - _tail + _head); }
 
 		// Reset to empty state
 		void clear() { _head = _tail = 0; }

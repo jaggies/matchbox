@@ -106,7 +106,7 @@ uint8_t BSP_SD_Init(void)
   uSdHandle.Init.ClockPowerSave      = SDIO_CLOCK_POWER_SAVE_DISABLE;
   uSdHandle.Init.BusWide             = SDIO_BUS_WIDE_1B;
   uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
-  uSdHandle.Init.ClockDiv            = SDIO_TRANSFER_CLK_DIV;
+  uSdHandle.Init.ClockDiv            = 2;//SDIO_TRANSFER_CLK_DIV;
 
   /* Check if the SD card is plugged in the slot */
   if(BSP_SD_IsDetected() != SD_PRESENT)
@@ -149,7 +149,7 @@ uint8_t BSP_SD_ITConfig(void)
   /* Configure Interrupt mode for SD detection pin */
   GPIO_Init_Structure.Mode      = GPIO_MODE_IT_RISING_FALLING;
   GPIO_Init_Structure.Pull      = GPIO_PULLUP;
-  GPIO_Init_Structure.Speed     = GPIO_SPEED_HIGH;
+  GPIO_Init_Structure.Speed     = GPIO_SPEED_FREQ_MEDIUM;
   GPIO_Init_Structure.Pin       = SD_DETECT_PIN;
   HAL_GPIO_Init(SD_DETECT_GPIO_PORT, &GPIO_Init_Structure);
 
@@ -227,13 +227,14 @@ uint8_t BSP_SD_ReadBlocks(uint32_t *pData, uint64_t ReadAddr, uint32_t BlockSize
   */
 uint8_t BSP_SD_WriteBlocks(uint32_t *pData, uint64_t WriteAddr, uint32_t BlockSize, uint32_t NumOfBlocks)
 {
-  if(HAL_SD_WriteBlocks(&uSdHandle, pData, WriteAddr, BlockSize, NumOfBlocks) != SD_OK)
-  {
-    return MSD_ERROR;
-  }
-  else
-  {
-    return MSD_OK;
+  int status = HAL_SD_WriteBlocks(&uSdHandle, pData, WriteAddr, BlockSize, NumOfBlocks);
+  switch (status) {
+      case SD_OK:
+//      case SD_TX_UNDERRUN:
+          return MSD_OK;
+      default:
+          printf("%s() failed: status = %d\n", __func__, status);
+          return MSD_ERROR;
   }
 }
 
@@ -347,7 +348,7 @@ static void SD_MspInit(void)
   /* Common GPIO configuration */
   GPIO_Init_Structure.Mode      = GPIO_MODE_AF_PP;
   GPIO_Init_Structure.Pull      = GPIO_PULLUP;
-  GPIO_Init_Structure.Speed     = GPIO_SPEED_HIGH;
+  GPIO_Init_Structure.Speed     = GPIO_SPEED_FREQ_MEDIUM;
   GPIO_Init_Structure.Alternate = GPIO_AF12_SDIO;
 
   /* GPIOC configuration */

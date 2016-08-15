@@ -54,6 +54,12 @@ void StartDefaultTask(void const * argument) {
             static const char msg[] = "Matchbox was able to write file. Yay!";
             static const char* filename = "matchbox.txt";
             debug("Successfully mounted volume\n");
+            printf("Waiting for SD\n");
+            int t = 5;
+            while (t) {
+                printf("%d...\n", t--);
+                osDelay(1000);
+            }
             if (FR_OK == (status = f_open(&file, filename, FA_WRITE | FA_CREATE_ALWAYS))) {
                 debug("Successfully opened file\n");
                 UINT written = 0;
@@ -106,7 +112,7 @@ void StartDefaultTask(void const * argument) {
     free(fname);
 
     char block[512];
-    while (1) {
+    while (count < 8192) {
         UINT written = 0;
         for (int i = 0; i < sizeof(block); i++) {
             block[i] = rand() & 0xff;
@@ -120,9 +126,15 @@ void StartDefaultTask(void const * argument) {
                 printf("block %04d\n", count);
                 //f_sync(&dataFile);
             }
-            led.write(count++ & 1);
         }
+        led.write(count++ & 1);
         f_sync(&dataFile);
         osDelay(1);
     }
+    if (FR_OK != (status = f_close(&dataFile))) {
+        error("Failed to close %s, status=%d\n", fname);
+    }
+    printf("Done.\n");
+    while (1)
+        ;
 }

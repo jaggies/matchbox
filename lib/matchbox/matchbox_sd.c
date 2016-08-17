@@ -230,7 +230,7 @@ uint8_t BSP_SD_WriteBlocks(uint32_t *pData, uint64_t WriteAddr, uint32_t BlockSi
   int status = HAL_SD_WriteBlocks(&uSdHandle, pData, WriteAddr, BlockSize, NumOfBlocks);
   switch (status) {
       case SD_OK:
-//      case SD_TX_UNDERRUN:
+      case SD_TX_UNDERRUN:
           return MSD_OK;
       default:
           printf("%s() failed: status = %d\n", __func__, status);

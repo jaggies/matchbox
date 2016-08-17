@@ -2449,9 +2449,15 @@ FRESULT validate (	/* FR_OK(0): The object is valid, !=0: Invalid */
 	FIL *fil = (FIL*)obj;	/* Assuming offset of .fs and .id in the FIL/DIR structure is identical */
 
 
-	if (!fil || !fil->fs || !fil->fs->fs_type || fil->fs->id != fil->id || (disk_status(fil->fs->drv) & STA_NOINIT))
+	if (!fil || !fil->fs || !fil->fs->fs_type || fil->fs->id != fil->id) {
+	    printf ("Validate failed: bad data\n");
 		return FR_INVALID_OBJECT;
-
+	}
+	DSTATUS status = disk_status(fil->fs->drv);
+	if (status & STA_NOINIT) {
+	    printf ("Validate failed: disk_status=%x\n", status);
+        return FR_INVALID_OBJECT;
+	}
 	ENTER_FF(fil->fs);		/* Lock file system */
 
 	return FR_OK;
@@ -2774,8 +2780,10 @@ FRESULT f_write (
 
 	res = validate(fp);						/* Check validity */
 	if (res != FR_OK) LEAVE_FF(fp->fs, res);
-	if (fp->err)							/* Check error */
+	if (fp->err)	{						/* Check error */
+		printf("fp->err error %d\n", fp->err);
 		LEAVE_FF(fp->fs, (FRESULT)fp->err);
+	}
 	if (!(fp->flag & FA_WRITE))				/* Check access mode */
 		LEAVE_FF(fp->fs, FR_DENIED);
 	if (fp->fptr + btw < fp->fptr) btw = 0;	/* File size cannot reach 4GB */
@@ -2808,8 +2816,10 @@ FRESULT f_write (
 				ABORT(fp->fs, FR_DISK_ERR);
 #else
 			if (fp->flag & FA__DIRTY) {		/* Write-back sector cache */
-				if (disk_write(fp->fs->drv, fp->buf.d8, fp->dsect, 1) != RES_OK)
+				if (disk_write(fp->fs->drv, fp->buf.d8, fp->dsect, 1) != RES_OK) {
+				    printf("Disk write1 failed(DIRTY)\n");
 					ABORT(fp->fs, FR_DISK_ERR);
+				}
 				fp->flag &= ~FA__DIRTY;
 			}
 #endif
@@ -2820,8 +2830,10 @@ FRESULT f_write (
 			if (cc) {						/* Write maximum contiguous sectors directly */
 				if (csect + cc > fp->fs->csize)	/* Clip at cluster boundary */
 					cc = fp->fs->csize - csect;
-				if (disk_write(fp->fs->drv, wbuff, sect, cc) != RES_OK)
-					ABORT(fp->fs, FR_DISK_ERR);
+				if (disk_write(fp->fs->drv, wbuff, sect, cc) != RES_OK) {
+				    printf("Disk write2 failed(DIRTY)\n");
+				    ABORT(fp->fs, FR_DISK_ERR);
+				}
 #if _FS_MINIMIZE <= 2
 #if _FS_TINY
 				if (fp->fs->winsect - sect < cc) {	/* Refill sector cache if it gets invalidated by the direct write */
@@ -2846,8 +2858,10 @@ FRESULT f_write (
 #else
 			if (fp->dsect != sect) {		/* Fill sector cache with file data */
 				if (fp->fptr < fp->fsize &&
-					disk_read(fp->fs->drv, fp->buf.d8, sect, 1) != RES_OK)
-						ABORT(fp->fs, FR_DISK_ERR);
+					disk_read(fp->fs->drv, fp->buf.d8, sect, 1) != RES_OK) {
+                        printf("Disk read1 failed\n");
+                        ABORT(fp->fs, FR_DISK_ERR);
+				}
 			}
 #endif
 			fp->dsect = sect;

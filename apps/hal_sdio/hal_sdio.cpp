@@ -73,7 +73,7 @@ bool sdInit() {
     uSdHandle.Init.ClockPowerSave      = SDIO_CLOCK_POWER_SAVE_DISABLE;
     uSdHandle.Init.BusWide             = SDIO_BUS_WIDE_1B;
     uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_ENABLE;
-    uSdHandle.Init.ClockDiv            = 2;//SDIO_TRANSFER_CLK_DIV;
+    uSdHandle.Init.ClockDiv            = 6;//SDIO_TRANSFER_CLK_DIV;
 
     HAL_SD_ErrorTypedef status;
     if((status = HAL_SD_Init(&uSdHandle, &uSdCardInfo)) != SD_OK) {
@@ -144,6 +144,10 @@ void StartDefaultTask(void const * argument) {
         buff[i] = i;
     }
     writeBlock(&buff[0], 512);
+
+    // Seed with random value
+    srand(HAL_GetTick());
+
     while (1) {
         for (int i = 0; i < 512; i++) {
             buff[i] = rand() & 0xff;

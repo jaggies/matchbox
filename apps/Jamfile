@@ -8,3 +8,4 @@ SubInclude TOP apps nrfclass ;
 SubInclude TOP apps lcdtest ;
 SubInclude TOP apps sdio ;
 SubInclude TOP apps fatfs ;
+SubInclude TOP apps hal_sdio ;

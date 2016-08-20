@@ -1,4 +1,4 @@
-SubDir TOP apps sdio ;
+SubDir TOP apps sdio_bsp ;
 SubDirHdrs $(TOP) lib matchbox ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;
@@ -12,10 +12,10 @@ SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source include ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 
-LINKLIBS on sdio = -Wl,--whole-archive -lmatchbox -lusb -lfreertos -lhal -Wl,--no-whole-archive ;
+LINKLIBS on sdio_bsp = -Wl,--whole-archive -lmatchbox -lusb -lfreertos -lhal -Wl,--no-whole-archive ;
 
-Depends sdio : libmatchbox.a libusb.a libfreertos.a libhal.a ;
+Depends sdio_bsp : libmatchbox.a libusb.a libfreertos.a libhal.a ;
 
-Main sdio :
-	sdio.cpp
+Main sdio_bsp :
+	sdio_bsp.cpp
 	;

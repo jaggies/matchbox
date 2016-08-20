@@ -90,21 +90,32 @@ bool sdInit() {
     HAL_NVIC_SetPriority(SDIO_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(SDIO_IRQn);
 
+    // try high speed mode
+    if ((status = HAL_SD_HighSpeed(&uSdHandle)) != SD_OK) {
+        printf("Failed to set high speed mode, status=%d\n", status);
+        while(1)
+            ;
+    }
+
     return true;
 }
 
-void readBlock(void* data, uint64_t addr) {
+int readBlock(void* data, uint64_t addr) {
     HAL_SD_ErrorTypedef status;
     if ((status = HAL_SD_ReadBlocks(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
         printf("Failed to read block: status = %d\n", status);
+        return 0;
     }
+    return 1;
 }
 
-void writeBlock(void* data, uint64_t addr) {
+int writeBlock(void* data, uint64_t addr) {
     HAL_SD_ErrorTypedef status;
     if ((status = HAL_SD_WriteBlocks(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
         printf("Failed to write block: status = %d\n", status);
+        return 0;
     }
+    return 1;
 }
 
 void dumpBlock(uint8_t* data, int count) {
@@ -125,6 +136,8 @@ void dumpBlock(uint8_t* data, int count) {
     }
 }
 
+extern "C" int SDGetStatus(SD_HandleTypeDef *hsd);
+
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     printf("initialize sdio\n");
@@ -139,21 +152,18 @@ void StartDefaultTask(void const * argument) {
             ;
     }
     bzero(buff, sizeof(buff));
-    writeBlock(&buff[0], 0);
-    for (int i=0; i < 512; i++) {
-        buff[i] = i;
-    }
-    writeBlock(&buff[0], 512);
 
     // Seed with random value
     srand(HAL_GetTick());
 
     while (1) {
+        char tmp[512]; // temporary read buffer, for verification
         for (int i = 0; i < 512; i++) {
             buff[i] = rand() & 0xff;
         }
         writeBlock(&buff[0], count * 512);
-        char tmp[512];
+        while (0x100 != (SDGetStatus(&uSdHandle) & 0x100))
+            ;
         readBlock(&tmp[0], count * 512);
         if (0 != memcmp(tmp, buff, sizeof(buff))) {
             printf("readback error: blocks differ!\n");

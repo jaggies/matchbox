@@ -14,6 +14,8 @@
 #include "pin.h"
 #include "util.h"
 
+#define DMA_NVIC_PRIORITY 5
+#define SD_NVIC_PRIORITY 6 // must be lower priority (higher #) than DMA_NVIC_PRIORITY
 #define SD_DMAx_Tx_CHANNEL                DMA_CHANNEL_4
 #define SD_DMAx_Rx_CHANNEL                DMA_CHANNEL_4
 #define SD_DMAx_TxRx_CLK_ENABLE           __HAL_RCC_DMA2_CLK_ENABLE
@@ -47,8 +49,7 @@ int main(void) {
 
 bool sdDmaInit(void) {
     bool result = true;
-    GPIO_InitTypeDef GPIO_Init_Structure;
-    SD_HandleTypeDef *hsd = &uSdHandle;
+    GPIO_InitTypeDef GPIO_Init_Structure = { 0 };
 
     /* Enable DMA2 clocks */
     SD_DMAx_TxRx_CLK_ENABLE();
@@ -69,7 +70,7 @@ bool sdDmaInit(void) {
     dmaRxHandle.Init.PeriphBurst = DMA_PBURST_INC4;
 
     /* Associate the DMA handle */
-    __HAL_LINKDMA(hsd, hdmarx, dmaRxHandle);
+    __HAL_LINKDMA(&uSdHandle, hdmarx, dmaRxHandle);
 
     /* Deinitialize the stream for new transfer */
     if (HAL_DMA_DeInit(&dmaRxHandle) != HAL_OK) {
@@ -99,7 +100,7 @@ bool sdDmaInit(void) {
     dmaTxHandle.Init.PeriphBurst = DMA_PBURST_INC4;
 
     /* Associate the DMA handle */
-    __HAL_LINKDMA(hsd, hdmatx, dmaTxHandle);
+    __HAL_LINKDMA(&uSdHandle, hdmatx, dmaTxHandle);
 
     /* Deinitialize the stream for new transfer */
     if (HAL_DMA_DeInit(&dmaTxHandle) != HAL_OK) {
@@ -114,25 +115,24 @@ bool sdDmaInit(void) {
     }
 
     /* NVIC configuration for DMA transfer complete interrupt */
-    HAL_NVIC_SetPriority(SD_DMAx_Rx_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(SD_DMAx_Rx_IRQn, DMA_NVIC_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(SD_DMAx_Rx_IRQn);
 
     /* NVIC configuration for DMA transfer complete interrupt */
-    HAL_NVIC_SetPriority(SD_DMAx_Tx_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(SD_DMAx_Tx_IRQn, DMA_NVIC_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(SD_DMAx_Tx_IRQn);
+
     return result;
 }
 
 bool sdInit() {
     /* Enable SDIO clock */
-    __SDIO_CLK_ENABLE();
+    __HAL_RCC_SDIO_CLK_ENABLE();
 
     /* Enable GPIOs clock */
     __GPIOC_CLK_ENABLE(); // sd data lines PC8..PC12
     __GPIOD_CLK_ENABLE(); // cmd line D2
     __GPIOB_CLK_ENABLE(); // pin detect
-
-    __HAL_RCC_SDIO_CLK_ENABLE();
 
     /* Common GPIO configuration */
     GPIO_InitTypeDef GPIO_Init_Structure = { 0 };
@@ -177,7 +177,7 @@ bool sdInit() {
     }
 
     /* NVIC configuration for SDIO interrupts */
-    HAL_NVIC_SetPriority(SDIO_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(SDIO_IRQn, SD_NVIC_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(SDIO_IRQn);
 
     // try high speed mode
@@ -192,8 +192,12 @@ bool sdInit() {
 
 int readBlock(void* data, uint64_t addr) {
     HAL_SD_ErrorTypedef status;
-    if ((status = HAL_SD_ReadBlocks(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
+    if ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
         printf("Failed to read block: status = %d\n", status);
+        return 0;
+    }
+    if ((status = HAL_SD_CheckReadOperation(&uSdHandle, 1000)) != SD_OK) {
+        printf("HAL_SD_CheckReadOperation() failed, status=%d\n", status);
         return 0;
     }
     return 1;
@@ -201,8 +205,12 @@ int readBlock(void* data, uint64_t addr) {
 
 int writeBlock(void* data, uint64_t addr) {
     HAL_SD_ErrorTypedef status;
-    if ((status = HAL_SD_WriteBlocks(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
+    if ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
         printf("Failed to write block: status = %d\n", status);
+        return 0;
+    }
+    if ((status = HAL_SD_CheckWriteOperation(&uSdHandle, 1000)) != SD_OK) {
+        printf("HAL_SD_CheckWriteOperation() failed, status=%d\n", status);
         return 0;
     }
     return 1;
@@ -227,9 +235,21 @@ void dumpBlock(uint8_t* data, int count) {
 }
 
 extern "C" int SDGetStatus(SD_HandleTypeDef *hsd);
+extern "C" void DMA2_Stream3_IRQHandler();
+extern "C" void DMA2_Stream6_IRQHandler();
+
+void DMA2_Stream3_IRQHandler() {
+    printf("%s\n", __func__);
+    HAL_DMA_IRQHandler(&dmaRxHandle);
+}
+
+void DMA2_Stream6_IRQHandler() {
+    printf("%s\n", __func__);
+    HAL_DMA_IRQHandler(&dmaTxHandle);
+}
 
 enum DeathCode {
-    SDIO_INIT = 2,
+    SDIO_INIT = 1,
     SDIO_DMA,
     BUFFER_NOT_ALIGNED
 };
@@ -249,19 +269,20 @@ void blinkOfDeath(Pin& led, int code)
 
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
-    debug("initialize sdio\n");
+    debug("Initializing sdio...\n");
     if (!sdInit()) {
         debug("Failed to initialize sdio\n");
         blinkOfDeath(led, SDIO_INIT);
     }
     if (!sdDmaInit()) {
-        printf("Failed to initialize sdio dma\n");
+        debug("Failed to initialize sdio dma\n");
         blinkOfDeath(led, SDIO_DMA);
     }
+
     int count = 0;
     uint8_t buff[512];
     if (uint32_t(&buff[0]) & 0x3 != 0) {
-        printf("Buffer not aligned!\n");
+        debug("Buffer not aligned!\n");
         blinkOfDeath(led, BUFFER_NOT_ALIGNED);
     }
     bzero(buff, sizeof(buff));
@@ -274,18 +295,20 @@ void StartDefaultTask(void const * argument) {
         for (int i = 0; i < 512; i++) {
             buff[i] = rand() & 0xff;
         }
+        printf("write...\n");
         writeBlock(&buff[0], count * 512);
-        while (0x100 != (SDGetStatus(&uSdHandle) & 0x100))
-            ;
+//        while (0x100 != (SDGetStatus(&uSdHandle) & 0x100))
+//            ;
+        printf("read..\n");
         readBlock(&tmp[0], count * 512);
         if (0 != memcmp(tmp, buff, sizeof(buff))) {
-            printf("readback error: blocks differ!\n");
+            debug("readback error: blocks differ!\n");
         } else {
             if (!(count % 64)) {
                 if (count != 0) {
                     printf("\n");
                 }
-                printf("Block %08x", count);
+                debug("Block %08x", count);
             } else {
                 printf(".");
             }

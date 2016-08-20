@@ -2378,6 +2378,18 @@ static HAL_SD_CardStateTypedef SD_GetState(SD_HandleTypeDef *hsd)
   }
 }
 
+// HACK.  Provide method to get actual status bits.
+int SDGetStatus(SD_HandleTypeDef *hsd) {
+    uint32_t resp1 = 0U;
+    HAL_SD_ErrorTypedef status = SD_SendStatus(hsd, &resp1);
+    if (status != SD_OK) {
+        printf("XX CARD_ERR %d\n", status);
+        return 0;
+    } else {
+        return resp1;
+    }
+}
+
 /**
   * @brief  Initializes all cards or single card as the case may be Card(s) come
   *         into standby state.

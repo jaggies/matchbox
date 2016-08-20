@@ -1,4 +1,4 @@
-SubDir TOP apps hal_sdio ;
+SubDir TOP apps sdio_test ;
 SubDirHdrs $(TOP) lib matchbox ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;
@@ -12,10 +12,10 @@ SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source include ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 
-LINKLIBS on hal_sdio = -Wl,--whole-archive -lmatchbox -lusb -lfreertos -lhal -Wl,--no-whole-archive ;
+LINKLIBS on sdio_test = -Wl,--whole-archive -lmatchbox -lusb -lfreertos -lhal -Wl,--no-whole-archive ;
 
-Depends hal_sdio : libmatchbox.a libusb.a libfreertos.a libhal.a ;
+Depends sdio_test : libmatchbox.a libusb.a libfreertos.a libhal.a ;
 
-Main hal_sdio :
-	hal_sdio.cpp
+Main sdio_test :
+	sdio_test.cpp
 	;

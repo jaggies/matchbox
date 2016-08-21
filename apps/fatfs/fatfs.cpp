@@ -40,7 +40,7 @@ void detectCb(uint32_t pin, void* arg) {
     debug("SD DETECT!\n");
 }
 
-bool writeFile(const char* fname, Pin& led) {
+bool writeFile(const char* fname, int blocks, Pin& led) {
     bool result = true;
     FIL dataFile = {0};
     FRESULT status;
@@ -54,7 +54,7 @@ bool writeFile(const char* fname, Pin& led) {
 
     int count = 0;
     srand(0); // reset random number generator
-    while (count < 8192) {
+    while (count < blocks) {
         char block[512];
         UINT written = 0;
         for (int i = 0; i < sizeof(block); i++) {
@@ -67,12 +67,9 @@ bool writeFile(const char* fname, Pin& led) {
         } else {
             if (!(count%4096)) {
                 printf("block %04d\n", count);
-                //f_sync(&dataFile);
             }
         }
         led.write(count++ & 1);
-        f_sync(&dataFile);
-        osDelay(1);
     }
     if (FR_OK != (status = f_close(&dataFile))) {
         error("Failed to close %s, status=%d\n", fname);
@@ -81,7 +78,7 @@ bool writeFile(const char* fname, Pin& led) {
     return result;
 }
 
-bool verifyFile(const char* fname, Pin& led) {
+bool verifyFile(const char* fname, int blocks, Pin& led) {
     bool result = true;
     FIL dataFile = {0};
     FRESULT status;
@@ -95,7 +92,7 @@ bool verifyFile(const char* fname, Pin& led) {
 
     int count = 0;
     srand(0); // reset random number generator
-    while (count < 8192) {
+    while (count < blocks) {
         char reference[512];
         char block[sizeof(reference)];
         UINT bread = 0;
@@ -119,7 +116,6 @@ bool verifyFile(const char* fname, Pin& led) {
             }
         }
         led.write(count++ & 1);
-        osDelay(1);
     }
     if (FR_OK != (status = f_close(&dataFile))) {
         debug("Failed to close %s, status=%d\n", fname);
@@ -178,15 +174,26 @@ void StartDefaultTask(void const * argument) {
         }
 
         printf("Writing %s\n", fname);
-        if (!writeFile(fname, led)) {
+        const int blocks = 8192;
+        int startTime = HAL_GetTick();
+        if (!writeFile(fname, blocks, led)) {
             error("Failed to write file %s\n", fname);
             continue;
+        } else {
+            int timeNow = HAL_GetTick();
+            float dt = float(timeNow - startTime) / 1000.0f;
+            printf("write success(%0.2f kB/s)\n", (float) blocks*512 / dt / 1024.0f);
         }
 
         // Verify data...
         printf("Verifying %s\n", fname);
-        if (!verifyFile(fname, led)) {
+        startTime = HAL_GetTick();
+        if (!verifyFile(fname, blocks, led)) {
             error("Failed to write file %s\n", fname);
+        } else {
+            int timeNow = HAL_GetTick();
+            float dt = float(timeNow - startTime) / 1000.0f;
+            printf("verified(%0.2f kB/s)\n", (float) blocks*512 / dt / 1024.0f);
         }
 
         free(fname);

@@ -5,7 +5,9 @@
  *      Author: jmiller
  */
 #include <string.h>
-#include "stm32f4xx.h" // chip-specific defines
+#include <stm32f4xx.h> // chip-specific defines
+#include <stm32f4xx_hal_dma.h>
+#include <stm32f4xx_hal_tim.h>
 #include "cmsis_os.h"
 #include "usbd_desc.h"
 #include "usbd_cdc.h"
@@ -94,6 +96,13 @@ void MatchBox::blinkOfDeath(Pin& led, BlinkCode code)
         }
         osDelay(1000);
     }
+}
+
+extern "C" TIM_HandleTypeDef htim1;
+
+uint32_t MatchBox::getTimer() {
+    // return __HAL_TIM_GET_COUNTER(&htim1);
+    return HAL_GetTick();
 }
 
 void MatchBox::gpioInit(void) {

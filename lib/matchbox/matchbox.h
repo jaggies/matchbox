@@ -22,6 +22,7 @@ class MatchBox {
         MatchBox(ClockSpeed = C168MHz);
         ~MatchBox();
         static void blinkOfDeath(Pin& led, BlinkCode code);
+        static uint32_t getTimer();
     private:
         void gpioInit(void);
         void usartInit(void);

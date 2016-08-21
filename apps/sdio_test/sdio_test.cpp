@@ -66,14 +66,22 @@ bool sdInit() {
     GPIO_Init_Structure.Pin       = 8;
     HAL_GPIO_Init(GPIOB, &GPIO_Init_Structure);
 
-    /* Initialize SD interface */
+    /* Initialize SD interface
+     * Note HW flow control must be disabled on STM32f415 due to hardware glitches on the SDIOCLK
+     * line. See errata:
+     *
+     * "When enabling the HW flow control by setting bit 14 of the SDIO_CLKCR register to ‘1’,
+     * glitches can occur on the SDIOCLK output clock resulting in wrong data to be written
+     * into the SD/MMC card or into the SDIO device. As a consequence, a CRC error will be
+     * reported to the SD/SDIO MMC host interface (DCRCFAIL bit set to ‘1’ in SDIO_STA register)."
+     **/
     uSdHandle.Instance = SDIO;
     uSdHandle.Init.ClockEdge           = SDIO_CLOCK_EDGE_RISING;
     uSdHandle.Init.ClockBypass         = SDIO_CLOCK_BYPASS_DISABLE;
     uSdHandle.Init.ClockPowerSave      = SDIO_CLOCK_POWER_SAVE_DISABLE;
     uSdHandle.Init.BusWide             = SDIO_BUS_WIDE_1B;
-    uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_ENABLE;
-    uSdHandle.Init.ClockDiv            = 6;//SDIO_TRANSFER_CLK_DIV;
+    uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
+    uSdHandle.Init.ClockDiv            = SDIO_TRANSFER_CLK_DIV;
 
     HAL_SD_ErrorTypedef status;
     if((status = HAL_SD_Init(&uSdHandle, &uSdCardInfo)) != SD_OK) {

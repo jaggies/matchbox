@@ -670,6 +670,9 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
   uint32_t *tempbuff = (uint32_t *)pWriteBuffer;
   uint8_t cardstate  = 0U;
 
+  /* prevent fifo underrun by disabling IRQ for write */
+  __disable_irq();
+
   /* Initialize data control register */
   hsd->Instance->DCTRL = 0U;
 
@@ -692,7 +695,7 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
 
   if (errorstate != SD_OK)
   {
-    return errorstate;
+    goto done;
   }
 
   if(NumberOfBlocks > 1U)
@@ -721,7 +724,7 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
 
   if (errorstate != SD_OK)
   {
-    return errorstate;
+    goto done;
   }
 
   /* Set total number of bytes to write */
@@ -828,24 +831,21 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
     __HAL_SD_SDIO_CLEAR_FLAG(hsd, SDIO_FLAG_DTIMEOUT);
 
     errorstate = SD_DATA_TIMEOUT;
-
-    return errorstate;
+    goto done;
   }
   else if (__HAL_SD_SDIO_GET_FLAG(hsd, SDIO_FLAG_DCRCFAIL))
   {
     __HAL_SD_SDIO_CLEAR_FLAG(hsd, SDIO_FLAG_DCRCFAIL);
 
     errorstate = SD_DATA_CRC_FAIL;
-
-    return errorstate;
+    goto done;
   }
   else if (__HAL_SD_SDIO_GET_FLAG(hsd, SDIO_FLAG_TXUNDERR))
   {
     __HAL_SD_SDIO_CLEAR_FLAG(hsd, SDIO_FLAG_TXUNDERR);
 
     errorstate = SD_TX_UNDERRUN;
-
-    return errorstate;
+    goto done;
   }
 #ifdef SDIO_STA_STBITERR
   else if (__HAL_SD_SDIO_GET_FLAG(hsd, SDIO_FLAG_STBITERR))
@@ -853,8 +853,7 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
     __HAL_SD_SDIO_CLEAR_FLAG(hsd, SDIO_FLAG_STBITERR);
 
     errorstate = SD_START_BIT_ERR;
-
-    return errorstate;
+    goto done;
   }
 #endif /* SDIO_STA_STBITERR */
   else
@@ -872,7 +871,8 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
   {
     errorstate = SD_IsCardProgramming(hsd, &cardstate);
   }
-
+done:
+  __enable_irq();
   return errorstate;
 }
 
@@ -2367,13 +2367,11 @@ static HAL_SD_CardStateTypedef SD_GetState(SD_HandleTypeDef *hsd)
   HAL_SD_ErrorTypedef  status = SD_SendStatus(hsd, &resp1);
   if (status != SD_OK)
   {
-      printf("XX CARD_ERR %d\n", status);
     return SD_CARD_ERROR;
   }
   else
   {
-      uint32_t st = (resp1 >> 9U) & 0x0FU;
-      //printf("XX resp1 = %d\n", st);
+    uint32_t st = (resp1 >> 9U) & 0x0FU;
     return (HAL_SD_CardStateTypedef)(st);
   }
 }
@@ -2383,7 +2381,6 @@ int SDGetStatus(SD_HandleTypeDef *hsd) {
     uint32_t resp1 = 0U;
     HAL_SD_ErrorTypedef status = SD_SendStatus(hsd, &resp1);
     if (status != SD_OK) {
-        printf("XX CARD_ERR %d\n", status);
         return 0;
     } else {
         return resp1;

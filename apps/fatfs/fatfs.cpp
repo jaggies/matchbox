@@ -5,8 +5,6 @@
  *      Author: jmiller
  */
 
-#define DEBUG
-
 #include <string.h>
 #include <stdlib.h>
 #include "matchbox.h"
@@ -66,7 +64,7 @@ bool writeFile(const char* fname, int blocks, Pin& led) {
             led.write(1); // stuck at on if there's an error
         } else {
             if (!(count%4096)) {
-                printf("block %04d\n", count);
+                debug("block %04d\n", count);
             }
         }
         led.write(count++ & 1);
@@ -112,7 +110,7 @@ bool verifyFile(const char* fname, int blocks, Pin& led) {
                 continue;
             }
             if (!(count%4096)) {
-                printf("block %04d\n", count);
+                debug("block %04d\n", count);
             }
         }
         led.write(count++ & 1);
@@ -182,7 +180,7 @@ void StartDefaultTask(void const * argument) {
         } else {
             int timeNow = HAL_GetTick();
             float dt = float(timeNow - startTime) / 1000.0f;
-            printf("write success(%0.2f kB/s)\n", (float) blocks*512 / dt / 1024.0f);
+            printf("done(%0.2f kB/s)\n", (float) blocks*512 / dt / 1024.0f);
         }
 
         // Verify data...

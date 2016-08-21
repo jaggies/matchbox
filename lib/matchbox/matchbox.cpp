@@ -12,6 +12,7 @@
 #include "usbserial.h"
 #include "matchbox.h"
 #include "gpio.h"
+#include "pin.h"
 
 typedef void (*fPtr)(void);
 typedef struct _ClockConfig {
@@ -80,6 +81,19 @@ MatchBox::MatchBox(ClockSpeed clkSpeed) : _clkSpeed(clkSpeed) {
 }
 
 MatchBox::~MatchBox() {
+}
+
+void MatchBox::blinkOfDeath(Pin& led, BlinkCode code)
+{
+    while (1) {
+        for (int i = 0; i < code; i++) {
+            led.write(1);
+            osDelay(125);
+            led.write(0);
+            osDelay(125);
+        }
+        osDelay(1000);
+    }
 }
 
 void MatchBox::gpioInit(void) {

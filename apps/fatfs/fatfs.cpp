@@ -5,6 +5,8 @@
  *      Author: jmiller
  */
 
+#define DEBUG
+
 #include <string.h>
 #include <stdlib.h>
 #include "matchbox.h"
@@ -38,9 +40,101 @@ void detectCb(uint32_t pin, void* arg) {
     debug("SD DETECT!\n");
 }
 
+bool writeFile(const char* fname, Pin& led) {
+    bool result = true;
+    FIL dataFile = {0};
+    FRESULT status;
+    if (FR_OK == (status = f_open(&dataFile, fname, FA_WRITE | FA_CREATE_ALWAYS))) {
+        debug("Successfully opened data file\n");
+        UINT written = 0;
+    } else {
+        debug("Failed to open data file: status=%d\n", status);
+        result = false;
+    }
+
+    int count = 0;
+    srand(0); // reset random number generator
+    while (count < 8192) {
+        char block[512];
+        UINT written = 0;
+        for (int i = 0; i < sizeof(block); i++) {
+            block[i] = rand() & 0xff;
+        }
+        if (FR_OK != (status = f_write(&dataFile, block, sizeof(block), &written))) {
+            error("Failed to write %d bytes: status=%d, written=%d, count = %d, ftell=%d\n",
+                    sizeof(block), status, written, count, f_tell(&dataFile));
+            led.write(1); // stuck at on if there's an error
+        } else {
+            if (!(count%4096)) {
+                printf("block %04d\n", count);
+                //f_sync(&dataFile);
+            }
+        }
+        led.write(count++ & 1);
+        f_sync(&dataFile);
+        osDelay(1);
+    }
+    if (FR_OK != (status = f_close(&dataFile))) {
+        error("Failed to close %s, status=%d\n", fname);
+        result = false;;
+    }
+    return result;
+}
+
+bool verifyFile(const char* fname, Pin& led) {
+    bool result = true;
+    FIL dataFile = {0};
+    FRESULT status;
+    if (FR_OK == (status = f_open(&dataFile, fname, FA_READ))) {
+        debug("Successfully opened data file\n");
+        UINT written = 0;
+    } else {
+        debug("Failed to open data file: status=%d\n", status);
+        result = false;
+    }
+
+    int count = 0;
+    srand(0); // reset random number generator
+    while (count < 8192) {
+        char reference[512];
+        char block[sizeof(reference)];
+        UINT bread = 0;
+        for (int i = 0; i < sizeof(block); i++) {
+            reference[i] = rand() & 0xff;
+        }
+        if (FR_OK != (status = f_read(&dataFile, block, sizeof(block), &bread))) {
+            error("Failed to write %d bytes: status=%d, read=%d, count = %d, ftell=%d\n",
+                    sizeof(block), status, bread, count, f_tell(&dataFile));
+            led.write(1); // stuck at on if there's an error
+            result = false;
+            break;
+        } else {
+            if (memcmp(block, reference, sizeof(reference))) {
+                debug("Verify failed at block %d\n", count);
+                result = false;
+                continue;
+            }
+            if (!(count%4096)) {
+                printf("block %04d\n", count);
+            }
+        }
+        led.write(count++ & 1);
+        osDelay(1);
+    }
+    if (FR_OK != (status = f_close(&dataFile))) {
+        debug("Failed to close %s, status=%d\n", fname);
+        result = false;;
+    }
+    return result;
+}
+
+enum DeathCode {
+    SDIO_MOUNT = MatchBox::CODE_LAST, // blink codes start here
+    SDIO_LINK
+};
+
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
-    FIL file = {0};
     FATFS FatFs = {0};   /* Work area (file system object) for logical drive */
     FRESULT status;
     char path[4];
@@ -49,8 +143,6 @@ void StartDefaultTask(void const * argument) {
 
     if (0 == FATFS_LinkDriver(&SD_Driver, &path[0])) {
         if (FR_OK == (status = f_mount(&FatFs, "", 0))) {
-            static const char msg[] = "Matchbox was able to write file. Yay!";
-            static const char* filename = "matchbox.txt";
             debug("Successfully mounted volume\n");
             printf("Waiting for SD\n");
             int t = 5;
@@ -58,29 +150,16 @@ void StartDefaultTask(void const * argument) {
                 printf("%d...\n", t--);
                 osDelay(1000);
             }
-            if (FR_OK == (status = f_open(&file, filename, FA_WRITE | FA_CREATE_ALWAYS))) {
-                debug("Successfully opened file\n");
-                UINT written = 0;
-                debug("sizeof(msg)=%d\n", sizeof(msg));
-                if (FR_OK != (status = f_write(&file, msg, strlen(msg), &written))) {
-                    error("Failed to write %d bytes to %s: status=%d, written=%d\n",
-                            sizeof(msg), filename, status, written);
-                }
-                f_sync(&file);
-                f_close(&file);
-            } else {
-                error("Failed to open file: status=%d\n", status);
-            }
-            // TODO: unmount?
         } else {
             error("Failed to open volume: status=%d\n", status);
+            MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_MOUNT);
         }
     } else {
         error("Failed to link SD driver\n");
+        MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_LINK);
     }
 
     while (1) {
-        FIL dataFile = {0};
         uint32_t count = 0;
         srand(0); // reset seed so files contain same data
 
@@ -98,43 +177,18 @@ void StartDefaultTask(void const * argument) {
             }
         }
 
-        while (1) {
-            if (FR_OK == (status = f_open(&dataFile, fname, FA_WRITE | FA_CREATE_ALWAYS))) {
-                debug("Successfully opened data file\n");
-                UINT written = 0;
-                break;
-            } else {
-                error("Failed to open data file: status=%d\n", status);
-                osDelay(1000);
-            }
-        };
-
         printf("Writing %s\n", fname);
-        free(fname);
+        if (!writeFile(fname, led)) {
+            error("Failed to write file %s\n", fname);
+            continue;
+        }
 
-        char block[512];
-        while (count < 8192) {
-            UINT written = 0;
-            for (int i = 0; i < sizeof(block); i++) {
-                block[i] = rand() & 0xff;
-            }
-            if (FR_OK != (status = f_write(&dataFile, block, sizeof(block), &written))) {
-                error("Failed to write %d bytes: status=%d, written=%d, count = %d, ftell=%d\n",
-                        sizeof(block), status, written, count, f_tell(&dataFile));
-                led.write(1); // stuck at on if there's an error
-            } else {
-                if (!(count%4096)) {
-                    printf("block %04d\n", count);
-                    //f_sync(&dataFile);
-                }
-            }
-            led.write(count++ & 1);
-            f_sync(&dataFile);
-            osDelay(1);
+        // Verify data...
+        printf("Verifying %s\n", fname);
+        if (!verifyFile(fname, led)) {
+            error("Failed to write file %s\n", fname);
         }
-        if (FR_OK != (status = f_close(&dataFile))) {
-            error("Failed to close %s, status=%d\n", fname);
-        }
-        printf("Done.\n");
+
+        free(fname);
     }
 }

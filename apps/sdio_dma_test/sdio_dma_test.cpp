@@ -156,14 +156,22 @@ bool sdInit() {
     GPIO_Init_Structure.Pin = 8;
     HAL_GPIO_Init(GPIOB, &GPIO_Init_Structure);
 
-    /* Initialize SD interface */
+    /* Initialize SD interface
+     * Note HW flow control must be disabled on STM32f415 due to hardware glitches on the SDIOCLK
+     * line. See errata:
+     *
+     * "When enabling the HW flow control by setting bit 14 of the SDIO_CLKCR register to ‘1’,
+     * glitches can occur on the SDIOCLK output clock resulting in wrong data to be written
+     * into the SD/MMC card or into the SDIO device. As a consequence, a CRC error will be
+     * reported to the SD/SDIO MMC host interface (DCRCFAIL bit set to ‘1’ in SDIO_STA register)."
+     **/
     uSdHandle.Instance = SDIO;
     uSdHandle.Init.ClockEdge = SDIO_CLOCK_EDGE_RISING;
     uSdHandle.Init.ClockBypass = SDIO_CLOCK_BYPASS_DISABLE;
     uSdHandle.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;
     uSdHandle.Init.BusWide = SDIO_BUS_WIDE_1B;
-    uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_ENABLE;
-    uSdHandle.Init.ClockDiv = 6; //SDIO_TRANSFER_CLK_DIV;
+    uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
+    uSdHandle.Init.ClockDiv = SDIO_TRANSFER_CLK_DIV;
 
     HAL_SD_ErrorTypedef status;
     if ((status = HAL_SD_Init(&uSdHandle, &uSdCardInfo)) != SD_OK) {
@@ -234,9 +242,17 @@ void dumpBlock(uint8_t* data, int count) {
     }
 }
 
-extern "C" int SDGetStatus(SD_HandleTypeDef *hsd);
-extern "C" void DMA2_Stream3_IRQHandler();
-extern "C" void DMA2_Stream6_IRQHandler();
+extern "C" {
+    int SDGetStatus(SD_HandleTypeDef *hsd);
+    void DMA2_Stream3_IRQHandler();
+    void DMA2_Stream6_IRQHandler();
+    void SDIO_IRQHandler(void);
+}
+//
+//void SDIO_IRQHandler(void) {
+//    printf("%s\n", __func__);
+//    HAL_SD_IRQHandler(&uSdHandle);
+//}
 
 void DMA2_Stream3_IRQHandler() {
     printf("%s\n", __func__);
@@ -249,41 +265,28 @@ void DMA2_Stream6_IRQHandler() {
 }
 
 enum DeathCode {
-    SDIO_INIT = 1,
+    SDIO_INIT = MatchBox::CODE_LAST, // blink codes start here
     SDIO_DMA,
     BUFFER_NOT_ALIGNED
 };
-
-void blinkOfDeath(Pin& led, int code)
-{
-    while (1) {
-        for (int i = 0; i < code; i++) {
-            led.write(1);
-            osDelay(125);
-            led.write(0);
-            osDelay(125);
-        }
-        osDelay(1000);
-    }
-}
 
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     debug("Initializing sdio...\n");
     if (!sdInit()) {
         debug("Failed to initialize sdio\n");
-        blinkOfDeath(led, SDIO_INIT);
+        MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_INIT);
     }
     if (!sdDmaInit()) {
         debug("Failed to initialize sdio dma\n");
-        blinkOfDeath(led, SDIO_DMA);
+        MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_DMA);
     }
 
     int count = 0;
     uint8_t buff[512];
     if (uint32_t(&buff[0]) & 0x3 != 0) {
         debug("Buffer not aligned!\n");
-        blinkOfDeath(led, BUFFER_NOT_ALIGNED);
+        MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) BUFFER_NOT_ALIGNED);
     }
     bzero(buff, sizeof(buff));
 

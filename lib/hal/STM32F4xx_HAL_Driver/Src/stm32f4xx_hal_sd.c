@@ -670,9 +670,6 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
   uint32_t *tempbuff = (uint32_t *)pWriteBuffer;
   uint8_t cardstate  = 0U;
 
-  /* prevent fifo underrun by disabling IRQ for write */
-  __disable_irq();
-
   /* Initialize data control register */
   hsd->Instance->DCTRL = 0U;
 
@@ -729,6 +726,9 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
 
   /* Set total number of bytes to write */
   totalnumberofbytes = NumberOfBlocks * BlockSize;
+
+  /* Prevent Tx underrun by disabling IRQ while filling the fifo */
+  __disable_irq();
 
   /* Configure the SD DPSM (Data Path State Machine) */
   sdio_datainitstructure.DataTimeOut   = SD_DATATIMEOUT;
@@ -814,6 +814,9 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
     }
   }
 
+  /* Done transfering data, re-enable IRQs */
+  __enable_irq();
+
   /* Send stop transmission command in case of multiblock write */
   if (__HAL_SD_SDIO_GET_FLAG(hsd, SDIO_FLAG_DATAEND) && (NumberOfBlocks > 1U))
   {
@@ -872,7 +875,6 @@ HAL_SD_ErrorTypedef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint32_t *pWriteBu
     errorstate = SD_IsCardProgramming(hsd, &cardstate);
   }
 done:
-  __enable_irq();
   return errorstate;
 }
 

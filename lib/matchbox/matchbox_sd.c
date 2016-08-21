@@ -98,15 +98,23 @@ uint8_t BSP_SD_Init(void)
 {
   uint8_t SD_state = MSD_OK;
 
-  /* uSD device interface configuration */
+  /* Initialize SD interface
+   * Note HW flow control must be disabled on STM32f415 due to hardware glitches on the SDIOCLK
+   * line. See errata:
+   *
+   * "When enabling the HW flow control by setting bit 14 of the SDIO_CLKCR register to ‘1’,
+   * glitches can occur on the SDIOCLK output clock resulting in wrong data to be written
+   * into the SD/MMC card or into the SDIO device. As a consequence, a CRC error will be
+   * reported to the SD/SDIO MMC host interface (DCRCFAIL bit set to ‘1’ in SDIO_STA register)."
+   **/
   uSdHandle.Instance = SDIO;
 
   uSdHandle.Init.ClockEdge           = SDIO_CLOCK_EDGE_RISING;
   uSdHandle.Init.ClockBypass         = SDIO_CLOCK_BYPASS_DISABLE;
   uSdHandle.Init.ClockPowerSave      = SDIO_CLOCK_POWER_SAVE_DISABLE;
   uSdHandle.Init.BusWide             = SDIO_BUS_WIDE_1B;
-  uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_ENABLE;
-  uSdHandle.Init.ClockDiv            = 6;//SDIO_TRANSFER_CLK_DIV;
+  uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
+  uSdHandle.Init.ClockDiv            = SDIO_TRANSFER_CLK_DIV;
 
   /* Check if the SD card is plugged in the slot */
   if(BSP_SD_IsDetected() != SD_PRESENT)
@@ -348,7 +356,7 @@ static void SD_MspInit(void)
   /* Common GPIO configuration */
   GPIO_Init_Structure.Mode      = GPIO_MODE_AF_PP;
   GPIO_Init_Structure.Pull      = GPIO_PULLUP;
-  GPIO_Init_Structure.Speed     = GPIO_SPEED_FREQ_MEDIUM;
+  GPIO_Init_Structure.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_Init_Structure.Alternate = GPIO_AF12_SDIO;
 
   /* GPIOC configuration */

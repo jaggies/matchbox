@@ -13,11 +13,15 @@
 #include "board.h"
 #include "gpio.h"
 
+class Pin;
+
 class MatchBox {
     public:
+        enum BlinkCode { CODE_ASSERT = 1 , CODE_LAST};
         enum ClockSpeed { C16MHz=0, C18MHz, C36MHz, C72MHz, C120MHz, C168MHz, C180MHz, C192MHz };
         MatchBox(ClockSpeed = C168MHz);
         ~MatchBox();
+        static void blinkOfDeath(Pin& led, BlinkCode code);
     private:
         void gpioInit(void);
         void usartInit(void);

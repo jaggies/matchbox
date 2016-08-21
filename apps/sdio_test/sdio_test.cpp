@@ -105,25 +105,31 @@ bool sdInit() {
             ;
     }
 
+    // enable interrupts for errors (tx underflow)
+//    __HAL_SD_SDIO_ENABLE_IT(&uSdHandle, (SDIO_IT_DCRCFAIL |\
+//                                    SDIO_IT_DTIMEOUT |\
+//                                    SDIO_IT_DATAEND  |\
+//                                    SDIO_IT_TXUNDERR |\
+//                                    SDIO_IT_STBITERR));
     return true;
 }
 
-int readBlock(void* data, uint64_t addr) {
+bool readBlock(void* data, uint64_t addr) {
     HAL_SD_ErrorTypedef status;
     if ((status = HAL_SD_ReadBlocks(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
         printf("Failed to read block: status = %d\n", status);
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 int writeBlock(void* data, uint64_t addr) {
     HAL_SD_ErrorTypedef status;
     if ((status = HAL_SD_WriteBlocks(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
         printf("Failed to write block: status = %d\n", status);
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 void dumpBlock(uint8_t* data, int count) {
@@ -164,22 +170,33 @@ void StartDefaultTask(void const * argument) {
     // Seed with random value
     srand(HAL_GetTick());
 
+    int tReadTime = 0; // total read/write time
+    int tWriteTime = 0;
+    const int CHUNKING = 64; // 64 blocks at a time
     while (1) {
         char tmp[512]; // temporary read buffer, for verification
         for (int i = 0; i < 512; i++) {
             buff[i] = rand() & 0xff;
         }
+        int tWriteStart = MatchBox::getTimer();
         writeBlock(&buff[0], count * 512);
+        tWriteTime += (MatchBox::getTimer() - tWriteStart);
         while (0x100 != (SDGetStatus(&uSdHandle) & 0x100))
             ;
+        int tReadStart = MatchBox::getTimer();
         readBlock(&tmp[0], count * 512);
+        tReadTime += (MatchBox::getTimer() - tReadStart);
+
         if (0 != memcmp(tmp, buff, sizeof(buff))) {
             printf("readback error: blocks differ!\n");
         } else {
-            if (!(count % 64)) {
-                if (count != 0) {
-                    printf("\n");
-                }
+            if (!(count % CHUNKING)) {
+                float writeTime = tWriteTime / 1000.0f;
+                float readTime = tReadTime / 1000.0f;
+                printf("R(%0.2f kB/s) W(%0.2f kB/s)\n",
+                        float(CHUNKING*sizeof(buff)/1024 / readTime),
+                        float(CHUNKING*sizeof(buff)/1024 / writeTime));
+                tReadTime = tWriteTime = 0;
                 printf("Block %08x", count);
             } else {
                 printf(".");

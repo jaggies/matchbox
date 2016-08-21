@@ -38,10 +38,8 @@ void detectCb(uint32_t pin, void* arg) {
     debug("SD DETECT!\n");
 }
 
-
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
-    uint32_t count = 0;
     FIL file = {0};
     FATFS FatFs = {0};   /* Work area (file system object) for logical drive */
     FRESULT status;
@@ -81,60 +79,62 @@ void StartDefaultTask(void const * argument) {
         error("Failed to link SD driver\n");
     }
 
-    FIL dataFile = {0};
-
-    // Find unused filename
-    int i = 0;
-    char * fname = NULL;
     while (1) {
-        char buff[32];
-        FILINFO info = { 0 };
-        sprintf(buff, "file%04d.dat", i++);
-        if (f_stat(buff, &info) != FR_OK) {
-            // file not found, use it
-            fname = strndup(buff, sizeof(buff));
-            break;
-        }
-    }
+        FIL dataFile = {0};
+        uint32_t count = 0;
+        srand(0); // reset seed so files contain same data
 
-    while (1) {
-        if (FR_OK == (status = f_open(&dataFile, fname, FA_WRITE | FA_CREATE_ALWAYS))) {
-            debug("Successfully opened data file\n");
-            UINT written = 0;
-            break;
-        } else {
-            error("Failed to open data file: status=%d\n", status);
-            osDelay(1000);
-        }
-    };
-
-    printf("Writing %s\n", fname);
-    free(fname);
-
-    char block[512];
-    while (count < 8192) {
-        UINT written = 0;
-        for (int i = 0; i < sizeof(block); i++) {
-            block[i] = rand() & 0xff;
-        }
-        if (FR_OK != (status = f_write(&dataFile, block, sizeof(block), &written))) {
-            error("Failed to write %d bytes: status=%d, written=%d, count = %d, ftell=%d\n",
-                    sizeof(block), status, written, count, f_tell(&dataFile));
-            led.write(1); // stuck at on if there's an error
-        } else {
-            if (!(count%4096)) {
-                printf("block %04d\n", count);
-                //f_sync(&dataFile);
+        // Find unused filename
+        int i = 0;
+        char * fname = NULL;
+        while (1) {
+            char buff[32];
+            FILINFO info = { 0 };
+            sprintf(buff, "file%04d.dat", i++);
+            if (f_stat(buff, &info) != FR_OK) {
+                // file not found, use it
+                fname = strndup(buff, sizeof(buff));
+                break;
             }
         }
-        led.write(count++ & 1);
-        f_sync(&dataFile);
-        osDelay(1);
+
+        while (1) {
+            if (FR_OK == (status = f_open(&dataFile, fname, FA_WRITE | FA_CREATE_ALWAYS))) {
+                debug("Successfully opened data file\n");
+                UINT written = 0;
+                break;
+            } else {
+                error("Failed to open data file: status=%d\n", status);
+                osDelay(1000);
+            }
+        };
+
+        printf("Writing %s\n", fname);
+        free(fname);
+
+        char block[512];
+        while (count < 8192) {
+            UINT written = 0;
+            for (int i = 0; i < sizeof(block); i++) {
+                block[i] = rand() & 0xff;
+            }
+            if (FR_OK != (status = f_write(&dataFile, block, sizeof(block), &written))) {
+                error("Failed to write %d bytes: status=%d, written=%d, count = %d, ftell=%d\n",
+                        sizeof(block), status, written, count, f_tell(&dataFile));
+                led.write(1); // stuck at on if there's an error
+            } else {
+                if (!(count%4096)) {
+                    printf("block %04d\n", count);
+                    //f_sync(&dataFile);
+                }
+            }
+            led.write(count++ & 1);
+            f_sync(&dataFile);
+            osDelay(1);
+        }
+        if (FR_OK != (status = f_close(&dataFile))) {
+            error("Failed to close %s, status=%d\n", fname);
+        }
+        printf("Done.\n");
     }
-    if (FR_OK != (status = f_close(&dataFile))) {
-        error("Failed to close %s, status=%d\n", fname);
-    }
-    printf("Done.\n");
-    while (1)
-        ;
 }

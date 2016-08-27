@@ -12,9 +12,9 @@
 #define SD_DETECT_GPIO_PORT              GPIOB
 #define SD_DETECT_IRQn                   EXTI9_5_IRQn
 
-#define SD_SDIO_NVIC_PRIORITY 5 // must be lower than SD_DMA_NVIC_PRIORITY
-#define SD_DMA_NVIC_PRIORITY 6
-#define SD_DET_NVIC_PRIORITY 7
+#define SD_SDIO_NVIC_PRIORITY 1 // must be lower than SD_DMA_NVIC_PRIORITY
+#define SD_DMA_NVIC_PRIORITY 2
+#define SD_DET_NVIC_PRIORITY 3
 
 #define SD_DMAx_Tx_CHANNEL                DMA_CHANNEL_4
 #define SD_DMAx_Rx_CHANNEL                DMA_CHANNEL_4

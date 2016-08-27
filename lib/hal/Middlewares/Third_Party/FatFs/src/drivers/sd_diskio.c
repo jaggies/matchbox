@@ -78,7 +78,7 @@ DSTATUS SD_initialize(BYTE lun) {
 DSTATUS SD_status(BYTE lun) {
     Stat = STA_NOINIT;
     HAL_SD_TransferStateTypedef stat = BSP_SD_GetStatus();
-    if (stat != SD_TRANSFER_OK) {
+    if (stat != SD_TRANSFER_ERROR) {
         Stat &= ~STA_NOINIT;
     }
     return Stat;

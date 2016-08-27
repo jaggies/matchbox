@@ -85,8 +85,8 @@
 static SD_HandleTypeDef uSdHandle;
 static SD_CardInfo uSdCardInfo;
 static void SD_MspInit(void);
-void SDIO_IRQHandler(void) {
-    printf("%s\n", __func__);
+__weak void SDIO_IRQHandler(void) {
+    printf("BSP: %s\n", __func__);
     HAL_SD_IRQHandler(&uSdHandle);
 }
 

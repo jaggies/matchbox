@@ -94,7 +94,7 @@ DSTATUS SD_status(BYTE lun) {
   */
 DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
     DRESULT res = RES_OK;
-    if (BSP_SD_ReadBlocks((uint32_t*) buff, (uint64_t) (sector * BLOCK_SIZE),
+    if (BSP_SD_ReadBlocks_DMA((uint32_t*) buff, (uint64_t) (sector * BLOCK_SIZE),
             BLOCK_SIZE, count) != SD_OK) {
         res = RES_ERROR;
     }
@@ -112,7 +112,7 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
 #if _USE_WRITE == 1
 DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
     DRESULT res = RES_OK;
-    if (BSP_SD_WriteBlocks((uint32_t*) buff, (uint64_t) (sector * BLOCK_SIZE),
+    if (BSP_SD_WriteBlocks_DMA((uint32_t*) buff, (uint64_t) (sector * BLOCK_SIZE),
     BLOCK_SIZE, count) != SD_OK) {
         res = RES_ERROR;
     }

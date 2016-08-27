@@ -27,7 +27,8 @@ static const uint32_t SD_IO_TIMEOUT = (uint32_t) -1; // wait long time before re
 static SD_HandleTypeDef uSdHandle;
 static SD_CardInfo uSdCardInfo;
 
-static void SD_MspInit(void);
+static HAL_SD_ErrorTypedef sdPinInit(void);
+static HAL_StatusTypeDef sdDmaInit(void);
 
 // IRQ handlers.  Declared weak so sdio_dma_test and other apps can override
 __weak void SDIO_IRQHandler(void) {
@@ -47,7 +48,19 @@ __weak void DMA2_Stream3_IRQHandler(void) {
  * @retval SD status.
  */
 HAL_StatusTypeDef BSP_SD_Init(void) {
-    HAL_StatusTypeDef status = HAL_OK;
+    /* Check if the SD card is plugged in the slot */
+    if (!BSP_SD_IsDetected()) {
+        return HAL_ERROR;
+    }
+
+    /* Enable SDIO and DMA2 clocks */
+    __HAL_RCC_SDIO_CLK_ENABLE();
+    __DMA2_CLK_ENABLE();
+
+    /* Enable GPIOs clock */
+    __GPIOC_CLK_ENABLE(); // sd data lines PC8..PC12
+    __GPIOD_CLK_ENABLE(); // cmd line D2
+    __GPIOB_CLK_ENABLE(); // pin detect
 
     /* Initialize SD interface
      * Note HW flow control must be disabled on STM32f415 due to hardware glitches on the SDIOCLK
@@ -66,26 +79,24 @@ HAL_StatusTypeDef BSP_SD_Init(void) {
     uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
     uSdHandle.Init.ClockDiv = SDIO_TRANSFER_CLK_DIV;
 
-    /* Check if the SD card is plugged in the slot */
-    if (!BSP_SD_IsDetected()) {
-        status = HAL_ERROR;
+    if (HAL_SD_Init(&uSdHandle, &uSdCardInfo) != HAL_OK) {
+       return HAL_ERROR;
     }
 
-    /* HAL SD initialization */
-    SD_MspInit();
-    if (HAL_SD_Init(&uSdHandle, &uSdCardInfo) != SD_OK) {
-        status = HAL_ERROR;
+    /* Configure SD wide bus width */
+    if (HAL_SD_WideBusOperation_Config(&uSdHandle, SDIO_BUS_WIDE_4B) != SD_OK) {
+        return HAL_ERROR;
     }
 
-    /* Configure SD Bus width */
-    if (status == HAL_OK) {
-        /* Enable wide operation */
-        if (HAL_SD_WideBusOperation_Config(&uSdHandle, SDIO_BUS_WIDE_4B) != SD_OK) {
-            status = HAL_ERROR;
-        }
+    if (sdPinInit() != HAL_OK) {
+       return HAL_ERROR;
     }
 
-    return status;
+    if (sdDmaInit() != HAL_OK) {
+       return HAL_ERROR;
+    }
+
+    return HAL_OK;
 }
 
 /**
@@ -193,7 +204,7 @@ HAL_SD_ErrorTypedef BSP_SD_Erase(uint64_t startAddr, uint64_t endAddr) {
     return HAL_SD_Erase(&uSdHandle, startAddr, endAddr);
 }
 
-static HAL_StatusTypeDef sdDmaInit(void) {
+HAL_StatusTypeDef sdDmaInit(void) {
     static DMA_HandleTypeDef dmaRxHandle;
     static DMA_HandleTypeDef dmaTxHandle;
 
@@ -268,7 +279,7 @@ static HAL_StatusTypeDef sdDmaInit(void) {
     return HAL_OK;
 }
 
-static HAL_SD_ErrorTypedef sdPinInit() {
+HAL_SD_ErrorTypedef sdPinInit(void) {
     /* Common GPIO configuration */
     GPIO_InitTypeDef GPIO_Init_Structure = { 0 };
     GPIO_Init_Structure.Mode = GPIO_MODE_AF_PP;
@@ -291,64 +302,17 @@ static HAL_SD_ErrorTypedef sdPinInit() {
     GPIO_Init_Structure.Pin = 8;
     HAL_GPIO_Init(GPIOB, &GPIO_Init_Structure);
 
-    /* Initialize SD interface
-     * Note HW flow control must be disabled on STM32f415 due to hardware glitches on the SDIOCLK
-     * line. See errata:
-     *
-     * "When enabling the HW flow control by setting bit 14 of the SDIO_CLKCR register to ‘1’,
-     * glitches can occur on the SDIOCLK output clock resulting in wrong data to be written
-     * into the SD/MMC card or into the SDIO device. As a consequence, a CRC error will be
-     * reported to the SD/SDIO MMC host interface (DCRCFAIL bit set to ‘1’ in SDIO_STA register)."
-     **/
-    uSdHandle.Instance = SDIO;
-    uSdHandle.Init.ClockEdge = SDIO_CLOCK_EDGE_RISING;
-    uSdHandle.Init.ClockBypass = SDIO_CLOCK_BYPASS_DISABLE;
-    uSdHandle.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;
-    uSdHandle.Init.BusWide = SDIO_BUS_WIDE_1B;
-    uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
-    uSdHandle.Init.ClockDiv = SDIO_TRANSFER_CLK_DIV;
-
-    HAL_SD_ErrorTypedef status;
-    if ((status = HAL_SD_Init(&uSdHandle, &uSdCardInfo)) != SD_OK) {
-        return status;
-    }
-
-    if ((status = HAL_SD_WideBusOperation_Config(&uSdHandle, SDIO_BUS_WIDE_4B)) != SD_OK) {
-        return status;
-    }
-
     /* NVIC configuration for SDIO interrupts */
     HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
     HAL_NVIC_SetPriority(SDIO_IRQn, SD_SDIO_NVIC_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(SDIO_IRQn);
 
     // try high speed mode
+    HAL_SD_ErrorTypedef status;
     if ((status = HAL_SD_HighSpeed(&uSdHandle)) != SD_OK) {
         return status;
     }
     return SD_OK;
-}
-/**
- * @brief  Initializes the SD MSP.
- */
-static void SD_MspInit(void) {
-    /* Enable SDIO and DMA2 clocks */
-    __HAL_RCC_SDIO_CLK_ENABLE();
-    __DMA2_CLK_ENABLE();
-
-    /* Enable GPIOs clock */
-    __GPIOC_CLK_ENABLE(); // sd data lines PC8..PC12
-    __GPIOD_CLK_ENABLE(); // cmd line D2
-    __GPIOB_CLK_ENABLE(); // pin detect
-
-    if (sdPinInit() != SD_OK) {
-        error("Failed to initialize SD Pins\n");
-        return;
-    }
-    if (sdDmaInit() != SD_OK) {
-        error("Failed to initialize DMA\n");
-        return;
-    }
 }
 
 /**

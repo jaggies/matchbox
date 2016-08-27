@@ -46,8 +46,8 @@ bool writeFile(const char* fname, int blocks, Pin& led) {
         debug("Successfully opened data file\n");
         UINT written = 0;
     } else {
-        debug("Failed to open data file: status=%d\n", status);
-        result = false;
+        error("Failed to open data file: status=%d\n", status);
+        return false;
     }
 
     int count = 0;
@@ -61,10 +61,11 @@ bool writeFile(const char* fname, int blocks, Pin& led) {
         if (FR_OK != (status = f_write(&dataFile, block, sizeof(block), &written))) {
             error("Failed to write %d bytes: status=%d, written=%d, count = %d, ftell=%d\n",
                     sizeof(block), status, written, count, f_tell(&dataFile));
-            led.write(1); // stuck at on if there's an error
+            result = false;
+            break;
         } else {
             if (!(count%4096)) {
-                debug("block %04d\n", count);
+                debug("Block %04d\n", count);
             }
         }
         led.write(count++ & 1);
@@ -84,8 +85,8 @@ bool verifyFile(const char* fname, int blocks, Pin& led) {
         debug("Successfully opened data file\n");
         UINT written = 0;
     } else {
-        debug("Failed to open data file: status=%d\n", status);
-        result = false;
+        error("Failed to open data file: status=%d\n", status);
+        return false;
     }
 
     int count = 0;
@@ -98,25 +99,25 @@ bool verifyFile(const char* fname, int blocks, Pin& led) {
             reference[i] = rand() & 0xff;
         }
         if (FR_OK != (status = f_read(&dataFile, block, sizeof(block), &bread))) {
-            error("Failed to write %d bytes: status=%d, read=%d, count = %d, ftell=%d\n",
+            error("Failed to read %d bytes: status=%d, read=%d, count = %d, ftell=%d\n",
                     sizeof(block), status, bread, count, f_tell(&dataFile));
             led.write(1); // stuck at on if there's an error
             result = false;
             break;
         } else {
             if (memcmp(block, reference, sizeof(reference))) {
-                debug("Verify failed at block %d\n", count);
+                error("Verify failed at block %d\n", count);
                 result = false;
-                continue;
+                break;
             }
             if (!(count%4096)) {
-                debug("block %04d\n", count);
+                debug("verify Block %04d\n", count);
             }
         }
         led.write(count++ & 1);
     }
     if (FR_OK != (status = f_close(&dataFile))) {
-        debug("Failed to close %s, status=%d\n", fname);
+        error("Failed to close %s, status=%d\n", fname);
         result = false;;
     }
     return result;
@@ -171,11 +172,13 @@ void StartDefaultTask(void const * argument) {
             }
         }
 
+        // Write file with random data...
         printf("Writing %s\n", fname);
         const int blocks = 8192;
         int startTime = HAL_GetTick();
         if (!writeFile(fname, blocks, led)) {
             error("Failed to write file %s\n", fname);
+            osDelay(1000);
             continue;
         } else {
             int timeNow = HAL_GetTick();
@@ -187,7 +190,8 @@ void StartDefaultTask(void const * argument) {
         printf("Verifying %s\n", fname);
         startTime = HAL_GetTick();
         if (!verifyFile(fname, blocks, led)) {
-            error("Failed to write file %s\n", fname);
+            error("Failed to verify file %s\n", fname);
+            osDelay(1000);
         } else {
             int timeNow = HAL_GetTick();
             float dt = float(timeNow - startTime) / 1000.0f;

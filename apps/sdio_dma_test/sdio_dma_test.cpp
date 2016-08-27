@@ -97,7 +97,7 @@ bool sdDmaInit(void) {
     dmaTxHandle.Init.PeriphInc = DMA_PINC_DISABLE;
     dmaTxHandle.Init.MemInc = DMA_MINC_ENABLE;
     dmaTxHandle.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
-    dmaTxHandle.Init.MemDataAlignment = DMA_PDATAALIGN_WORD;
+    dmaTxHandle.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
     dmaTxHandle.Init.Mode = DMA_PFCTRL;
     dmaTxHandle.Init.Priority = DMA_PRIORITY_LOW;
     dmaTxHandle.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
@@ -330,9 +330,9 @@ void StartDefaultTask(void const * argument) {
 
     printf("Starting DMA\n");
     while (1) {
-        char tmp[512]; // temporary read buffer, for verification
-        for (int i = 0; i < 512; i+=4) {
-           *(int*) &buff[i] = rand() & 0xff;
+        char tmp[sizeof(buff)]; // temporary read buffer, for verification
+        for (int i = 0; i < sizeof(buff); i++) {
+            buff[i] = rand() & 0xff;
         }
         writeBlock(&buff[0], count * 512);
 //        while (0x100 != (SDGetStatus(&uSdHandle) & 0x100))

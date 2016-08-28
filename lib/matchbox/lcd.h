@@ -48,8 +48,14 @@ class Lcd {
 		void circle(int x0, int y0, int radius, uint8_t r, uint8_t g, uint8_t b);
 		void line(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b);
 		void rect(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b, bool fill = true);
-		int putChar(uint8_t c, int x, int y);
-		void putString(const char *str, int x, int y);
+		inline int putChar(uint8_t c, int x, int y) {
+		    return putChar(c, x, y, _fg, _bg);
+		}
+		int putChar(uint8_t c, int x, int y, const uint8_t* fg, const uint8_t* bg);
+		inline void putString(const char *str, int x, int y) {
+		    putString(str, x, y, _fg, _bg);
+		}
+		void putString(const char *str, int x, int y, const uint8_t* fg, const uint8_t* bg);
 		void swapBuffers() {
             _doSwap = true; /* handled in refresh */
             while (_doSwap) {
@@ -86,6 +92,8 @@ class Lcd {
 		const Font* _currentFont;
 		Frame* _writeBuffer;
 		Frame* _refreshBuffer;
+		uint8_t _fg[3];
+		uint8_t _bg[3];
 		volatile bool _doSwap; // trigger swapBuffer on next frame refresh
 };
 

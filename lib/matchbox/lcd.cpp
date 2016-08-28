@@ -26,6 +26,10 @@ Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
 {
     bool doubleBuffer = config.doubleBuffer;
     _writeBuffer = doubleBuffer ? new Frame() : _refreshBuffer;
+    for (int i = 0; i < 3; i++) {
+        _fg[i] = 0;
+        _bg[i] = 0xff;
+    }
 }
 
 void Lcd::begin() {
@@ -168,9 +172,7 @@ void Lcd::rect(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b, 
 	}
 }
 
-int Lcd::putChar(uint8_t c, int x, int y) {
-    static const uint8_t fColor[] = {0, 0, 0}; // TODO: allow these to be set
-    static const uint8_t bColor[] = {0xff, 0xff, 0xff};
+int Lcd::putChar(uint8_t c, int x, int y, const uint8_t* fg, const uint8_t* bg) {
 
     if (!_currentFont) return 0;
 
@@ -192,15 +194,17 @@ int Lcd::putChar(uint8_t c, int x, int y) {
 		    const int bitAddr = (charData->y + j) * _currentFont->width + (charData->x + i);
 		    const int byteAddr = bitAddr / 8;
 		    const int bitMask = 1 << (bitAddr % 8);
-			const uint8_t* color = (_currentFont->bitmap[byteAddr] & bitMask) ? fColor : bColor;
-			setPixel(i + x, j + y, color[0], color[1], color[2]);
+			const uint8_t* color = (_currentFont->bitmap[byteAddr] & bitMask) ? bg : fg;
+			if (color) {
+			    setPixel(i + x, j + y, color[0], color[1], color[2]);
+			}
 		}
 	}
 	return charData->width;
 }
 
-void Lcd::putString(const char *str, int x, int y) {
+void Lcd::putString(const char *str, int x, int y, const uint8_t* fg, const uint8_t *bg) {
 	while (char ch = *str++) {
-		x += putChar(ch, x, y);
+		x += putChar(ch, x, y, fg, bg);
 	}
 }

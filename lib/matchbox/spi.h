@@ -28,11 +28,12 @@ class Spi {
         enum Phase { Rising, Falling };
         enum Order { MSB_FIRST, LSB_FIRST };
         enum SlaveSelect { SOFTWARE, HARD_INPUT, HARD_OUTPUT };
+        enum ClockDiv {DIV2=0, DIV4, DIV8, DIV16, DIV32, DIV64, DIV128, DIV256 };
 
         class Config {
             public:
                 Config() : mode(Master), dir(TxRx), size(S8), polarity(LOW),
-                        phase(Rising), order(MSB_FIRST), ss(HARD_OUTPUT) { }
+                        phase(Rising), order(MSB_FIRST), ss(HARD_OUTPUT), div(DIV16) { }
                 Config& setMode(Mode m) { mode = m; return *this; }
                 Config& setDirection(Direction d) { dir = d; return *this; }
                 Config& setSize(Size sz) { size = sz; return *this; }
@@ -40,6 +41,7 @@ class Spi {
                 Config& setPhase(Phase p) { phase = p; return *this; }
                 Config& setOrder(Order ord) { order = ord; return *this; }
                 Config& setSlaveSelect(SlaveSelect s) { ss = s; return *this; }
+                Config& setClockDiv(ClockDiv d) { div = d; return *this; }
 
                 Mode mode;
                 Direction dir;
@@ -48,6 +50,7 @@ class Spi {
                 Phase phase;
                 Order order;
                 SlaveSelect ss;
+                ClockDiv div;
         };
 
         typedef void (*TransmitCallback)(void *args);

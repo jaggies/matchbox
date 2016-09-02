@@ -17,6 +17,11 @@ static SPI_TypeDef* const _busMap[] = { SPI1, SPI2, SPI3 };
 static const IRQn_Type irqMap[] = { SPI1_IRQn, SPI2_IRQn, SPI3_IRQn };
 static const uint32_t _dirMap[] = { SPI_DIRECTION_2LINES, SPI_DIRECTION_2LINES_RXONLY,
         SPI_DIRECTION_1LINE };
+static const uint32_t clkdivs[] = {
+    SPI_BAUDRATEPRESCALER_2, SPI_BAUDRATEPRESCALER_4, SPI_BAUDRATEPRESCALER_8,
+    SPI_BAUDRATEPRESCALER_16, SPI_BAUDRATEPRESCALER_32, SPI_BAUDRATEPRESCALER_64,
+    SPI_BAUDRATEPRESCALER_128, SPI_BAUDRATEPRESCALER_256
+};
 
 // Used to quickly map an irq to an instance of Spi object
 static Spi* spiMap[3] = { 0, 0, 0 };
@@ -33,7 +38,7 @@ Spi::Spi(Bus bus, const Config& config)
     _spi.Init.CLKPhase = config.phase == Rising ? SPI_PHASE_1EDGE : SPI_PHASE_2EDGE;
     _spi.Init.NSS = config.ss == SOFTWARE ? SPI_NSS_SOFT
             : (config.ss == HARD_OUTPUT ? SPI_NSS_HARD_OUTPUT : SPI_NSS_HARD_INPUT);
-    _spi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16; // TODO
+    _spi.Init.BaudRatePrescaler = clkdivs[config.div];
     _spi.Init.FirstBit = config.order == MSB_FIRST ? SPI_FIRSTBIT_MSB : SPI_FIRSTBIT_LSB;
     _spi.Init.TIMode = SPI_TIMODE_DISABLE;
     _spi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

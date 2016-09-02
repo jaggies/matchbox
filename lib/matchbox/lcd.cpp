@@ -62,16 +62,21 @@ void Lcd::refreshFrame() {
     }
     _doSwap = false;
 #ifndef BLE_PRESENT
-    writePin(_config.extc, (_frame++) & 0x01); // Toggle common driver once per frame
+    writePin(_config.extc, (_frame) & 0x01); // Toggle common driver once per frame
+#else
+    // TODO: ensure _clear is always in the correct state
+    _refreshBuffer->line[0].cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
 #endif
+
     writePin(_config.scs, 0); // cs disabled
     writePin(_config.scs, 1); // cs enabled
     Spi::Status status = _spi.transmit((uint8_t*)_refreshBuffer, sizeof(*_refreshBuffer),
             refreshFrameCallback, this);
     if (Spi::OK != status) {
-        printf("Failed to refresh with status=%d\n", status);
+        error("Failed to refresh with status=%d\n", status);
     }
     _clear = 0;
+    _frame++; // Toggle common driver once per frame
 }
 
 void

@@ -38,6 +38,12 @@ class Fifo {
 			return newhead == _tail;
 		}
 
+		// Peek n items back in history
+		inline const T& peek(S n) {
+		    S idx = (_head + N - n) % N;
+		    return _data[idx];
+		}
+
 		inline bool isEmpty() const { return _head == _tail; }
 
 		inline S count() const { return _head >= _tail ? (_head - _tail) : (N - _tail + _head); }

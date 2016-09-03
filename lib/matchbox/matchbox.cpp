@@ -81,6 +81,7 @@ MatchBox::MatchBox(ClockSpeed clkSpeed) : _clkSpeed(clkSpeed) {
     gpioInit();
     maybeJumpToBootloader();
     systemClockConfig();
+    rtcInit();
     usartInit();
     UsbSerial::getInstance(); // force initialization here
 }
@@ -101,7 +102,10 @@ void MatchBox::blinkOfDeath(Pin& led, BlinkCode code)
     }
 }
 
-extern "C" TIM_HandleTypeDef htim1;
+extern "C" {
+    TIM_HandleTypeDef htim1;
+    RTC_HandleTypeDef hrtc;
+}
 
 uint32_t MatchBox::getTimer() {
     // return __HAL_TIM_GET_COUNTER(&htim1);
@@ -165,5 +169,23 @@ void MatchBox::usartInit() {
    huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
    huart1.Init.OverSampling = UART_OVERSAMPLING_16;
    HAL_UART_Init(&huart1);
+}
+
+void MatchBox::rtcInit(void) {
+    __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
+    // Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
+    #define RTC_ASYNCH_PREDIV       0U
+    #define RTC_SYNCH_PREDIV        31U
+
+    hrtc.Instance = RTC;
+    hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+    hrtc.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
+    hrtc.Init.SynchPrediv = RTC_SYNCH_PREDIV;
+    hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+    hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+    hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+
+    __HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
+    HAL_RTC_Init(&hrtc);
 }
 

@@ -28,6 +28,7 @@ class MatchBox {
         void gpioInit(void);
         void usartInit(void);
         void systemClockConfig(void);
+        void rtcInit(void);
         ClockSpeed _clkSpeed;
         UART_HandleTypeDef huart1;
 };

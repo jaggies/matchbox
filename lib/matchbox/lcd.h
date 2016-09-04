@@ -41,8 +41,10 @@ class Lcd {
                 uint8_t en, scs, extc, disp;
         };
         Lcd(Spi& spi, const Config& config = Config());
+        ~Lcd();
 
 		void begin(void);
+		void setEnabled(bool enabled);
 		void clear(uint8_t r, uint8_t g, uint8_t b);
 		void setPixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
 		void circle(int x0, int y0, int radius, uint8_t r, uint8_t g, uint8_t b);

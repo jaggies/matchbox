@@ -26,10 +26,15 @@ Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
 {
     bool doubleBuffer = config.doubleBuffer;
     _writeBuffer = doubleBuffer ? new Frame() : _refreshBuffer;
-    for (int i = 0; i < 3; i++) {
-        _fg[i] = 0;
-        _bg[i] = 0xff;
+    memset(_fg, 0, sizeof(_fg));
+    memset(_bg, 0xff, sizeof(_bg));
+}
+
+Lcd::~Lcd() {
+    if (_writeBuffer != _refreshBuffer) {
+        delete _writeBuffer; // double buffered
     }
+    delete _refreshBuffer;
 }
 
 void Lcd::begin() {
@@ -48,6 +53,17 @@ void Lcd::begin() {
     refreshFrame(); // start SPI transfer chain
 }
 
+void Lcd::setEnabled(bool enabled) {
+    bool en = readPin(_config.en);
+    if (enabled != en) {
+        if (enabled) {
+            // restart refresh
+            // refreshFrame();
+        }
+        writePin(_config.en, enabled ? 1 : 0);
+    }
+}
+
 // Called when SPI finishes transfering the current frame
 void Lcd::refreshFrameCallback(void* arg) {
     Lcd* thisPtr = (Lcd*) arg;
@@ -59,8 +75,8 @@ void Lcd::refreshFrameCallback(void* arg) {
 void Lcd::refreshFrame() {
     if (_doSwap) {
         std::swap(_refreshBuffer, _writeBuffer);
+        _doSwap = false;
     }
-    _doSwap = false;
 #ifndef BLE_PRESENT
     writePin(_config.extc, (_frame) & 0x01); // Toggle common driver once per frame
 #else

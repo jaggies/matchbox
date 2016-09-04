@@ -1,7 +1,7 @@
 build
 .trash
 .DS_Store
-projects/stm168MHzWUSB/
-apps/experimental/
 .cproject
 .project
+.settings
+apps/experimental/

@@ -21,11 +21,11 @@
 }
 
 #if defined(DEBUG)
-#define debug(a...) printf(a)
+#define debug(...) printf(__VA_ARGS__)
 #else
-#define debug(a...)
+#define debug(...) { }
 #endif
 
-#define error(a...) printf(a)
+#define error(...) printf(__VA_ARGS__)
 
 #endif /* UTIL_H_ */

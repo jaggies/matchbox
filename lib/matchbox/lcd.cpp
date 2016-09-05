@@ -193,6 +193,15 @@ void Lcd::rect(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b, 
 	}
 }
 
+bool Lcd::setFont(const char* name) {
+    const Font* font = getFont(name);
+    if (font) {
+        _currentFont = font;
+        return true;
+    }
+    return false;
+}
+
 int Lcd::putChar(uint8_t c, int x, int y, const uint8_t* fg, const uint8_t* bg) {
 
     if (!_currentFont) return 0;

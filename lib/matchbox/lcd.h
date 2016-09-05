@@ -50,6 +50,8 @@ class Lcd {
 		void circle(int x0, int y0, int radius, uint8_t r, uint8_t g, uint8_t b);
 		void line(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b);
 		void rect(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b, bool fill = true);
+
+		bool setFont(const char* name);
 		inline int putChar(uint8_t c, int x, int y) {
 		    return putChar(c, x, y, _fg, _bg);
 		}

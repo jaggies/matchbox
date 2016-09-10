@@ -26,11 +26,9 @@ class MatchBox {
         static uint32_t getTimer();
     private:
         void gpioInit(void);
-        void usartInit(void);
         void systemClockConfig(void);
         void rtcInit(void);
         ClockSpeed _clkSpeed;
-        UART_HandleTypeDef huart1;
 };
 
 #endif /* MATCHBOX_H_ */

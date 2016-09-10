@@ -16,6 +16,11 @@
 #include "gpio.h"
 #include "pin.h"
 
+extern "C" {
+    TIM_HandleTypeDef htim1;
+    RTC_HandleTypeDef hrtc;
+}
+
 typedef void (*fPtr)(void);
 typedef struct _ClockConfig {
     public:
@@ -82,7 +87,6 @@ MatchBox::MatchBox(ClockSpeed clkSpeed) : _clkSpeed(clkSpeed) {
     maybeJumpToBootloader();
     systemClockConfig();
     rtcInit();
-    usartInit();
     UsbSerial::getInstance(); // force initialization here
 }
 
@@ -102,13 +106,7 @@ void MatchBox::blinkOfDeath(Pin& led, BlinkCode code)
     }
 }
 
-extern "C" {
-    TIM_HandleTypeDef htim1;
-    RTC_HandleTypeDef hrtc;
-}
-
 uint32_t MatchBox::getTimer() {
-    // return __HAL_TIM_GET_COUNTER(&htim1);
     return HAL_GetTick();
 }
 
@@ -156,19 +154,6 @@ void MatchBox::systemClockConfig(void) {
 
     /* SysTick_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
-}
-
-void MatchBox::usartInit() {
-   bzero(&huart1, sizeof(huart1));
-   huart1.Instance = USART1;
-   huart1.Init.BaudRate = 115200;
-   huart1.Init.WordLength = UART_WORDLENGTH_8B;
-   huart1.Init.StopBits = UART_STOPBITS_1;
-   huart1.Init.Parity = UART_PARITY_NONE;
-   huart1.Init.Mode = UART_MODE_TX_RX;
-   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-   HAL_UART_Init(&huart1);
 }
 
 void MatchBox::rtcInit(void) {

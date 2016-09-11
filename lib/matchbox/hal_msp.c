@@ -54,7 +54,7 @@ void HAL_MspInit(void) {
 }
 
 void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc) {
-    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
     if (hadc->Instance == ADC1) {
         /* Peripheral clock enable */
         __HAL_RCC_ADC1_CLK_ENABLE();

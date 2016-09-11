@@ -8,6 +8,7 @@
 #include <stm32f4xx.h> // chip-specific defines
 #include <stm32f4xx_hal_dma.h>
 #include <stm32f4xx_hal_tim.h>
+#include <stm32f4xx_hal_pwr_ex.h>
 #include "cmsis_os.h"
 #include "usbd_desc.h"
 #include "usbd_cdc.h"
@@ -147,8 +148,13 @@ void MatchBox::systemClockConfig(void) {
     RCC_ClkInitStruct.APB1CLKDivider = config[_clkSpeed].apb1div;
     RCC_ClkInitStruct.APB2CLKDivider = config[_clkSpeed].apb2div;
     HAL_RCC_ClockConfig(&RCC_ClkInitStruct, config[_clkSpeed].latency);
+    const uint32_t freq = HAL_RCC_GetHCLKFreq();
+    HAL_SYSTICK_Config(freq / 1000);
 
-    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
+    // Save a little power if clock is below 144MHz
+    if (freq <= 144000000) {
+        __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
+    }
 
     HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 

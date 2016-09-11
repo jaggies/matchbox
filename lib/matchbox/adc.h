@@ -18,13 +18,14 @@ class Adc {
     public:
         enum Device { AD1=0, AD2, AD3 };
         typedef void (*SampleCallback)(const uint16_t* samples, int n, void *args);
-        Adc(Device adc, int sampleCount = 1);
+        Adc(Device adc, int sampleCount = 0);
         ~Adc();
 
         void start(SampleCallback cb = 0, void* args = 0);
         void stop();
         // Returns latest sample in buffer
         uint16_t getValue() { return _sampleIndex > 0 ? _samples[_sampleIndex-1] : 0; }
+        uint16_t pollForValue(int timeout = 1000);
 
     private:
         friend void ADC_IRQHandler(void);

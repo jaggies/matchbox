@@ -41,6 +41,7 @@ Adc::Adc(Device device, int sampleCount) :
     sConfig.Channel = ADC_CHANNEL_15;
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+    sConfig.Offset = 0;
     HAL_ADC_ConfigChannel(&_adc, &sConfig);
     _adcMap[device] = this;
 
@@ -53,11 +54,26 @@ Adc::~Adc() {
     delete [] _samples;
 }
 
+uint16_t Adc::pollForValue(int timeout) {
+    HAL_StatusTypeDef status = HAL_ADC_PollForConversion(&_adc, timeout);
+    if (HAL_OK != status) {
+        debug("ADC error: returned %d\n", status);
+        return 0;
+    }
+    return HAL_ADC_GetValue(&_adc);
+}
+
 void Adc::start(SampleCallback cb, void* arg) {
     _callback = cb;
     _arg = arg;
-    HAL_NVIC_EnableIRQ(ADC_IRQn);
-    HAL_ADC_Start_IT(&_adc);
+    if (_callback) {
+        HAL_NVIC_EnableIRQ(ADC_IRQn);
+        HAL_ADC_Start_IT(&_adc);
+    } else {
+        // polled conversions
+        HAL_NVIC_DisableIRQ(ADC_IRQn);
+        HAL_ADC_Start(&_adc);
+    }
 }
 
 void Adc::stop() {

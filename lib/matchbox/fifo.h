@@ -9,9 +9,7 @@ class Fifo {
 		Fifo() : _head(0), _tail(0) { }
 
 		inline bool add(const T& data) {
-			S newhead = (_head + 1);
-			if (newhead == N)
-				newhead = 0;
+			S newhead = (_head + 1) % N;
 			if (newhead != _tail) {
 				_data[_head] = data;
 				_head = newhead;
@@ -23,18 +21,14 @@ class Fifo {
 		inline bool remove(T* data) {
 			if (_tail != _head) {
 				*data = _data[_tail];
-				_tail = (_tail + 1);
-				if (_tail == N)
-					_tail = 0;
+				_tail = (_tail + 1) % N;
 				return true;
 			}
 			return false;
 		}
 
 		inline bool isFull() const {
-			S newhead = (_head + 1);
-			if (newhead == N)
-				newhead = 0;
+			S newhead = (_head + 1) % N;
 			return newhead == _tail;
 		}
 

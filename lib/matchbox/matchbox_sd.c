@@ -322,11 +322,14 @@ HAL_SD_ErrorTypedef sdPinInit(void) {
     HAL_NVIC_SetPriority(SDIO_IRQn, SD_SDIO_NVIC_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(SDIO_IRQn);
 
-    // try high speed mode
-    HAL_SD_ErrorTypedef status;
-    if ((status = HAL_SD_HighSpeed(&uSdHandle)) != SD_OK) {
-        return status;
-    }
+    // Try high speed mode. This operation should be followed by the configuration
+    // of PLL to have SDIOCK clock between 67 and 75 MHz
+//    if (HAL_RCC_GetHCLKFreq() >= 36000000) {
+//        HAL_SD_ErrorTypedef status;
+//        if ((status = HAL_SD_HighSpeed(&uSdHandle)) != SD_OK) {
+//            return status;
+//        }
+//    }
     return SD_OK;
 }
 

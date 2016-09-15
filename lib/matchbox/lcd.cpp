@@ -22,7 +22,7 @@
 Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
         _clear(1), _frame(0), _currentFont(getFont("roboto_bold_10")),
         _xres(LCD_XRES), _yres(LCD_YRES), _channels(LCD_CHAN), _line_size(LCD_XRES*LCD_CHAN/8),
-        _refreshBuffer(new Frame()), _doSwap(true)
+        _refreshBuffer(new Frame()), _doSwap(true), _disableRefresh(false), _enabled(false)
 {
     bool doubleBuffer = config.doubleBuffer;
     _writeBuffer = doubleBuffer ? new Frame() : _refreshBuffer;
@@ -50,15 +50,16 @@ void Lcd::begin() {
         pinInitOutput(pins[i], defaults[i]);
     }
     bzero(_refreshBuffer, sizeof(*_refreshBuffer));
-    refreshFrame(); // start SPI transfer chain
+    setEnabled(true);
 }
 
 void Lcd::setEnabled(bool enabled) {
-    bool en = readPin(_config.en);
-    if (enabled != en) {
+    if (enabled != _enabled) {
+        _enabled = enabled;
         if (enabled) {
-            // restart refresh
-            // refreshFrame();
+            refreshFrame();
+        } else {
+            _disableRefresh = true;
         }
         writePin(_config.en, enabled ? 1 : 0);
     }
@@ -73,6 +74,10 @@ void Lcd::refreshFrameCallback(void* arg) {
 // Single line format : SCS CMD ROW <data0..n> 0 0 SCS#
 // Multi-line format : SCS CMD ROW <data0..n> IGNORED ROW <data0..127> ... SCS#
 void Lcd::refreshFrame() {
+    if (_disableRefresh) {
+        _disableRefresh = false;
+        return; // don't start another refresh cycle
+    }
     if (_doSwap) {
         std::swap(_refreshBuffer, _writeBuffer);
         _doSwap = false;

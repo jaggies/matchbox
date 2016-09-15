@@ -99,6 +99,8 @@ class Lcd {
 		uint8_t _fg[3];
 		uint8_t _bg[3];
 		volatile bool _doSwap; // trigger swapBuffer on next frame refresh
+        volatile bool _disableRefresh;
+        volatile bool _enabled;
 };
 
 #define BITBAND_SRAM_REF 0x20000000

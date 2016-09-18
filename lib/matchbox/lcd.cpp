@@ -211,19 +211,25 @@ int Lcd::putChar(uint8_t c, int x, int y, const uint8_t* fg, const uint8_t* bg) 
 
     if (!_currentFont) return 0;
 
-    // Find character to print. TODO: use binary search
-    const CharData* charData = 0;
-    for (int i = 0; i < _currentFont->charCount; i++) {
-        if (c == _currentFont->charData[i].ch) {
-            charData = &_currentFont->charData[i];
+    // Find character to print.
+    int first = 0, last = _currentFont->charCount;
+    int mid;
+    while (first <= last) {
+        mid = (first + last) / 2;
+        const uint8_t chr = _currentFont->charData[mid].ch;
+        if (c < chr) {
+            last = mid-1;   // Search left half
+        } else if (c > chr) {
+            first = mid+1;  // Search right half
+        } else {
             break;
         }
     }
 
-    if (!charData) {
+    if (first > last) {
         return 0; // character not found
     }
-
+    const CharData* charData = &_currentFont->charData[mid];
 	for (int j = 0; j < charData->height; j++) {
 		for (int i = 0; i < charData->width; i++) {
 		    const int bitAddr = (charData->y + j) * _currentFont->width + (charData->x + i);

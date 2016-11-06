@@ -120,7 +120,7 @@ void MatchBox::gpioInit(void) {
     __HAL_RCC_GPIOD_CLK_ENABLE();
 
     // POWER_PIN is wired to the LTC2954 KILL# pin. It must be remain high or power will shut off.
-    pinInitOutput(POWER_PIN, 1);
+//    pinInitOutput(POWER_PIN, 1);
 }
 
 void MatchBox::systemClockConfig(void) {

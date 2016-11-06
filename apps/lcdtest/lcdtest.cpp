@@ -105,7 +105,7 @@ void StartDefaultTask(void const * argument)
   Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST));
   Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(1));
   Adc adc(Adc::AD1, lcd.getWidth());
-  Button sw2(SW2_PIN, buttonHandler, &mode);
+//  Button sw2(SW2_PIN, buttonHandler, &mode);
   uint16_t samples[lcd.getWidth()];
 
   pinInitOutput(LED_PIN, 1);

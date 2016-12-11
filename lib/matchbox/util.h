@@ -23,7 +23,7 @@
 #if defined(DEBUG)
 #define debug(...) printf(__VA_ARGS__)
 #else
-#define debug(...) { }
+inline void debug(const char* fmt, ...) { }
 #endif
 
 #define error(...) printf(__VA_ARGS__)

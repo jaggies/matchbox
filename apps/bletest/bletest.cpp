@@ -20,9 +20,9 @@ void nrf8001Setup();
 void aci_loop();
 
 #ifdef DEBUG_BLE
-static const bool debug = true;
+static const bool debug_ble = true;
 #else
-static const bool debug = false;
+static const bool debug_ble = false;
 #endif
 
 template<class K> bool sendData(int pipe, const K& data);
@@ -156,7 +156,7 @@ static hal_aci_evt_t aci_data;
 static bool timing_change_done = false;
 
 void __ble_assert(const char *file, uint16_t line) {
-    if (debug) printf("BLE ERROR: file %s, line %d\n", file, line);
+    if (debug_ble) printf("BLE ERROR: file %s, line %d\n", file, line);
     while (1)
         ;
 }
@@ -184,7 +184,7 @@ void nrf8001Setup() {
     aci_state.aci_pins.interrupt_number = 1;
 
     // Reset nRF8001 with hardware line, if available.
-    lib_aci_init(&aci_state, false /* debug */);
+    lib_aci_init(&aci_state, false /* debug_ble */);
 }
 
 void aci_loop() {
@@ -199,23 +199,23 @@ void aci_loop() {
             // As soon as you reset the nRF8001 you will get an ACI Device Started Event
             case ACI_EVT_DEVICE_STARTED: {
                 aci_state.data_credit_total = aci_evt->params.device_started.credit_available;
-                if (debug) printf("Total credits: %d\n", aci_evt->params.device_started.credit_available);
+                if (debug_ble) printf("Total credits: %d\n", aci_evt->params.device_started.credit_available);
                 switch (aci_evt->params.device_started.device_mode) {
                     case ACI_DEVICE_SETUP:
                         // When the device is in the setup mode
-                        if (debug) printf("Evt Device Started: Setup\n");
+                        if (debug_ble) printf("Evt Device Started: Setup\n");
                         setup_required = true;
                     break;
 
                     case ACI_DEVICE_STANDBY:
-                        if (debug) printf("Evt Device Started: Standby\n");
+                        if (debug_ble) printf("Evt Device Started: Standby\n");
                         //Looking for an iPhone by sending radio advertisements
                         //When an iPhone connects to us we will get an ACI_EVT_CONNECTED event from the nRF8001
                         if (aci_evt->params.device_started.hw_error) {
                             osDelay(20); //Magic number used to make sure the HW error event is handled correctly.
                         } else {
                             lib_aci_connect(180 /* seconds */, 0x0050 /* advertising interval 50ms*/);
-                            if (debug) printf("Advertising started\n");
+                            if (debug_ble) printf("Advertising started\n");
                         }
                     break;
                 }
@@ -228,7 +228,7 @@ void aci_loop() {
                     //ACI ReadDynamicData and ACI WriteDynamicData will have status codes of
                     //TRANSACTION_CONTINUE and TRANSACTION_COMPLETE
                     //all other ACI commands will have status code of ACI_STATUS_SCUCCESS for a successful command
-                    if (debug) printf("ACI Command %x Status %x\n", aci_evt->params.cmd_rsp.cmd_opcode,
+                    if (debug_ble) printf("ACI Command %x Status %x\n", aci_evt->params.cmd_rsp.cmd_opcode,
                             aci_evt->params.cmd_rsp.cmd_status);
                 }
                 if (ACI_CMD_GET_DEVICE_VERSION == aci_evt->params.cmd_rsp.cmd_opcode) {
@@ -241,7 +241,7 @@ void aci_loop() {
             break;
 
             case ACI_EVT_CONNECTED:
-                if (debug) printf("Evt Connected\n");
+                if (debug_ble) printf("Evt Connected\n");
                 timing_change_done = false;
                 aci_state.data_credit_available = aci_state.data_credit_total;
                 aci_state.bonded = true;
@@ -249,30 +249,30 @@ void aci_loop() {
             break;
 
             case ACI_EVT_PIPE_STATUS:
-                if (debug) printf("Evt Pipe Status\n");
+                if (debug_ble) printf("Evt Pipe Status\n");
                 if (!timing_change_done) {
                     // lib_aci_change_timing_GAP_PPCP(); // Pre-programmed parameters from nRFStudio (xml file)
                     if (!lib_aci_change_timing(MIN_INTERVAL, MAX_INTERVAL, SLAVE_LATENCY,
                             SLAVE_TIMEOUT)) {
-                        if (debug) printf("Change Timing failed\n");
+                        if (debug_ble) printf("Change Timing failed\n");
                     }
                     timing_change_done = true;
                 }
             break;
 
             case ACI_EVT_TIMING:
-                if (debug) printf("Evt link connection interval changed\n");
+                if (debug_ble) printf("Evt link connection interval changed\n");
             break;
 
             case ACI_EVT_DISCONNECTED:
-                if (debug) printf("Evt Disconnected/Advertising timed out\n");
+                if (debug_ble) printf("Evt Disconnected/Advertising timed out\n");
                 aci_state.bonded = false;
                 lib_aci_connect(180/* in seconds */, 0x0100 /* advertising interval 100ms*/);
-                if (debug) printf("Advertising started\n");
+                if (debug_ble) printf("Advertising started\n");
             break;
 
             case ACI_EVT_DATA_RECEIVED:
-                if (debug) printf("Pipe Number: %d\n", aci_evt->params.data_received.rx_data.pipe_number);
+                if (debug_ble) printf("Pipe Number: %d\n", aci_evt->params.data_received.rx_data.pipe_number);
             break;
 
             case ACI_EVT_DATA_CREDIT:
@@ -282,8 +282,8 @@ void aci_loop() {
 
             case ACI_EVT_PIPE_ERROR:
                 //See the appendix in the nRF8001 Product Specication for details on the error codes
-                if (debug) printf("ACI Evt Pipe Error: Pipe #:%d\n", aci_evt->params.pipe_error.pipe_number);
-                if (debug) printf("  Pipe Error Code: 0x%x\n", aci_evt->params.pipe_error.error_code);
+                if (debug_ble) printf("ACI Evt Pipe Error: Pipe #:%d\n", aci_evt->params.pipe_error.pipe_number);
+                if (debug_ble) printf("  Pipe Error Code: 0x%x\n", aci_evt->params.pipe_error.error_code);
 
                 //Increment the credit available as the data packet was not sent.
                 //The pipe error also represents the Attribute protocol Error Response sent from the peer and that should not be counted
@@ -294,13 +294,13 @@ void aci_loop() {
             break;
 
             case ACI_EVT_HW_ERROR:
-                if (debug) printf("HW error: %d in ", aci_evt->params.hw_error.line_num);
+                if (debug_ble) printf("HW error: %d in ", aci_evt->params.hw_error.line_num);
                 for (uint8_t counter = 0; counter <= (aci_evt->len - 3); counter++) {
-                    if (debug) printf("%c", aci_evt->params.hw_error.file_name[counter]);
+                    if (debug_ble) printf("%c", aci_evt->params.hw_error.file_name[counter]);
                 }
-                if (debug) printf("\n");
+                if (debug_ble) printf("\n");
                 lib_aci_connect(180/* in seconds */, 0x0050 /* advertising interval 50ms*/);
-                if (debug) printf("Advertising started\n");
+                if (debug_ble) printf("Advertising started\n");
             break;
 
         }

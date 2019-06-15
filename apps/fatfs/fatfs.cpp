@@ -139,10 +139,10 @@ void StartDefaultTask(void const * argument) {
     if (0 == FATFS_LinkDriver(&SD_Driver, &path[0])) {
         if (FR_OK == (status = f_mount(&FatFs, "", 0))) {
             debug("Successfully mounted volume\n");
-            printf("Waiting for SD\n");
+            debug("Waiting for SD\n");
             int t = 5;
             while (t) {
-                printf("%d...\n", t--);
+                debug("%d...\n", t--);
                 osDelay(1000);
             }
         } else {

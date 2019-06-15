@@ -105,14 +105,16 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     uint8_t p[3];
     // TODO: handle monochrome displays and dithering...
     uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) &p[0], 0); // addr of first pixel
+
+    r = r ? 1 : 0; g = g ? 1 : 0; b = b ? 1 : 0;
     for (int i = 0; i < _channels * 8; i+=_channels) {
-        *pixel++ = r ? 1 : 0;
-        *pixel++ = g ? 1 : 0;
-        *pixel++ = b ? 1 : 0;
+        *pixel++ = r;
+        *pixel++ = g;
+        *pixel++ = b;
     }
     for (int j = 0; j < _yres; j++) {
         uint8_t* pixels = &_writeBuffer->line[j].data[0];
-        for (int i = 0; i < _line_size/3; i++) {
+        for (int i = 0; i < _line_size/_channels; i++) {
             *pixels++ = p[0];
             *pixels++ = p[1];
             *pixels++ = p[2];

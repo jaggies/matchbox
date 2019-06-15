@@ -22,10 +22,10 @@
 
 #if defined(DEBUG)
 #define debug(...) printf(__VA_ARGS__)
+#define error(...) printf(__VA_ARGS__)
 #else
 inline void debug(const char* fmt, ...) { }
+inline void error(const char* fmt, ...) { }
 #endif
-
-#define error(...) printf(__VA_ARGS__)
 
 #endif /* UTIL_H_ */

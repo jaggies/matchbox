@@ -1,0 +1,7 @@
+VCC measurement (running)
+
+USB connected: 4.83 (0x0ba5)
+Battery (charged): 4.18 (0x0a1c)
+
+393 counts = 650mV
+

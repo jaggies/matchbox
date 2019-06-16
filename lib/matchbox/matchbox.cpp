@@ -176,7 +176,11 @@ void MatchBox::rtcInit(void) {
     hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
     hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
 
+    HAL_PWR_EnableBkUpAccess();
     __HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
+    __HAL_RCC_PWR_CLK_ENABLE();
+//    __HAL_RCC_RTC_CONFIG();
+    __HAL_RCC_RTC_ENABLE();
     HAL_RTC_Init(&hrtc);
 }
 

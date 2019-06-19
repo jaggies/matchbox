@@ -21,8 +21,9 @@
 
 Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
         _clear(1), _frame(0), _currentFont(getFont("roboto_bold_10")),
-        _xres(LCD_XRES), _yres(LCD_YRES), _channels(LCD_CHAN), _line_size(LCD_XRES*LCD_CHAN/8),
-        _refreshBuffer(new Frame()), _doSwap(true), _disableRefresh(false), _enabled(false)
+        _xres(LCD_XRES), _yres(LCD_YRES), _depth(LCD_DEPTH), _line_size(LCD_XRES*LCD_DEPTH/8),
+        _refreshBuffer(new Frame()), _doSwap(true), _disableRefresh(false), _enabled(false),
+        _red(0), _grn(0), _blu(0)
 {
     bool doubleBuffer = config.doubleBuffer;
     _writeBuffer = doubleBuffer ? new Frame() : _refreshBuffer;
@@ -107,14 +108,14 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) &p[0], 0); // addr of first pixel
 
     r = r ? 1 : 0; g = g ? 1 : 0; b = b ? 1 : 0;
-    for (int i = 0; i < _channels * 8; i+=_channels) {
+    for (int i = 0; i < _depth * 8; i+=_depth) {
         *pixel++ = r;
         *pixel++ = g;
         *pixel++ = b;
     }
     for (int j = 0; j < _yres; j++) {
         uint8_t* pixels = &_writeBuffer->line[j].data[0];
-        for (int i = 0; i < _line_size/_channels; i++) {
+        for (int i = 0; i < _line_size/_depth; i++) {
             *pixels++ = p[0];
             *pixels++ = p[1];
             *pixels++ = p[2];
@@ -128,15 +129,14 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     }
 }
 
-void Lcd::line(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b) {
+void Lcd::line(int x0, int y0, int x1, int y1) {
 	int dx = abs(x1-x0);
 	int dy = abs(y1-y0);
 	const int stepX = x0 < x1 ? 1 : -1;
 	const int stepY = y0 < y1 ? 1 : -1;
 	int err = dx - dy;
-    uint32_t pixaddr = x0 * _channels;
 	while (x0 != x1 || y0 != y1) {
-		setPixel(x0, y0, r, g, b); // TODO: optimize with bit banding
+		setPixel(x0, y0); // TODO: optimize with bit banding
 		int e2 = err << 1;
 		if (e2 <  dx) {
 		   err += dx;
@@ -149,17 +149,17 @@ void Lcd::line(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b) 
 	}
 }
 
-void Lcd::circle(int x0, int y0, int radius, uint8_t r, uint8_t g, uint8_t b)
+void Lcd::circle(int x0, int y0, int radius)
 {
 	int f = 1 - radius;
 	int ddF_x = 0;
 	int ddF_y = -2 * radius;
 	int x = 0;
 	int y = radius;
-	setPixel(x0, y0 + radius, r, g, b);
-	setPixel(x0, y0 - radius, r, g, b);
-	setPixel(x0 + radius, y0, r, g, b);
-	setPixel(x0 - radius, y0, r, g, b);
+	setPixel(x0, y0 + radius);
+	setPixel(x0, y0 - radius);
+	setPixel(x0 + radius, y0);
+	setPixel(x0 - radius, y0);
 	while (x < y) {
 		if (f >= 0) {
 			y--;
@@ -169,18 +169,18 @@ void Lcd::circle(int x0, int y0, int radius, uint8_t r, uint8_t g, uint8_t b)
 		x++;
 		ddF_x += 2;
 		f += ddF_x + 1;
-		setPixel(x0 + x, y0 + y, r, g, b);
-		setPixel(x0 - x, y0 + y, r, g, b);
-		setPixel(x0 + x, y0 - y, r, g, b);
-		setPixel(x0 - x, y0 - y, r, g, b);
-		setPixel(x0 + y, y0 + x, r, g, b);
-		setPixel(x0 - y, y0 + x, r, g, b);
-		setPixel(x0 + y, y0 - x, r, g, b);
-		setPixel(x0 - y, y0 - x, r, g, b);
+		setPixel(x0 + x, y0 + y);
+		setPixel(x0 - x, y0 + y);
+		setPixel(x0 + x, y0 - y);
+		setPixel(x0 - x, y0 - y);
+		setPixel(x0 + y, y0 + x);
+		setPixel(x0 - y, y0 + x);
+		setPixel(x0 + y, y0 - x);
+		setPixel(x0 - y, y0 - x);
 	}
 }
 
-void Lcd::rect(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b, bool fill)
+void Lcd::rect(int x0, int y0, int x1, int y1, bool fill)
 {
 	if (fill) {
 		const int xmin = std::min(x0, x1);
@@ -189,14 +189,14 @@ void Lcd::rect(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b, 
 		const int ymax = std::max(y0, y1);
 		for (int j = ymin; j < ymax; j++) {
 		    for (int i = xmin; i < xmax; i++) {
-		        setPixel(i, j, r, g, b);
+		        setPixel(i, j);
 		    }
 		}
 	} else {
-		line(x0, y0, x1, y0, r, g, b);
-		line(x0, y1, x1, y1, r, g, b);
-		line(x0, y0, x0, y1, r, g, g);
-		line(x1, y0, x1, y1, r, g, b);
+		line(x0, y0, x1, y0);
+		line(x0, y1, x1, y1);
+		line(x0, y0, x0, y1);
+		line(x1, y0, x1, y1);
 	}
 }
 
@@ -239,7 +239,8 @@ int Lcd::putChar(uint8_t c, int x, int y, const uint8_t* fg, const uint8_t* bg) 
 		    const int bitMask = 1 << (bitAddr % 8);
 			const uint8_t* color = (_currentFont->bitmap[byteAddr] & bitMask) ? bg : fg;
 			if (color) {
-			    setPixel(i + x, j + y, color[0], color[1], color[2]);
+			    setColor(color[0], color[1], color[2]);
+			    setPixel(i + x, j + y);
 			}
 		}
 	}

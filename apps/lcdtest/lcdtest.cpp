@@ -45,7 +45,8 @@ static void drawBars(Lcd& lcd, int vertical)
         for (int i = 0; i < 128; i++) {
             uint8_t r, g, b;
             int index = vertical ? j : i;
-            lcd.setPixel(i,j, (index >> 4) & 1, (index >> 5) & 1, (index >> 6) & 1);
+            lcd.setColor((index >> 4) & 1, (index >> 5) & 1, (index >> 6) & 1);
+            lcd.setPixel(i,j);
         }
     }
 }
@@ -55,7 +56,8 @@ static void drawChecker(Lcd& lcd, int scale)
     for (int j = 0; j < 128; j++) {
         for (int i = 0; i < 128; i++) {
             uint8_t pix = ((j>>(scale)) ^ (i>>(scale))) & 1;
-            lcd.setPixel(i,j, pix, pix, pix);
+            lcd.setColor(pix, pix, pix);
+            lcd.setPixel(i,j);
         }
     }
 }
@@ -63,15 +65,17 @@ static void drawChecker(Lcd& lcd, int scale)
 static void drawAdc(Lcd& lcd, const uint16_t* values, int n, uint8_t r, uint8_t g, uint8_t b, bool useLine)
 {
     if (useLine) {
+        lcd.setColor(r, g, b);
         for (int x0 = 0; x0 < n; x0++) {
             int y0 = values[x0 & 0x7f] & 0x7f;
             int x1 = x0 + 1;
             int y1 = values[x1 & 0x7f] & 0x7f;
-            lcd.line(x0, y0, x1, y1, r, g, b);
+            lcd.line(x0, y0, x1, y1);
         }
     } else {
+        lcd.setColor(r, g, b);
         for (int i = 0; i < n; i++) {
-            lcd.setPixel(i, values[i] & 0x7f, r, g, b);
+            lcd.setPixel(i, values[i] & 0x7f);
         }
     }
 }
@@ -79,8 +83,9 @@ static void drawAdc(Lcd& lcd, const uint16_t* values, int n, uint8_t r, uint8_t 
 static void drawCircles(Lcd& lcd, uint8_t r, uint8_t g, uint8_t b,
         uint8_t br, uint8_t bg, uint8_t bb) {
     lcd.clear(br, bg, bb);
+    lcd.setColor(r, g, b);
     for (int i = 0; i < 64; i++) {
-        lcd.circle(64, 64, i, r, g, b);
+        lcd.circle(64, 64, i);
     }
 }
 

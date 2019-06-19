@@ -86,7 +86,8 @@ inline static void drawTrapezoid(Lcd& lcd, Edge& edge1, Edge& edge2, int ymin, i
 			grn(left->g.nextValue(), right->g.nextValue(), dist, offset),
 			blu(left->b.nextValue(), right->b.nextValue(), dist, offset);
 		for (int x = x1; x <= x2; x++) {
-			lcd.setPixel(x, y, red.nextValue(), grn.nextValue(), blu.nextValue());
+		    lcd.setColor(red.nextValue(), grn.nextValue(), blu.nextValue());
+			lcd.setPixel(x, y);
 		}
 	}
 }

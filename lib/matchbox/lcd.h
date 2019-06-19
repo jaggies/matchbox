@@ -20,10 +20,10 @@
 #define LCD_EXTC_PIN PB4
 #define LCD_DISP_PIN PB5
 #define LCD_SIZE (YRES * LCD_LINE_SIZE) // size of lcd frame in bytes
-#define LCD_CHAN 3 // 3 == color, 1 == mono
+#define LCD_DEPTH 3 // 3 == color, 1 == mono
 #define LCD_XRES 128
 #define LCD_YRES 128
-#define LCD_LINE_SIZE (LCD_CHAN*LCD_XRES/8) // size of a line in bytes (data only)
+#define LCD_LINE_SIZE (LCD_DEPTH*LCD_XRES/8) // size of a line in bytes (data only)
 
 class Lcd {
 	public:
@@ -45,11 +45,12 @@ class Lcd {
 
 		void begin(void);
 		void setEnabled(bool enabled);
+		void setColor(uint8_t r, uint8_t g, uint8_t b);
 		void clear(uint8_t r, uint8_t g, uint8_t b);
-		void setPixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
-		void circle(int x0, int y0, int radius, uint8_t r, uint8_t g, uint8_t b);
-		void line(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b);
-		void rect(int x0, int y0, int x1, int y1, uint8_t r, uint8_t g, uint8_t b, bool fill = true);
+		void setPixel(uint16_t x, uint16_t y);
+		void circle(int x0, int y0, int radius);
+		void line(int x0, int y0, int x1, int y1);
+		void rect(int x0, int y0, int x1, int y1, bool fill = true);
 
 		bool setFont(const char* name);
 		inline int putChar(uint8_t c, int x, int y) {
@@ -81,7 +82,8 @@ class Lcd {
 		struct Frame {
 		        Frame() : sync1(0), sync2(0) { }
 		        Line line[LCD_YRES];
-		        const uint8_t sync1, sync2; // final sync bytes to simplify SPI streaming
+		        const uint8_t sync1; // final sync bytes to simplify SPI streaming
+		        const uint8_t sync2;
 		};
 
 		static void refreshFrameCallback(void* arg);
@@ -91,13 +93,14 @@ class Lcd {
 		Spi& _spi;
 		Config _config;
 		uint8_t _frame; // refresh frame count
-		const uint16_t _xres, _yres, _channels, _line_size;
+		const uint16_t _xres, _yres, _depth, _line_size;
 		uint8_t _clear;
 		const Font* _currentFont;
 		Frame* _writeBuffer;
 		Frame* _refreshBuffer;
 		uint8_t _fg[3];
 		uint8_t _bg[3];
+		uint8_t _red, _grn, _blu;
 		volatile bool _doSwap; // trigger swapBuffer on next frame refresh
         volatile bool _disableRefresh;
         volatile bool _enabled;
@@ -108,28 +111,34 @@ class Lcd {
 #define BITBAND_SRAM(a,b) ((BITBAND_SRAM_BASE + (a-BITBAND_SRAM_REF)*32 + (b*4)))
 #define DO_BITBAND
 
-inline void Lcd::setPixel(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
+inline void Lcd::setColor(uint8_t r, uint8_t g, uint8_t b) {
+    _red = r;
+    _grn = g;
+    _blu = b;
+}
+
+inline void Lcd::setPixel(uint16_t x, uint16_t y)
 {
 #ifdef DO_BITBAND
-    uint32_t pixaddr = x * _channels;
+    uint32_t pixaddr = x * _depth;
     uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int)&_writeBuffer->line[y].data[0], pixaddr);
-    *pixel++ = r ? 1 : 0;
-    *pixel++ = g ? 1 : 0;
-    *pixel = b ? 1 : 0;
+    *pixel++ = _red ? 1 : 0;
+    *pixel++ = _grn ? 1 : 0;
+    *pixel = _blu ? 1 : 0;
 #else
-    uint16_t rbitaddr = x * _channels + 0;
+    uint16_t rbitaddr = x * _depth + 0;
     uint16_t rbyteaddr = rbitaddr / 8;
     uint16_t rbit = rbitaddr % 8;
     _frameBuffer[y].data[rbyteaddr] &= ~(1 << rbit);
     _frameBuffer[y].data[rbyteaddr] |= r ? (1 << rbit) : 0;
 
-    uint16_t gbitaddr = x * _channels + 1;
+    uint16_t gbitaddr = x * _depth + 1;
     uint16_t gbyteaddr = gbitaddr / 8;
     uint16_t gbit = gbitaddr % 8;
     _frameBuffer[y].data[gbyteaddr] &= ~(1 << gbit);
     _frameBuffer[y].data[gbyteaddr] |= g ? (1 << gbit) : 0;
 
-    uint16_t bbitaddr = x * _channels + 2;
+    uint16_t bbitaddr = x * _depth + 2;
     uint16_t bbyteaddr = bbitaddr / 8;
     uint16_t bbit = bbitaddr % 8;
     _frameBuffer[y].data[bbyteaddr] &= ~(1 << bbit);

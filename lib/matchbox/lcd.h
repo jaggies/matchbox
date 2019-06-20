@@ -70,6 +70,9 @@ class Lcd {
 
 		int getHeight() const { return _yres; }
 		int getWidth() const { return _xres; }
+
+		int getFontWidth() const { return _currentFont ? _currentFont->width : 0; }
+        int getFontHeight() const { return _currentFont ? _currentFont->height : 0; }
 		void refresh();
 
 	private:

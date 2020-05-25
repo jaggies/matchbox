@@ -23,7 +23,7 @@
 @brief Implementation of the ACI transport layer module
 */
 
-#include <SPI.h>
+//#include <SPI.h>
 #include "hal_platform.h"
 #include "hal_aci_tl.h"
 #include "aci_queue.h"

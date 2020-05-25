@@ -72,6 +72,9 @@ static int input_queue_head = 0;
 // The number of items in the queue (tail = (head + length) % len):
 static int input_queue_length = 0;
 
+// TODO: For some reason these aren't found in string.h for target = ARM
+extern char *stpcpy(char *dest, const char *src);
+extern char *strdup(const char *s);
 
 //----------------------------------------------------------------------------
 // Stream capture for playback

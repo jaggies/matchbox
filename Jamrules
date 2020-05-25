@@ -1,4 +1,9 @@
-GCC_HOME = $(HOME)/trees/open-source/gcc-arm-none-eabi-4_9-2015q3/bin/ ;
+if $(OS) = MACOSX {
+	# Had to compile this manually.
+	GCC_HOME = $(HOME)/trees/open-source/gcc-arm-none-eabi-4_9-2015q3/bin/ ;
+} else {
+	GCC_HOME = /bin/ ;
+}
 ARCH = arm-none-eabi ;
 GCC_PATH = $(GCC_HOME)$(ARCH) ;
 ALL_LOCATE_TARGET = $(TOP)/build/$(ARCH) ;

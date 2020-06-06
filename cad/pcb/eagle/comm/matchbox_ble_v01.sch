@@ -83,7 +83,10 @@
 <layer number="114" name="Badge_Outline" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="115" name="ReferenceISLANDS" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="116" name="Patch_BOT" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="117" name="mPads" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="118" name="Rect_Pads" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="119" name="mUnrouted" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="120" name="mDimension" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="121" name="_tsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="122" name="_bsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="123" name="tTestmark" color="7" fill="1" visible="yes" active="yes"/>
@@ -93,15 +96,38 @@
 <layer number="127" name="_tValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="128" name="_bValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="129" name="Mask" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="130" name="mbStop" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="131" name="tAdjust" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="132" name="bAdjust" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="133" name="mtFinish" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="134" name="mbFinish" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="135" name="mtGlue" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="136" name="mbGlue" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="137" name="mtTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="138" name="mbTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="139" name="mtKeepout" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="140" name="mbKeepout" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="141" name="mtRestrict" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="142" name="mbRestrict" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="143" name="mvRestrict" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="144" name="Drill_legend" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="145" name="mHoles" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="146" name="mMilling" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="147" name="mMeasures" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="148" name="mDocument" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="149" name="mReference" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="150" name="Notes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="151" name="HeatSink" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="152" name="_bDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="153" name="FabDoc1" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="154" name="FabDoc2" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="155" name="FabDoc3" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="191" name="mNets" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="192" name="mBusses" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="193" name="mPins" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="194" name="mSymbols" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="195" name="mNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="196" name="mValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="199" name="Contour" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="200" name="200bmp" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="201" name="201bmp" color="7" fill="1" visible="yes" active="yes"/>
@@ -376,6 +402,21 @@
 <hole x="4.8" y="1.5" drill="0.6"/>
 <wire x1="-4.125" y1="0.75" x2="4.125" y2="0.75" width="0.127" layer="21"/>
 </package>
+<package name="ABM11">
+<wire x1="-1.25" y1="1.05" x2="1.25" y2="1.05" width="0.127" layer="21"/>
+<wire x1="-1.25" y1="-1.05" x2="1.25" y2="-1.05" width="0.127" layer="21"/>
+<wire x1="-1.25" y1="1.05" x2="-1.25" y2="-1.05" width="0.127" layer="21"/>
+<wire x1="1.25" y1="-1.05" x2="1.25" y2="1.05" width="0.127" layer="21"/>
+<wire x1="-1.25" y1="1.05" x2="1.25" y2="1.05" width="0.127" layer="51"/>
+<wire x1="-1.25" y1="-1.05" x2="1.25" y2="-1.05" width="0.127" layer="51"/>
+<wire x1="-1.25" y1="1.05" x2="-1.25" y2="-1.05" width="0.127" layer="51"/>
+<wire x1="1.25" y1="-1.05" x2="1.25" y2="1.05" width="0.127" layer="51"/>
+<smd name="1" x="-0.65" y="-0.5" dx="0.75" dy="0.65" layer="1"/>
+<smd name="2" x="0.65" y="-0.5" dx="0.75" dy="0.65" layer="1"/>
+<smd name="3" x="0.65" y="0.5" dx="0.75" dy="0.65" layer="1"/>
+<smd name="4" x="-0.65" y="0.5" dx="0.75" dy="0.65" layer="1"/>
+<text x="-1.266" y="-1.5" size="0.762" layer="51" align="center-left">&gt;NAME</text>
+</package>
 </packages>
 <symbols>
 <symbol name="DF12-32-F">
@@ -457,6 +498,26 @@
 <pin name="32" x="12.7" y="-20.32" length="middle" rot="R180"/>
 <text x="-5.08" y="21.59" size="1.778" layer="95">&gt;NAME</text>
 <text x="-5.08" y="-25.4" size="1.778" layer="96">&gt;VALUE</text>
+</symbol>
+<symbol name="XTAL3">
+<wire x1="-1.27" y1="1.27" x2="1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="1.27" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-1.27" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="-1.27" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="1.27" x2="-2.54" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="2.54" y1="1.27" x2="2.54" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="-2.54" x2="3.81" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="3.81" y1="-2.54" x2="3.81" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="-2.54" x2="-3.81" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="2.54" x2="3.81" y2="2.54" width="0.254" layer="94"/>
+<wire x1="3.81" y1="2.54" x2="3.81" y2="1.27" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="2.54" x2="-3.81" y2="1.27" width="0.254" layer="94"/>
+<pin name="1" x="-7.62" y="0" length="middle"/>
+<pin name="2" x="7.62" y="0" length="middle" rot="R180"/>
+<pin name="P1" x="0" y="-5.08" length="short" rot="R90"/>
+<pin name="P2" x="0" y="5.08" length="short" rot="R270"/>
+<text x="-10.16" y="5.08" size="1.27" layer="95" align="top-left">&gt;NAME</text>
+<text x="10.16" y="-7.62" size="1.27" layer="96" align="bottom-right">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -560,6 +621,28 @@
 </device>
 </devices>
 </deviceset>
+<deviceset name="AS-ITM-00228" prefix="Y" uservalue="yes">
+<description>CRYSTAL 16MHZ 8PF SMD</description>
+<gates>
+<gate name="G$1" symbol="XTAL3" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="ABM11">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="3"/>
+<connect gate="G$1" pin="P1" pad="4"/>
+<connect gate="G$1" pin="P2" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="PARTNO" value="AS-ITM-00228" constant="no"/>
+<attribute name="VALUE" value="8Y-16.000MAAV-T" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 <library name="tinycircuits">
@@ -579,21 +662,6 @@
 <circle x="0.9" y="0" radius="0.1" width="0.1" layer="51"/>
 <circle x="0.9" y="0" radius="0.1" width="0.1" layer="21"/>
 <text x="0" y="0" size="0.508" layer="51" align="center">&gt;NAME</text>
-</package>
-<package name="ABM11">
-<smd name="3" x="0.65" y="0.5" dx="0.75" dy="0.65" layer="1"/>
-<smd name="2" x="0.65" y="-0.5" dx="0.75" dy="0.65" layer="1"/>
-<smd name="4" x="-0.65" y="0.5" dx="0.75" dy="0.65" layer="1"/>
-<smd name="1" x="-0.65" y="-0.5" dx="0.75" dy="0.65" layer="1"/>
-<wire x1="-1" y1="0.8" x2="1" y2="0.8" width="0.127" layer="21"/>
-<wire x1="-1" y1="-0.8" x2="1" y2="-0.8" width="0.127" layer="21"/>
-<wire x1="-1" y1="0.8" x2="-1" y2="-0.8" width="0.127" layer="21"/>
-<wire x1="1" y1="-0.8" x2="1" y2="0.8" width="0.127" layer="21"/>
-<wire x1="-1" y1="0.8" x2="1" y2="0.8" width="0.127" layer="51"/>
-<wire x1="-1" y1="-0.8" x2="1" y2="-0.8" width="0.127" layer="51"/>
-<wire x1="-1" y1="0.8" x2="-1" y2="-0.8" width="0.127" layer="51"/>
-<wire x1="1" y1="-0.8" x2="1" y2="0.8" width="0.127" layer="51"/>
-<text x="-1.016" y="0" size="0.762" layer="51" align="center-left">&gt;NAME</text>
 </package>
 <package name="2450AT18A100">
 <wire x1="-1.6" y1="-0.8" x2="1.6" y2="-0.8" width="0.1" layer="51"/>
@@ -627,26 +695,6 @@
 <wire x1="7.62" y1="7.62" x2="-7.62" y2="7.62" width="0.254" layer="94"/>
 <text x="-7.62" y="10.16" size="1.778" layer="95" align="top-left">&gt;NAME</text>
 <text x="7.62" y="-7.62" size="1.778" layer="96" align="bottom-right">&gt;VALUE</text>
-</symbol>
-<symbol name="XTAL3">
-<wire x1="-1.27" y1="1.27" x2="1.27" y2="1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="1.27" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="-1.27" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="-1.27" y1="-1.27" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="1.27" x2="-2.54" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="2.54" y1="1.27" x2="2.54" y2="-1.27" width="0.254" layer="94"/>
-<pin name="1" x="-7.62" y="0" length="middle"/>
-<pin name="2" x="7.62" y="0" length="middle" rot="R180"/>
-<pin name="P1" x="0" y="-5.08" length="short" rot="R90"/>
-<pin name="P2" x="0" y="5.08" length="short" rot="R270"/>
-<text x="-10.16" y="5.08" size="1.27" layer="95" align="top-left">&gt;NAME</text>
-<text x="10.16" y="-7.62" size="1.27" layer="96" align="bottom-right">&gt;VALUE</text>
-<wire x1="-3.81" y1="-2.54" x2="3.81" y2="-2.54" width="0.254" layer="94"/>
-<wire x1="3.81" y1="-2.54" x2="3.81" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="-2.54" x2="-3.81" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="2.54" x2="3.81" y2="2.54" width="0.254" layer="94"/>
-<wire x1="3.81" y1="2.54" x2="3.81" y2="1.27" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="2.54" x2="-3.81" y2="1.27" width="0.254" layer="94"/>
 </symbol>
 <symbol name="2G4_ANT">
 <pin name="2" x="0" y="5.08" visible="off" length="middle" rot="R270"/>
@@ -682,28 +730,6 @@
 <technology name="">
 <attribute name="PARTNO" value="AS-ITM-00114" constant="no"/>
 <attribute name="VALUE" value="2450BM14A0002" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="AS-ITM-00228" prefix="Y" uservalue="yes">
-<description>CRYSTAL 16MHZ 8PF SMD</description>
-<gates>
-<gate name="G$1" symbol="XTAL3" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="ABM11">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="3"/>
-<connect gate="G$1" pin="P1" pad="4"/>
-<connect gate="G$1" pin="P2" pad="2"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="PARTNO" value="AS-ITM-00228" constant="no"/>
-<attribute name="VALUE" value="8Y-16.000MAAV-T" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -2470,7 +2496,7 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <part name="R1" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="22K"/>
 <part name="U5" library="tinycircuits" deviceset="AS-ITM-00114" device="" value="2450BM14A0002"/>
 <part name="C5" library="SparkFun-Passives" deviceset="CAP" device="0402-CAP" value="2.2nF"/>
-<part name="Y1" library="tinycircuits" deviceset="AS-ITM-00228" device="" value="NX3225SA-16">
+<part name="Y1" library="micro1292" deviceset="AS-ITM-00228" device="" value="8Y-16.000MAAV-T">
 <attribute name="PARTNO" value="AS-ITM-00228"/>
 <attribute name="VALUE" value="8Y-16.000MAAV-T"/>
 </part>
@@ -2991,19 +3017,9 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 </net>
 <net name="PC4" class="0">
 <segment>
-<wire x1="167.64" y1="48.26" x2="175.26" y2="48.26" width="0.1524" layer="91"/>
-<label x="167.64" y="48.26" size="1.778" layer="95"/>
-<pinref part="P2" gate="G$1" pin="19"/>
-</segment>
-<segment>
 <wire x1="198.12" y1="99.06" x2="205.74" y2="99.06" width="0.1524" layer="91"/>
 <label x="200.66" y="99.06" size="1.778" layer="95"/>
 <pinref part="P1" gate="G$1" pin="20"/>
-</segment>
-<segment>
-<wire x1="119.38" y1="48.26" x2="127" y2="48.26" width="0.1524" layer="91"/>
-<label x="119.38" y="48.26" size="1.778" layer="95"/>
-<pinref part="J2" gate="G$1" pin="19"/>
 </segment>
 <segment>
 <wire x1="149.86" y1="99.06" x2="157.48" y2="99.06" width="0.1524" layer="91"/>
@@ -3047,19 +3063,9 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 </net>
 <net name="PC5" class="0">
 <segment>
-<wire x1="167.64" y1="50.8" x2="175.26" y2="50.8" width="0.1524" layer="91"/>
-<label x="167.64" y="50.8" size="1.778" layer="95"/>
-<pinref part="P2" gate="G$1" pin="17"/>
-</segment>
-<segment>
 <wire x1="198.12" y1="96.52" x2="205.74" y2="96.52" width="0.1524" layer="91"/>
 <label x="200.66" y="96.52" size="1.778" layer="95"/>
 <pinref part="P1" gate="G$1" pin="22"/>
-</segment>
-<segment>
-<wire x1="119.38" y1="50.8" x2="127" y2="50.8" width="0.1524" layer="91"/>
-<label x="119.38" y="50.8" size="1.778" layer="95"/>
-<pinref part="J2" gate="G$1" pin="17"/>
 </segment>
 <segment>
 <wire x1="149.86" y1="96.52" x2="157.48" y2="96.52" width="0.1524" layer="91"/>
@@ -3449,24 +3455,24 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <net name="RSV0" class="0">
 <segment>
 <wire x1="167.64" y1="68.58" x2="175.26" y2="68.58" width="0.1524" layer="91"/>
-<label x="167.64" y="68.58" size="1.778" layer="95"/>
+<label x="165.1" y="68.58" size="1.778" layer="95"/>
 <pinref part="P2" gate="G$1" pin="3"/>
 </segment>
 <segment>
 <wire x1="119.38" y1="68.58" x2="127" y2="68.58" width="0.1524" layer="91"/>
-<label x="119.38" y="68.58" size="1.778" layer="95"/>
+<label x="116.84" y="68.58" size="1.778" layer="95"/>
 <pinref part="J2" gate="G$1" pin="3"/>
 </segment>
 </net>
 <net name="RSV1" class="0">
 <segment>
 <wire x1="167.64" y1="66.04" x2="175.26" y2="66.04" width="0.1524" layer="91"/>
-<label x="167.64" y="66.04" size="1.778" layer="95"/>
+<label x="165.1" y="66.04" size="1.778" layer="95"/>
 <pinref part="P2" gate="G$1" pin="5"/>
 </segment>
 <segment>
 <wire x1="119.38" y1="66.04" x2="127" y2="66.04" width="0.1524" layer="91"/>
-<label x="119.38" y="66.04" size="1.778" layer="95"/>
+<label x="116.84" y="66.04" size="1.778" layer="95"/>
 <pinref part="J2" gate="G$1" pin="5"/>
 </segment>
 </net>
@@ -3637,6 +3643,30 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <wire x1="12.7" y1="5.08" x2="5.08" y2="5.08" width="0.1524" layer="91"/>
 <label x="5.08" y="5.08" size="1.778" layer="95"/>
 <pinref part="R5" gate="G$1" pin="2"/>
+</segment>
+</net>
+<net name="RSV2" class="0">
+<segment>
+<wire x1="119.38" y1="50.8" x2="127" y2="50.8" width="0.1524" layer="91"/>
+<label x="116.84" y="50.8" size="1.778" layer="95"/>
+<pinref part="J2" gate="G$1" pin="17"/>
+</segment>
+<segment>
+<wire x1="167.64" y1="50.8" x2="175.26" y2="50.8" width="0.1524" layer="91"/>
+<label x="165.1" y="50.8" size="1.778" layer="95"/>
+<pinref part="P2" gate="G$1" pin="17"/>
+</segment>
+</net>
+<net name="RSV3" class="0">
+<segment>
+<wire x1="119.38" y1="48.26" x2="127" y2="48.26" width="0.1524" layer="91"/>
+<label x="116.84" y="48.26" size="1.778" layer="95"/>
+<pinref part="J2" gate="G$1" pin="19"/>
+</segment>
+<segment>
+<wire x1="167.64" y1="48.26" x2="175.26" y2="48.26" width="0.1524" layer="91"/>
+<label x="165.1" y="48.26" size="1.778" layer="95"/>
+<pinref part="P2" gate="G$1" pin="19"/>
 </segment>
 </net>
 </nets>

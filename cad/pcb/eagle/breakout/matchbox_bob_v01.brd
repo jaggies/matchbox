@@ -152,7 +152,7 @@
 <hole x="35" y="28" drill="2.5"/>
 <hole x="35" y="3" drill="2.5"/>
 <hole x="3" y="3" drill="2.5"/>
-<text x="9" y="28.5" size="1.4224" layer="25">MatchBox Breakout</text>
+<text x="6" y="28.5" size="1.4224" layer="25">MatchBox Breakout V0.1</text>
 <text x="9.625" y="24.75" size="0.8128" layer="21">A7</text>
 <text x="12.125" y="24.75" size="0.8128" layer="21">A6</text>
 <text x="14.625" y="24.75" size="0.8128" layer="21">A5</text>

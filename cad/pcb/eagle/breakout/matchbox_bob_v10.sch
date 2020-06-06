@@ -1798,6 +1798,11 @@ Standard 8-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </net>
 <net name="PC4" class="0">
 <segment>
+<wire x1="20.32" y1="81.28" x2="27.94" y2="81.28" width="0.1524" layer="91"/>
+<label x="20.32" y="81.28" size="1.778" layer="95"/>
+<pinref part="J2" gate="G$1" pin="19"/>
+</segment>
+<segment>
 <wire x1="50.8" y1="132.08" x2="58.42" y2="132.08" width="0.1524" layer="91"/>
 <label x="53.34" y="132.08" size="1.778" layer="95"/>
 <pinref part="J1" gate="G$1" pin="20"/>
@@ -1848,6 +1853,11 @@ Standard 8-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </segment>
 </net>
 <net name="PC5" class="0">
+<segment>
+<wire x1="20.32" y1="83.82" x2="27.94" y2="83.82" width="0.1524" layer="91"/>
+<label x="20.32" y="83.82" size="1.778" layer="95"/>
+<pinref part="J2" gate="G$1" pin="17"/>
+</segment>
 <segment>
 <wire x1="50.8" y1="129.54" x2="58.42" y2="129.54" width="0.1524" layer="91"/>
 <label x="53.34" y="129.54" size="1.778" layer="95"/>
@@ -2346,7 +2356,7 @@ Standard 8-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <net name="RSV0" class="0">
 <segment>
 <wire x1="20.32" y1="101.6" x2="27.94" y2="101.6" width="0.1524" layer="91"/>
-<label x="15.24" y="101.6" size="1.778" layer="95"/>
+<label x="20.32" y="101.6" size="1.778" layer="95"/>
 <pinref part="J2" gate="G$1" pin="3"/>
 </segment>
 <segment>
@@ -2363,7 +2373,7 @@ Standard 8-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <net name="RSV1" class="0">
 <segment>
 <wire x1="20.32" y1="99.06" x2="27.94" y2="99.06" width="0.1524" layer="91"/>
-<label x="15.24" y="99.06" size="1.778" layer="95"/>
+<label x="20.32" y="99.06" size="1.778" layer="95"/>
 <pinref part="J2" gate="G$1" pin="5"/>
 </segment>
 <segment>
@@ -2422,22 +2432,12 @@ Standard 8-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <label x="-38.1" y="83.82" size="1.778" layer="95"/>
 <pinref part="P2" gate="G$1" pin="17"/>
 </segment>
-<segment>
-<wire x1="20.32" y1="83.82" x2="27.94" y2="83.82" width="0.1524" layer="91"/>
-<label x="15.24" y="83.82" size="1.778" layer="95"/>
-<pinref part="J2" gate="G$1" pin="17"/>
-</segment>
 </net>
 <net name="RSV3" class="0">
 <segment>
 <wire x1="-33.02" y1="81.28" x2="-25.4" y2="81.28" width="0.1524" layer="91"/>
 <label x="-38.1" y="81.28" size="1.778" layer="95"/>
 <pinref part="P2" gate="G$1" pin="19"/>
-</segment>
-<segment>
-<wire x1="20.32" y1="81.28" x2="27.94" y2="81.28" width="0.1524" layer="91"/>
-<label x="15.24" y="81.28" size="1.778" layer="95"/>
-<pinref part="J2" gate="G$1" pin="19"/>
 </segment>
 </net>
 </nets>

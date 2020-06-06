@@ -8,24 +8,24 @@
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
-<layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
-<layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
-<layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
-<layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
-<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="no"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="no"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="no"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="no"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="no" active="no"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="no"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="yes" active="no"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="yes" active="no"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="yes" active="no"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="yes" active="no"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="no"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="no"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="no"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="no"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="no"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="no"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="no"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="no"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="no"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="no"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="no"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="no"/>
@@ -34,8 +34,8 @@
 <layer number="34" name="bFinish" color="6" fill="6" visible="no" active="no"/>
 <layer number="35" name="tGlue" color="7" fill="4" visible="no" active="no"/>
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="no"/>
-<layer number="37" name="tTest" color="7" fill="1" visible="no" active="no"/>
-<layer number="38" name="bTest" color="7" fill="1" visible="no" active="no"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="no"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="no"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="no"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="no"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="no"/>
@@ -43,19 +43,19 @@
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="no"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="no"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="no"/>
-<layer number="46" name="Milling" color="3" fill="1" visible="no" active="no"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="no" active="no"/>
-<layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
-<layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
-<layer number="50" name="ReferenceLS" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="no"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
-<layer number="53" name="tGND_GNDA" color="7" fill="1" visible="no" active="no"/>
-<layer number="54" name="bGND_GNDA" color="7" fill="1" visible="no" active="no"/>
-<layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
-<layer number="57" name="tCAD" color="7" fill="1" visible="no" active="no"/>
-<layer number="59" name="tCarbon" color="7" fill="1" visible="no" active="no"/>
-<layer number="60" name="bCarbon" color="7" fill="1" visible="no" active="no"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="no"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="no"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="no"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="no"/>
+<layer number="50" name="ReferenceLS" color="7" fill="1" visible="yes" active="no"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="no"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="no"/>
+<layer number="53" name="tGND_GNDA" color="7" fill="1" visible="yes" active="no"/>
+<layer number="54" name="bGND_GNDA" color="7" fill="1" visible="yes" active="no"/>
+<layer number="56" name="wert" color="7" fill="1" visible="yes" active="no"/>
+<layer number="57" name="tCAD" color="7" fill="1" visible="yes" active="no"/>
+<layer number="59" name="tCarbon" color="7" fill="1" visible="yes" active="no"/>
+<layer number="60" name="bCarbon" color="7" fill="1" visible="yes" active="no"/>
 <layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
@@ -1250,22 +1250,6 @@ It has a reduced top mask to make it harder to install upside-down.</description
 <circle x="-3.81" y="0" radius="1.02390625" width="0" layer="30"/>
 <circle x="3.81" y="0" radius="1.04726875" width="0" layer="30"/>
 </package>
-<package name="PAD.02X.02">
-<smd name="P$1" x="0" y="0" dx="0.508" dy="0.508" layer="1"/>
-</package>
-<package name="PAD.03X.03">
-<smd name="P$1" x="0" y="0" dx="0.762" dy="0.762" layer="1" roundness="100" cream="no"/>
-</package>
-<package name="PAD.03X.05">
-<smd name="P$1" x="0" y="0" dx="1.27" dy="1.27" layer="1" roundness="100" cream="no"/>
-</package>
-<package name="PAD.03X.04">
-<smd name="P$1" x="0" y="0" dx="1.016" dy="1.016" layer="1" roundness="100" cream="no"/>
-</package>
-<package name="TP_15TH">
-<pad name="P$1" x="0" y="0" drill="0.381" diameter="0.6096" stop="no"/>
-<circle x="0" y="0" radius="0.381" width="0" layer="30"/>
-</package>
 </packages>
 <symbols>
 <symbol name="CAP">
@@ -1292,13 +1276,6 @@ It has a reduced top mask to make it harder to install upside-down.</description
 <text x="-3.81" y="-3.302" size="1.778" layer="96">&gt;VALUE</text>
 <pin name="2" x="5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1" rot="R180"/>
 <pin name="1" x="-5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1"/>
-</symbol>
-<symbol name="TEST-POINT">
-<wire x1="2.54" y1="0" x2="0" y2="0" width="0.1524" layer="94"/>
-<wire x1="3.302" y1="0.762" x2="3.302" y2="-0.762" width="0.1524" layer="94" curve="180"/>
-<text x="-2.54" y="2.54" size="1.778" layer="95">&gt;Name</text>
-<text x="-2.54" y="-2.54" size="1.778" layer="96">&gt;Value</text>
-<pin name="1" x="0" y="0" visible="off" length="point" rot="R180"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -1565,54 +1542,6 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
 <connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="TEST-POINT" prefix="TP">
-<description>Bare copper test points for troubleshooting or ICT</description>
-<gates>
-<gate name="G$1" symbol="TEST-POINT" x="0" y="0"/>
-</gates>
-<devices>
-<device name="2" package="PAD.02X.02">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="3" package="PAD.03X.03">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="3X5" package="PAD.03X.05">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="3X4" package="PAD.03X.04">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="TP_15TH_THRU" package="TP_15TH">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -2434,8 +2363,8 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <wire x1="10.16" y1="-30.48" x2="-10.16" y2="-30.48" width="0.254" layer="94"/>
 <wire x1="-10.16" y1="-30.48" x2="-10.16" y2="30.48" width="0.254" layer="94"/>
 <pin name="ACTIVE" x="15.24" y="-22.86" length="middle" rot="R180"/>
-<pin name="ANT1" x="-15.24" y="10.16" length="middle"/>
-<pin name="ANT2" x="-15.24" y="7.62" length="middle"/>
+<pin name="ANT1" x="-15.24" y="7.62" length="middle"/>
+<pin name="ANT2" x="-15.24" y="10.16" length="middle"/>
 <pin name="AVDD" x="-15.24" y="27.94" length="middle"/>
 <pin name="AVDD1" x="-15.24" y="25.4" length="middle"/>
 <pin name="AVDD2" x="-15.24" y="22.86" length="middle"/>
@@ -2554,12 +2483,12 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <part name="C9" library="SparkFun-Passives" deviceset="CAP" device="0402-CAP" value="2.2nF"/>
 <part name="C10" library="SparkFun-Passives" deviceset="CAP" device="0402-CAP" value="1uF"/>
 <part name="U$1" library="molexmicrosd" deviceset="MOLEX_MICROSD_PP" device=""/>
-<part name="TP1" library="SparkFun-Passives" deviceset="TEST-POINT" device="3X5"/>
 <part name="D1" library="SparkFun-LED" deviceset="LED" device="0603" value="BLUE"/>
 <part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="22K"/>
 <part name="C4" library="SparkFun-Passives" deviceset="CAP" device="0805" value="1uF"/>
-<part name="TP2" library="SparkFun-Passives" deviceset="TEST-POINT" device="3X5"/>
-<part name="TP3" library="SparkFun-Passives" deviceset="TEST-POINT" device="3X5"/>
+<part name="R3" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="0K"/>
+<part name="R4" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="0K"/>
+<part name="R5" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="0K"/>
 </parts>
 <sheets>
 <sheet>
@@ -2585,23 +2514,23 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 </instance>
 <instance part="U5" gate="G$1" x="68.58" y="81.28" smashed="yes" rot="MR0">
 <attribute name="NAME" x="76.2" y="91.44" size="1.778" layer="95" rot="MR0" align="top-left"/>
-<attribute name="VALUE" x="76.454" y="74.422" size="1.778" layer="96" rot="MR0" align="bottom-right"/>
+<attribute name="VALUE" x="60.96" y="73.914" size="1.778" layer="96" rot="MR0" align="bottom-right"/>
 </instance>
 <instance part="C5" gate="G$1" x="53.34" y="63.5" smashed="yes">
 <attribute name="NAME" x="49.784" y="61.595" size="1.778" layer="95"/>
 <attribute name="VALUE" x="49.784" y="59.055" size="1.778" layer="96"/>
 </instance>
 <instance part="Y1" gate="G$1" x="63.5" y="101.6" smashed="yes" rot="R90">
-<attribute name="NAME" x="58.42" y="91.44" size="1.27" layer="95" rot="R90" align="top-left"/>
+<attribute name="NAME" x="58.42" y="106.68" size="1.27" layer="95" rot="R180" align="top-left"/>
 <attribute name="VALUE" x="66.802" y="105.156" size="1.27" layer="96" rot="R180" align="bottom-right"/>
 </instance>
 <instance part="C6" gate="G$1" x="71.12" y="93.98" smashed="yes" rot="R90">
 <attribute name="NAME" x="65.024" y="94.361" size="1.778" layer="95"/>
-<attribute name="VALUE" x="72.644" y="94.361" size="1.778" layer="96"/>
+<attribute name="VALUE" x="71.12" y="94.361" size="1.778" layer="96"/>
 </instance>
 <instance part="C7" gate="G$1" x="71.12" y="109.22" smashed="yes" rot="R90">
 <attribute name="NAME" x="65.024" y="109.601" size="1.778" layer="95"/>
-<attribute name="VALUE" x="72.644" y="109.601" size="1.778" layer="96"/>
+<attribute name="VALUE" x="71.12" y="109.601" size="1.778" layer="96"/>
 </instance>
 <instance part="ANT1" gate="G$1" x="93.98" y="88.9"/>
 <instance part="C1" gate="G$1" x="76.2" y="63.5" smashed="yes">
@@ -2617,9 +2546,6 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <attribute name="VALUE" x="61.722" y="59.055" size="1.778" layer="96"/>
 </instance>
 <instance part="U$1" gate="G$1" x="27.94" y="38.1"/>
-<instance part="TP1" gate="G$1" x="63.5" y="127" smashed="yes">
-<attribute name="NAME" x="68.58" y="127" size="1.778" layer="95"/>
-</instance>
 <instance part="D1" gate="G$1" x="76.2" y="45.72" rot="R90"/>
 <instance part="R2" gate="G$1" x="66.04" y="45.72" smashed="yes" rot="R180">
 <attribute name="NAME" x="63.5" y="48.0314" size="1.778" layer="95" rot="R180"/>
@@ -2629,11 +2555,17 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <attribute name="NAME" x="84.836" y="61.595" size="1.778" layer="95"/>
 <attribute name="VALUE" x="84.836" y="59.309" size="1.778" layer="96"/>
 </instance>
-<instance part="TP2" gate="G$1" x="63.5" y="121.92" smashed="yes">
-<attribute name="NAME" x="68.58" y="121.92" size="1.778" layer="95"/>
+<instance part="R3" gate="G$1" x="17.78" y="15.24" smashed="yes" rot="R180">
+<attribute name="NAME" x="15.24" y="17.5514" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="24.892" y="17.526" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="TP3" gate="G$1" x="63.5" y="116.84" smashed="yes">
-<attribute name="NAME" x="68.58" y="116.84" size="1.778" layer="95"/>
+<instance part="R4" gate="G$1" x="17.78" y="10.16" smashed="yes" rot="R180">
+<attribute name="NAME" x="15.24" y="12.4714" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="24.892" y="12.446" size="1.778" layer="96" rot="R180"/>
+</instance>
+<instance part="R5" gate="G$1" x="17.78" y="5.08" smashed="yes" rot="R180">
+<attribute name="NAME" x="15.24" y="7.3914" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="24.892" y="7.366" size="1.778" layer="96" rot="R180"/>
 </instance>
 </instances>
 <busses>
@@ -2972,11 +2904,6 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <pinref part="J1" gate="G$1" pin="25"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="SCK"/>
-<wire x1="12.7" y1="101.6" x2="5.08" y2="101.6" width="0.1524" layer="91"/>
-<label x="5.08" y="101.854" size="1.778" layer="95"/>
-</segment>
-<segment>
 <wire x1="12.7" y1="45.72" x2="5.08" y2="45.72" width="0.1524" layer="91"/>
 <label x="5.08" y="45.72" size="1.778" layer="95"/>
 <pinref part="U$1" gate="G$1" pin="DAT2"/>
@@ -2994,11 +2921,6 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <pinref part="J1" gate="G$1" pin="21"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="MOSI"/>
-<wire x1="12.7" y1="106.68" x2="5.08" y2="106.68" width="0.1524" layer="91"/>
-<label x="5.08" y="106.934" size="1.778" layer="95"/>
-</segment>
-<segment>
 <wire x1="12.7" y1="35.56" x2="5.08" y2="35.56" width="0.1524" layer="91"/>
 <label x="5.08" y="35.56" size="1.778" layer="95"/>
 <pinref part="U$1" gate="G$1" pin="CLK"/>
@@ -3014,11 +2936,6 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <wire x1="119.38" y1="93.98" x2="127" y2="93.98" width="0.1524" layer="91"/>
 <label x="119.38" y="93.98" size="1.778" layer="95"/>
 <pinref part="J1" gate="G$1" pin="23"/>
-</segment>
-<segment>
-<pinref part="U1" gate="G$1" pin="MISO"/>
-<wire x1="12.7" y1="104.14" x2="5.08" y2="104.14" width="0.1524" layer="91"/>
-<label x="5.08" y="104.394" size="1.778" layer="95"/>
 </segment>
 <segment>
 <wire x1="12.7" y1="43.18" x2="5.08" y2="43.18" width="0.1524" layer="91"/>
@@ -3067,9 +2984,9 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <pinref part="J1" gate="G$1" pin="27"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="REQN"/>
 <wire x1="12.7" y1="109.22" x2="5.08" y2="109.22" width="0.1524" layer="91"/>
-<label x="5.08" y="109.474" size="1.778" layer="95"/>
+<label x="5.08" y="109.22" size="1.778" layer="95"/>
+<pinref part="U1" gate="G$1" pin="REQN"/>
 </segment>
 </net>
 <net name="PC4" class="0">
@@ -3105,6 +3022,11 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <label x="119.38" y="111.76" size="1.778" layer="95"/>
 <pinref part="J1" gate="G$1" pin="9"/>
 </segment>
+<segment>
+<wire x1="30.48" y1="10.16" x2="22.86" y2="10.16" width="0.1524" layer="91"/>
+<label x="25.4" y="10.16" size="1.778" layer="95"/>
+<pinref part="R4" gate="G$1" pin="1"/>
+</segment>
 </net>
 <net name="PB7" class="0">
 <segment>
@@ -3116,6 +3038,11 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <wire x1="119.38" y1="114.3" x2="127" y2="114.3" width="0.1524" layer="91"/>
 <label x="119.38" y="114.3" size="1.778" layer="95"/>
 <pinref part="J1" gate="G$1" pin="7"/>
+</segment>
+<segment>
+<wire x1="30.48" y1="5.08" x2="22.86" y2="5.08" width="0.1524" layer="91"/>
+<label x="25.4" y="5.08" size="1.778" layer="95"/>
+<pinref part="R5" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="PC5" class="0">
@@ -3204,6 +3131,11 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <label x="119.38" y="101.6" size="1.778" layer="95"/>
 <pinref part="J1" gate="G$1" pin="17"/>
 </segment>
+<segment>
+<wire x1="12.7" y1="101.6" x2="5.08" y2="101.6" width="0.1524" layer="91"/>
+<label x="5.08" y="101.6" size="1.778" layer="95"/>
+<pinref part="U1" gate="G$1" pin="SCK"/>
+</segment>
 </net>
 <net name="PB4" class="0">
 <segment>
@@ -3216,6 +3148,11 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <label x="119.38" y="104.14" size="1.778" layer="95"/>
 <pinref part="J1" gate="G$1" pin="15"/>
 </segment>
+<segment>
+<wire x1="12.7" y1="104.14" x2="5.08" y2="104.14" width="0.1524" layer="91"/>
+<label x="5.08" y="104.14" size="1.778" layer="95"/>
+<pinref part="U1" gate="G$1" pin="MISO"/>
+</segment>
 </net>
 <net name="PB5" class="0">
 <segment>
@@ -3227,6 +3164,11 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <wire x1="119.38" y1="106.68" x2="127" y2="106.68" width="0.1524" layer="91"/>
 <label x="119.38" y="106.68" size="1.778" layer="95"/>
 <pinref part="J1" gate="G$1" pin="13"/>
+</segment>
+<segment>
+<wire x1="12.7" y1="106.68" x2="5.08" y2="106.68" width="0.1524" layer="91"/>
+<label x="5.08" y="106.68" size="1.778" layer="95"/>
+<pinref part="U1" gate="G$1" pin="MOSI"/>
 </segment>
 </net>
 <net name="PA14" class="0">
@@ -3486,6 +3428,11 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <label x="152.4" y="114.3" size="1.778" layer="95"/>
 <pinref part="J1" gate="G$1" pin="8"/>
 </segment>
+<segment>
+<wire x1="30.48" y1="15.24" x2="22.86" y2="15.24" width="0.1524" layer="91"/>
+<label x="25.4" y="15.24" size="1.778" layer="95"/>
+<pinref part="R3" gate="G$1" pin="1"/>
+</segment>
 </net>
 <net name="PA8" class="0">
 <segment>
@@ -3581,11 +3528,10 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <net name="VDD_PA" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="VDD_PA"/>
-<wire x1="43.18" y1="86.36" x2="48.26" y2="86.36" width="0.1524" layer="91"/>
-<label x="43.688" y="86.614" size="1.778" layer="95"/>
-<wire x1="48.26" y1="86.36" x2="50.8" y2="83.82" width="0.1524" layer="91"/>
+<label x="43.688" y="84.074" size="1.778" layer="95"/>
+<wire x1="43.18" y1="86.36" x2="43.18" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="U5" gate="G$1" pin="DC_FEED"/>
-<wire x1="50.8" y1="83.82" x2="55.88" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="83.82" x2="55.88" y2="83.82" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C5" gate="G$1" pin="1"/>
@@ -3617,6 +3563,11 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 </net>
 <net name="RDYN" class="0">
 <segment>
+<wire x1="12.7" y1="15.24" x2="5.08" y2="15.24" width="0.1524" layer="91"/>
+<label x="5.08" y="15.24" size="1.778" layer="95"/>
+<pinref part="R3" gate="G$1" pin="2"/>
+</segment>
+<segment>
 <pinref part="U1" gate="G$1" pin="RDYN"/>
 <wire x1="12.7" y1="114.3" x2="5.08" y2="114.3" width="0.1524" layer="91"/>
 <label x="5.08" y="114.554" size="1.778" layer="95"/>
@@ -3629,20 +3580,20 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <pinref part="ANT1" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="N$3" class="0">
+<net name="ANT2" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="ANT2"/>
 <pinref part="U5" gate="G$1" pin="BP"/>
-<wire x1="43.18" y1="81.28" x2="53.34" y2="81.28" width="0.1524" layer="91"/>
-<wire x1="53.34" y1="81.28" x2="55.88" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="78.74" x2="53.34" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="53.34" y1="78.74" x2="55.88" y2="78.74" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$6" class="0">
+<net name="ANT1" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="ANT1"/>
 <pinref part="U5" gate="G$1" pin="BP1"/>
-<wire x1="43.18" y1="78.74" x2="53.34" y2="78.74" width="0.1524" layer="91"/>
-<wire x1="53.34" y1="78.74" x2="55.88" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="81.28" x2="53.34" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="53.34" y1="81.28" x2="55.88" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="ACTIVE" class="0">
@@ -3650,11 +3601,6 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <wire x1="12.7" y1="111.76" x2="5.08" y2="111.76" width="0.1524" layer="91"/>
 <label x="5.08" y="111.76" size="1.778" layer="95"/>
 <pinref part="U1" gate="G$1" pin="ACTIVE"/>
-</segment>
-<segment>
-<pinref part="TP1" gate="G$1" pin="1"/>
-<wire x1="63.5" y1="127" x2="55.88" y2="127" width="0.1524" layer="91"/>
-<label x="55.88" y="127" size="1.778" layer="95"/>
 </segment>
 <segment>
 <wire x1="60.96" y1="45.72" x2="53.34" y2="45.72" width="0.1524" layer="91"/>
@@ -3676,9 +3622,9 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <pinref part="U1" gate="G$1" pin="RXD"/>
 </segment>
 <segment>
-<wire x1="63.5" y1="121.92" x2="55.88" y2="121.92" width="0.1524" layer="91"/>
-<label x="55.88" y="121.92" size="1.778" layer="95"/>
-<pinref part="TP2" gate="G$1" pin="1"/>
+<wire x1="12.7" y1="10.16" x2="5.08" y2="10.16" width="0.1524" layer="91"/>
+<label x="5.08" y="10.16" size="1.778" layer="95"/>
+<pinref part="R4" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="TXD" class="0">
@@ -3688,9 +3634,9 @@ Source: http://datasheets.maxim-ic.com/en/ds/MAX7042.pdf</description>
 <pinref part="U1" gate="G$1" pin="TXD"/>
 </segment>
 <segment>
-<wire x1="63.5" y1="116.84" x2="55.88" y2="116.84" width="0.1524" layer="91"/>
-<label x="55.88" y="116.84" size="1.778" layer="95"/>
-<pinref part="TP3" gate="G$1" pin="1"/>
+<wire x1="12.7" y1="5.08" x2="5.08" y2="5.08" width="0.1524" layer="91"/>
+<label x="5.08" y="5.08" size="1.778" layer="95"/>
+<pinref part="R5" gate="G$1" pin="2"/>
 </segment>
 </net>
 </nets>

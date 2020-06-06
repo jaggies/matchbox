@@ -3333,7 +3333,7 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <package name="B3U-3100PM-B">
 <smd name="1" x="-1.7" y="0" dx="0.8" dy="1.7" layer="1"/>
 <smd name="2" x="1.7" y="0" dx="0.8" dy="1.7" layer="1"/>
-<hole x="0" y="0" drill="0.85"/>
+<hole x="0" y="0" drill="0.7"/>
 <smd name="GND" x="0" y="-1.65" dx="0.8" dy="1.1" layer="1"/>
 <wire x1="-1.5" y1="1.25" x2="-1.5" y2="1.05" width="0.127" layer="21"/>
 <wire x1="-1.5" y1="1.25" x2="-0.85" y2="1.25" width="0.127" layer="21"/>
@@ -3344,9 +3344,14 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <wire x1="0.65" y1="-1.25" x2="1.5" y2="-1.25" width="0.127" layer="21"/>
 <wire x1="1.5" y1="-1.25" x2="1.5" y2="-1.05" width="0.127" layer="21"/>
 <wire x1="-1.5" y1="-1.25" x2="-1.5" y2="-1.05" width="0.127" layer="21"/>
-<wire x1="-0.85" y1="1.25" x2="-0.85" y2="2.25" width="0.127" layer="21"/>
-<wire x1="-0.85" y1="2.25" x2="0.85" y2="2.25" width="0.127" layer="21"/>
-<wire x1="0.85" y1="2.25" x2="0.85" y2="1.25" width="0.127" layer="21"/>
+<wire x1="-0.85" y1="1.25" x2="-0.85" y2="1.6" width="0.127" layer="21"/>
+<wire x1="-0.85" y1="1.6" x2="-0.45" y2="1.95" width="0.127" layer="21"/>
+<wire x1="-0.45" y1="1.95" x2="0.45" y2="1.95" width="0.127" layer="21"/>
+<wire x1="0.45" y1="1.95" x2="0.85" y2="1.6" width="0.127" layer="21"/>
+<wire x1="0.85" y1="1.6" x2="0.85" y2="1.25" width="0.127" layer="21"/>
+<text x="-2.54" y="-3.81" size="1.27" layer="21">&gt;NAME</text>
+<wire x1="0.85" y1="1.2" x2="0.85" y2="0.85" width="0.127" layer="21"/>
+<wire x1="-1.55" y1="1.55" x2="1.5" y2="1.55" width="0.05" layer="21" style="longdash"/>
 </package>
 </packages>
 <symbols>
@@ -3354,7 +3359,7 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <pin name="P$1" x="-5.08" y="0" visible="pad" length="point"/>
 <pin name="P$2" x="5.08" y="0" visible="pad" length="point" rot="R180"/>
 <wire x1="-2.54" y1="0" x2="2.54" y2="2.54" width="0.254" layer="94"/>
-<text x="-2.54" y="5.08" size="1.27" layer="94">&gt;NAME</text>
+<text x="-2.54" y="2.54" size="1.778" layer="95">&gt;NAME</text>
 <circle x="-5.08" y="0" radius="0.254" width="0.254" layer="94"/>
 <circle x="5.08" y="0" radius="0.254" width="0.254" layer="94"/>
 <wire x1="-5.08" y1="0" x2="-2.54" y2="0" width="0.254" layer="94"/>
@@ -3415,7 +3420,7 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <part name="C14" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="1uF"/>
 <part name="C15" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value=".033uF"/>
 <part name="D1" library="SparkFun-LED" deviceset="LED" device="0603" value="PWR"/>
-<part name="D2" library="SparkFun-LED" deviceset="LED" device="0603" value="PB2"/>
+<part name="D2" library="SparkFun-LED" deviceset="LED" device="0603" value="STAT"/>
 <part name="R3" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="1k"/>
 <part name="R4" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="1k"/>
 <part name="Q1" library="transistor-power" deviceset="FDN360P" device=""/>
@@ -3449,10 +3454,12 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <part name="R14" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="0k"/>
 <part name="C22" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="0.1uF"/>
 <part name="U$1" library="jimduino" deviceset="MICROUSB" device=""/>
-<part name="U$2" library="sharp_display" deviceset="B3U-3100PM-B" device=""/>
-<part name="U$3" library="sharp_display" deviceset="B3U-3100PM-B" device=""/>
-<part name="U$4" library="sharp_display" deviceset="B3U-3100PM-B" device=""/>
-<part name="U$5" library="sharp_display" deviceset="B3U-3100PM-B" device=""/>
+<part name="RESET" library="sharp_display" deviceset="B3U-3100PM-B" device=""/>
+<part name="SW1" library="sharp_display" deviceset="B3U-3100PM-B" device=""/>
+<part name="PWR" library="sharp_display" deviceset="B3U-3100PM-B" device=""/>
+<part name="BOOT0" library="sharp_display" deviceset="B3U-3100PM-B" device=""/>
+<part name="R15" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
+<part name="R16" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
 </parts>
 <sheets>
 <sheet>
@@ -3549,9 +3556,9 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <instance part="RSV1" gate="G$1" x="-27.94" y="66.04" smashed="yes">
 <attribute name="NAME" x="-22.86" y="65.278" size="1.778" layer="95"/>
 </instance>
-<instance part="R2" gate="G$1" x="203.2" y="66.04" smashed="yes" rot="R180">
-<attribute name="NAME" x="200.152" y="68.0974" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="210.82" y="68.072" size="1.778" layer="96" rot="R180"/>
+<instance part="R2" gate="G$1" x="198.12" y="66.04" smashed="yes" rot="R180">
+<attribute name="NAME" x="199.644" y="69.3674" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="205.74" y="68.072" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="R5" gate="G$1" x="-20.32" y="142.24" smashed="yes">
 <attribute name="NAME" x="-26.162" y="142.7226" size="1.778" layer="95"/>
@@ -3591,9 +3598,9 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <attribute name="NAME" x="160.528" y="93.472" size="1.778" layer="95"/>
 <attribute name="VALUE" x="166.624" y="86.614" size="1.778" layer="96"/>
 </instance>
-<instance part="R12" gate="G$1" x="203.2" y="60.96" smashed="yes" rot="R180">
-<attribute name="NAME" x="200.66" y="63.0174" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="210.82" y="63.246" size="1.778" layer="96" rot="R180"/>
+<instance part="R12" gate="G$1" x="198.12" y="60.96" smashed="yes" rot="R180">
+<attribute name="NAME" x="200.66" y="64.2874" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="205.74" y="63.246" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="D5" gate="G$1" x="175.26" y="93.98" smashed="yes" rot="R270">
 <attribute name="NAME" x="177.038" y="92.9386" size="1.778" layer="95"/>
@@ -3618,17 +3625,25 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <attribute name="VALUE" x="-16.764" y="137.541" size="1.778" layer="96"/>
 </instance>
 <instance part="U$1" gate="G$1" x="114.3" y="48.26"/>
-<instance part="U$2" gate="G$1" x="-22.86" y="121.92" smashed="yes">
-<attribute name="NAME" x="-7.62" y="121.92" size="1.27" layer="94"/>
+<instance part="RESET" gate="G$1" x="-22.86" y="121.92" smashed="yes">
+<attribute name="NAME" x="-7.62" y="121.92" size="1.778" layer="95"/>
 </instance>
-<instance part="U$3" gate="G$1" x="-22.86" y="116.84" smashed="yes">
-<attribute name="NAME" x="-7.62" y="116.84" size="1.27" layer="94"/>
+<instance part="SW1" gate="G$1" x="-22.86" y="116.84" smashed="yes">
+<attribute name="NAME" x="-7.62" y="116.84" size="1.778" layer="95"/>
 </instance>
-<instance part="U$4" gate="G$1" x="-22.86" y="111.76" smashed="yes">
-<attribute name="NAME" x="-7.62" y="111.76" size="1.27" layer="94"/>
+<instance part="PWR" gate="G$1" x="-22.86" y="111.76" smashed="yes">
+<attribute name="NAME" x="-7.62" y="111.76" size="1.778" layer="95"/>
 </instance>
-<instance part="U$5" gate="G$1" x="-20.32" y="83.82" smashed="yes">
+<instance part="BOOT0" gate="G$1" x="-20.32" y="83.82" smashed="yes">
 <attribute name="NAME" x="-22.86" y="86.36" size="1.27" layer="94"/>
+</instance>
+<instance part="R15" gate="G$1" x="-22.86" y="20.32" smashed="yes">
+<attribute name="NAME" x="-25.146" y="22.0726" size="1.778" layer="95"/>
+<attribute name="VALUE" x="-24.892" y="17.018" size="1.778" layer="96"/>
+</instance>
+<instance part="R16" gate="G$1" x="-10.16" y="20.32" smashed="yes">
+<attribute name="NAME" x="-12.192" y="21.8186" size="1.778" layer="95"/>
+<attribute name="VALUE" x="-11.684" y="17.018" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -3716,13 +3731,13 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <label x="-9.144" y="144.526" size="1.778" layer="95"/>
 </segment>
 <segment>
-<label x="200.406" y="69.85" size="1.778" layer="95"/>
+<label x="205.994" y="57.15" size="1.778" layer="95" rot="R180"/>
 <pinref part="R12" gate="G$1" pin="1"/>
-<wire x1="208.28" y1="60.96" x2="210.82" y2="60.96" width="0.1524" layer="91"/>
-<junction x="210.82" y="60.96"/>
+<wire x1="203.2" y1="60.96" x2="205.74" y2="60.96" width="0.1524" layer="91"/>
+<junction x="205.74" y="60.96"/>
 <pinref part="R2" gate="G$1" pin="1"/>
-<wire x1="208.28" y1="66.04" x2="210.82" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="210.82" y1="66.04" x2="210.82" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="203.2" y1="66.04" x2="205.74" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="205.74" y1="66.04" x2="205.74" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <wire x1="-27.94" y1="45.72" x2="-35.56" y2="45.72" width="0.1524" layer="91"/>
@@ -3737,7 +3752,7 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <segment>
 <wire x1="-5.08" y1="83.82" x2="-15.24" y2="83.82" width="0.1524" layer="91"/>
 <label x="-16.256" y="84.582" size="1.778" layer="95"/>
-<pinref part="U$5" gate="G$1" pin="P$2"/>
+<pinref part="BOOT0" gate="G$1" pin="P$2"/>
 </segment>
 <segment>
 <wire x1="-7.62" y1="91.44" x2="-15.24" y2="91.44" width="0.1524" layer="91"/>
@@ -3962,17 +3977,22 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <segment>
 <wire x1="-17.78" y1="121.92" x2="-10.16" y2="121.92" width="0.1524" layer="91"/>
 <label x="-15.24" y="121.92" size="1.778" layer="95"/>
-<pinref part="U$2" gate="G$1" pin="P$2"/>
+<pinref part="RESET" gate="G$1" pin="P$2"/>
 </segment>
 <segment>
 <wire x1="-10.16" y1="111.76" x2="-17.78" y2="111.76" width="0.1524" layer="91"/>
 <label x="-15.24" y="112.522" size="1.778" layer="95"/>
-<pinref part="U$4" gate="G$1" pin="P$2"/>
+<pinref part="PWR" gate="G$1" pin="P$2"/>
 </segment>
 <segment>
 <wire x1="-10.16" y1="116.84" x2="-17.78" y2="116.84" width="0.1524" layer="91"/>
 <label x="-14.986" y="117.348" size="1.778" layer="95"/>
-<pinref part="U$3" gate="G$1" pin="P$2"/>
+<pinref part="SW1" gate="G$1" pin="P$2"/>
+</segment>
+<segment>
+<wire x1="2.54" y1="20.32" x2="-5.08" y2="20.32" width="0.1524" layer="91"/>
+<label x="0" y="22.86" size="1.778" layer="95" rot="R180"/>
+<pinref part="R16" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="PB15" class="0">
@@ -4252,6 +4272,15 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <label x="129.54" y="129.54" size="1.778" layer="95"/>
 <pinref part="P1" gate="G$1" pin="22"/>
 </segment>
+<segment>
+<pinref part="R15" gate="G$1" pin="2"/>
+<pinref part="R16" gate="G$1" pin="1"/>
+<wire x1="-15.24" y1="20.32" x2="-17.78" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="-15.24" y1="20.32" x2="-15.24" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="-15.24" y1="15.24" x2="-35.56" y2="15.24" width="0.1524" layer="91"/>
+<junction x="-15.24" y="20.32"/>
+<label x="-35.56" y="15.24" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="PB0" class="0">
 <segment>
@@ -4359,11 +4388,10 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <pinref part="P1" gate="G$1" pin="11"/>
 </segment>
 <segment>
-<wire x1="187.96" y1="60.96" x2="195.58" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="187.96" y1="60.96" x2="193.04" y2="60.96" width="0.1524" layer="91"/>
 <label x="188.722" y="61.468" size="1.778" layer="95"/>
 <pinref part="U4" gate="G$1" pin="!KILL!"/>
 <pinref part="R12" gate="G$1" pin="2"/>
-<wire x1="195.58" y1="60.96" x2="198.12" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PB8" class="0">
@@ -4480,7 +4508,7 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <segment>
 <wire x1="-35.56" y1="121.92" x2="-27.94" y2="121.92" width="0.1524" layer="91"/>
 <label x="-35.052" y="122.682" size="1.778" layer="95"/>
-<pinref part="U$2" gate="G$1" pin="P$1"/>
+<pinref part="RESET" gate="G$1" pin="P$1"/>
 </segment>
 </net>
 <net name="PC13" class="0">
@@ -4506,7 +4534,7 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <segment>
 <wire x1="-27.94" y1="116.84" x2="-35.56" y2="116.84" width="0.1524" layer="91"/>
 <label x="-35.052" y="117.602" size="1.778" layer="95"/>
-<pinref part="U$3" gate="G$1" pin="P$1"/>
+<pinref part="SW1" gate="G$1" pin="P$1"/>
 </segment>
 </net>
 <net name="PC8" class="0">
@@ -4680,7 +4708,7 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <segment>
 <wire x1="-27.94" y1="111.76" x2="-35.56" y2="111.76" width="0.1524" layer="91"/>
 <label x="-35.052" y="112.522" size="1.778" layer="95"/>
-<pinref part="U$4" gate="G$1" pin="P$1"/>
+<pinref part="PWR" gate="G$1" pin="P$1"/>
 </segment>
 </net>
 <net name="PA13" class="0">
@@ -4695,11 +4723,10 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <pinref part="P2" gate="G$1" pin="6"/>
 </segment>
 <segment>
-<wire x1="187.96" y1="66.04" x2="195.58" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="187.96" y1="66.04" x2="193.04" y2="66.04" width="0.1524" layer="91"/>
 <label x="188.722" y="66.548" size="1.778" layer="95"/>
 <pinref part="U4" gate="G$1" pin="!INT!"/>
 <pinref part="R2" gate="G$1" pin="2"/>
-<wire x1="195.58" y1="66.04" x2="198.12" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$5" class="0">
@@ -4753,7 +4780,7 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <segment>
 <wire x1="-35.56" y1="83.82" x2="-25.4" y2="83.82" width="0.1524" layer="91"/>
 <label x="-35.56" y="84.074" size="1.778" layer="95"/>
-<pinref part="U$5" gate="G$1" pin="P$1"/>
+<pinref part="BOOT0" gate="G$1" pin="P$1"/>
 </segment>
 <segment>
 <wire x1="-25.4" y1="132.08" x2="-35.56" y2="132.08" width="0.1524" layer="91"/>
@@ -4849,6 +4876,11 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <pinref part="U2" gate="G$1" pin="VI"/>
 <wire x1="157.48" y1="27.94" x2="147.32" y2="27.94" width="0.1524" layer="91"/>
 <label x="152.4" y="27.94" size="1.778" layer="95"/>
+</segment>
+<segment>
+<wire x1="-27.94" y1="20.32" x2="-35.56" y2="20.32" width="0.1524" layer="91"/>
+<label x="-35.56" y="20.32" size="1.778" layer="95"/>
+<pinref part="R15" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="VCC_USBF" class="0">
@@ -4964,6 +4996,10 @@ http://portal.fciconnect.com/Comergent//fci/drawing/10118192.pdf</description>
 <approved hash="104,1,154.94,71.12,U4,VIN,VCC_SEL,,,"/>
 <approved hash="104,1,160.02,114.3,U3,VIN,VCC_USBF,,,"/>
 <approved hash="104,1,180.34,109.22,U3,VSS,GND,,,"/>
+<approved hash="204,1,-22.86,119.38,RESET,GND,,,,"/>
+<approved hash="204,1,-22.86,114.3,SW1,GND,,,,"/>
+<approved hash="204,1,-22.86,109.22,PWR,GND,,,,"/>
+<approved hash="204,1,-20.32,81.28,BOOT0,GND,,,,"/>
 </errors>
 </schematic>
 </drawing>

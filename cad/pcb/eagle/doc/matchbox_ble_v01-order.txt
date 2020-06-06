@@ -1,0 +1,19 @@
+X 1	ANT1	2450AT18A100	unknown					
+X 3	100nF	0402-CAP	17F2165	VISHAY/SPRAGUE	1C20Z5U104M050B	40110	0.056	VISHAY - 1C20Z5U104M050B - CERAMIC CAPACITOR 0.1UF, 50V, Z5U, 20%, RADIAL
+X 1	33nF	0402-CAP	unknown					
+X 1	2.2nF	0402-CAP	unknown					
+X 2	8.2pF	0402-CAP	unknown					
+X 2	4.0pF	0402 (alternate for 16MHz osc)
+X 1	1nF	0402-CAP	unknown					
+X 1	22K	0402-RES	unknown					
+X 1	MOLEX_MICROSD_PP	MOLEX_MICROSD_PP	unknown					
+X 1	NRF8001	ATMEL_QFN32	unknown					
+X 1	2450BM14A0002	2450BM14A0002	unknown					
+X 1	8Y-16.000MAAV-T	ABM11	unknown					
+X 2	DF12-32-DS	DF12-32-DS	unknown					
+X 2	DF12-32-DP	DF12-32-DP	unknown					
+X 1	BLUE	LED-0603	unknown					
+
+/ 1	1uF	0805	unknown					
+/ 1	1K	0805	unknown					
+/ 4	0K	0805	unknown					

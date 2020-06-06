@@ -8,20 +8,24 @@
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
-<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="no"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="no"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="no"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="no"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="no" active="no"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="no"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="yes" active="no"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="yes" active="no"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="yes" active="no"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="yes" active="no"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="no"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="no"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="no"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="no"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="no"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="no"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="no"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="no"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="no"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="no"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="no"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="no"/>
@@ -30,8 +34,8 @@
 <layer number="34" name="bFinish" color="6" fill="6" visible="no" active="no"/>
 <layer number="35" name="tGlue" color="7" fill="4" visible="no" active="no"/>
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="no"/>
-<layer number="37" name="tTest" color="7" fill="1" visible="no" active="no"/>
-<layer number="38" name="bTest" color="7" fill="1" visible="no" active="no"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="no"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="no"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="no"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="no"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="no"/>
@@ -39,19 +43,19 @@
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="no"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="no"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="no"/>
-<layer number="46" name="Milling" color="3" fill="1" visible="no" active="no"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="no" active="no"/>
-<layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
-<layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
-<layer number="50" name="ReferenceLS" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="no"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
-<layer number="53" name="tGND_GNDA" color="7" fill="1" visible="no" active="no"/>
-<layer number="54" name="bGND_GNDA" color="7" fill="1" visible="no" active="no"/>
-<layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
-<layer number="57" name="tCAD" color="7" fill="1" visible="no" active="no"/>
-<layer number="59" name="tCarbon" color="7" fill="1" visible="no" active="no"/>
-<layer number="60" name="bCarbon" color="7" fill="1" visible="no" active="no"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="no"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="no"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="no"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="no"/>
+<layer number="50" name="ReferenceLS" color="7" fill="1" visible="yes" active="no"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="no"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="no"/>
+<layer number="53" name="tGND_GNDA" color="7" fill="1" visible="yes" active="no"/>
+<layer number="54" name="bGND_GNDA" color="7" fill="1" visible="yes" active="no"/>
+<layer number="56" name="wert" color="7" fill="1" visible="yes" active="no"/>
+<layer number="57" name="tCAD" color="7" fill="1" visible="yes" active="no"/>
+<layer number="59" name="tCarbon" color="7" fill="1" visible="yes" active="no"/>
+<layer number="60" name="bCarbon" color="7" fill="1" visible="yes" active="no"/>
 <layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
@@ -820,8 +824,8 @@ chip</description>
 <wire x1="1.473" y1="-0.483" x2="-1.473" y2="-0.483" width="0.0508" layer="39"/>
 <wire x1="-1.473" y1="-0.483" x2="-1.473" y2="0.483" width="0.0508" layer="39"/>
 <wire x1="0" y1="0.0305" x2="0" y2="-0.0305" width="0.4064" layer="21"/>
-<smd name="1" x="-0.58" y="0" dx="0.85" dy="0.9" layer="1"/>
-<smd name="2" x="0.58" y="0" dx="0.85" dy="0.9" layer="1"/>
+<smd name="1" x="-0.65" y="0" dx="0.7" dy="0.9" layer="1"/>
+<smd name="2" x="0.65" y="0" dx="0.7" dy="0.9" layer="1"/>
 <text x="-0.889" y="0.6985" size="0.4064" layer="25">&gt;NAME</text>
 <text x="-1.0795" y="-1.143" size="0.4064" layer="27">&gt;VALUE</text>
 <rectangle x1="-0.554" y1="-0.3048" x2="-0.254" y2="0.2951" layer="51"/>
@@ -3989,61 +3993,63 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <part name="P2" library="micro1292" deviceset="AS-ITM-00015" device="" value="DF12-32-DP"/>
 <part name="P1" library="micro1292" deviceset="AS-ITM-00015" device="" value="DF12-32-DP"/>
 <part name="P3" library="jimduino" deviceset="MICROUSB" device=""/>
-<part name="C1" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="1uF"/>
-<part name="C2" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="1uF"/>
-<part name="C3" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="1uF"/>
-<part name="C5" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="0.1uF"/>
-<part name="C6" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="1uF"/>
+<part name="C1" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="1uF"/>
+<part name="C2" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="1uF"/>
+<part name="C3" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="1uF"/>
+<part name="C5" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="0.1uF"/>
+<part name="C6" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="1uF"/>
 <part name="Y1" library="micro1292" deviceset="AS-ITM-00228" device="" value="8Y-16.000MAAV-T"/>
-<part name="C7" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="20pF"/>
-<part name="C8" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="20pF"/>
-<part name="C9" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="2.2uF"/>
-<part name="C10" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="2.2uF"/>
+<part name="C7" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="20pF"/>
+<part name="C8" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="20pF"/>
+<part name="C9" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="2.2uF"/>
+<part name="C10" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="2.2uF"/>
 <part name="U4" library="GeekAmmo" deviceset="LTC2954" device="" value="LTC2954-2"/>
 <part name="RESET" library="SparkFun-Electromechanical" deviceset="SWITCH-MOMENTARY-2" device="SMD-REDUNDANT"/>
-<part name="R1" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
+<part name="R1" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="10k"/>
 <part name="U2" library="linear" deviceset="MCP1703" device=""/>
-<part name="C11" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="1uF"/>
-<part name="C12" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="20pF"/>
-<part name="C13" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="20pF"/>
+<part name="C11" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="1uF"/>
+<part name="C12" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="20pF"/>
+<part name="C13" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="20pF"/>
 <part name="Y2" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="EPSONMC146" value="32.768kHz"/>
-<part name="C14" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="1uF"/>
-<part name="C15" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value=".033uF"/>
+<part name="C14" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="1uF"/>
+<part name="C15" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value=".033uF"/>
 <part name="POWER" library="SparkFun-Electromechanical" deviceset="SWITCH-MOMENTARY-2" device="SMD-REDUNDANT"/>
 <part name="D1" library="SparkFun-LED" deviceset="LED" device="0603" value="PWR"/>
 <part name="D2" library="SparkFun-LED" deviceset="LED" device="0603" value="PC13"/>
-<part name="R3" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="1k"/>
-<part name="R4" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="1k"/>
+<part name="R3" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="1k"/>
+<part name="R4" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="1k"/>
 <part name="Q1" library="transistor-power" deviceset="FDN360P" device=""/>
-<part name="R6" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="100k"/>
-<part name="R7" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="100k"/>
+<part name="R6" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="100k"/>
+<part name="R7" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="100k"/>
 <part name="C16" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="10uF"/>
 <part name="SW1" library="SparkFun-Electromechanical" deviceset="SWITCH-MOMENTARY-2" device="SMD-REDUNDANT"/>
 <part name="RSV0" library="SparkFun-Passives" deviceset="TEST-POINT" device="3"/>
 <part name="RSV1" library="SparkFun-Passives" deviceset="TEST-POINT" device="3"/>
-<part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
-<part name="R5" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
-<part name="C4" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="0.1uF"/>
-<part name="C17" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="0.1uF"/>
-<part name="C18" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="0.1uF"/>
-<part name="C19" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="1uF"/>
+<part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="10k"/>
+<part name="R5" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="10k"/>
+<part name="C4" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="0.1uF"/>
+<part name="C17" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="0.1uF"/>
+<part name="C18" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="0.1uF"/>
+<part name="C19" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="1uF"/>
 <part name="U3" library="SparkFun-PowerIC" deviceset="MCP73831" device=""/>
 <part name="D3" library="SparkFun-LED" deviceset="LED" device="0603" value="CHG"/>
-<part name="R8" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="1k"/>
-<part name="R9" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7k"/>
+<part name="R8" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="1k"/>
+<part name="R9" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="4.7k"/>
 <part name="C20" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="10uF"/>
 <part name="F1" library="SparkFun-PowerIC" deviceset="PTC" device="SMD"/>
-<part name="R11" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
+<part name="R11" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="10k"/>
 <part name="BOOT0" library="SparkFun-Passives" deviceset="JUMPER-PAD-2-NC_BY_PASTE" device=""/>
 <part name="BKUP" library="SparkFun-Passives" deviceset="JUMPER-PAD-2-NC_BY_PASTE" device=""/>
 <part name="CN1" library="con-jst2" deviceset="?M02B-SRSS-TB" device="S"/>
-<part name="C21" library="SparkFun-Capacitors" deviceset="CAP" device="0805" value="0.1uF"/>
-<part name="R10" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="100k"/>
+<part name="C21" library="SparkFun-Capacitors" deviceset="CAP" device="0402-CAP" value="0.1uF"/>
+<part name="R10" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="100k"/>
 <part name="Q2" library="transistor-power" deviceset="FDN360P" device=""/>
-<part name="R12" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10k"/>
+<part name="R12" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="10k"/>
 <part name="D5" library="SparkFun-DiscreteSemi" deviceset="DIODE" device="SOD123" value="MBR120"/>
 <part name="RSV2" library="SparkFun-Passives" deviceset="TEST-POINT" device="3"/>
 <part name="RSV3" library="SparkFun-Passives" deviceset="TEST-POINT" device="3"/>
+<part name="BOOT1" library="SparkFun-Passives" deviceset="JUMPER-PAD-2-NC_BY_PASTE" device=""/>
+<part name="R13" library="SparkFun-Passives" deviceset="RESISTOR" device="0402-RES" value="10k"/>
 </parts>
 <sheets>
 <sheet>
@@ -4144,11 +4150,11 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <instance part="SW1" gate="G$1" x="-22.86" y="116.84" smashed="yes">
 <attribute name="NAME" x="-7.112" y="116.84" size="1.778" layer="95"/>
 </instance>
-<instance part="RSV0" gate="G$1" x="-27.94" y="76.2" smashed="yes">
-<attribute name="NAME" x="-22.86" y="75.438" size="1.778" layer="95"/>
+<instance part="RSV0" gate="G$1" x="-27.94" y="71.12" smashed="yes">
+<attribute name="NAME" x="-22.86" y="70.358" size="1.778" layer="95"/>
 </instance>
-<instance part="RSV1" gate="G$1" x="-27.94" y="73.66" smashed="yes">
-<attribute name="NAME" x="-22.86" y="72.898" size="1.778" layer="95"/>
+<instance part="RSV1" gate="G$1" x="-27.94" y="68.58" smashed="yes">
+<attribute name="NAME" x="-22.86" y="67.818" size="1.778" layer="95"/>
 </instance>
 <instance part="R2" gate="G$1" x="203.2" y="66.04" smashed="yes" rot="R180">
 <attribute name="NAME" x="200.152" y="68.0974" size="1.778" layer="95" rot="R180"/>
@@ -4206,11 +4212,18 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <attribute name="NAME" x="177.038" y="92.9386" size="1.778" layer="95"/>
 <attribute name="VALUE" x="171.6786" y="99.06" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="RSV2" gate="G$1" x="-27.94" y="71.12" smashed="yes">
-<attribute name="NAME" x="-22.86" y="70.358" size="1.778" layer="95"/>
+<instance part="RSV2" gate="G$1" x="-27.94" y="66.04" smashed="yes">
+<attribute name="NAME" x="-22.86" y="65.278" size="1.778" layer="95"/>
 </instance>
-<instance part="RSV3" gate="G$1" x="-27.94" y="68.58" smashed="yes">
-<attribute name="NAME" x="-22.86" y="67.818" size="1.778" layer="95"/>
+<instance part="RSV3" gate="G$1" x="-27.94" y="63.5" smashed="yes">
+<attribute name="NAME" x="-22.86" y="62.738" size="1.778" layer="95"/>
+</instance>
+<instance part="BOOT1" gate="G$1" x="-20.32" y="76.2" smashed="yes">
+<attribute name="NAME" x="-22.86" y="78.74" size="1.778" layer="95"/>
+</instance>
+<instance part="R13" gate="G$1" x="-20.32" y="132.08" smashed="yes">
+<attribute name="NAME" x="-26.416" y="132.5626" size="1.778" layer="95"/>
+<attribute name="VALUE" x="-17.78" y="132.588" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -4291,15 +4304,20 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <segment>
 <label x="-8.89" y="139.954" size="1.778" layer="95"/>
 <pinref part="R1" gate="G$1" pin="2"/>
-<pinref part="R5" gate="G$1" pin="2"/>
 <wire x1="-15.24" y1="147.32" x2="-10.16" y2="147.32" width="0.1524" layer="91"/>
 <wire x1="-10.16" y1="147.32" x2="-10.16" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="-10.16" y1="144.78" x2="-10.16" y2="142.24" width="0.1524" layer="91"/>
-<wire x1="-10.16" y1="142.24" x2="-15.24" y2="142.24" width="0.1524" layer="91"/>
-<pinref part="R11" gate="G$1" pin="2"/>
 <wire x1="-10.16" y1="142.24" x2="-10.16" y2="137.16" width="0.1524" layer="91"/>
-<wire x1="-10.16" y1="137.16" x2="-15.24" y2="137.16" width="0.1524" layer="91"/>
+<label x="-8.89" y="134.874" size="1.778" layer="95"/>
+<pinref part="R13" gate="G$1" pin="2"/>
+<wire x1="-10.16" y1="137.16" x2="-10.16" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="-10.16" y1="132.08" x2="-15.24" y2="132.08" width="0.1524" layer="91"/>
+<pinref part="R5" gate="G$1" pin="2"/>
+<wire x1="-15.24" y1="142.24" x2="-10.16" y2="142.24" width="0.1524" layer="91"/>
+<pinref part="R11" gate="G$1" pin="2"/>
+<wire x1="-15.24" y1="137.16" x2="-10.16" y2="137.16" width="0.1524" layer="91"/>
 <junction x="-10.16" y="142.24"/>
+<junction x="-10.16" y="137.16"/>
 </segment>
 <segment>
 <label x="200.406" y="69.85" size="1.778" layer="95"/>
@@ -4547,6 +4565,11 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <junction x="129.54" y="43.18"/>
 <junction x="129.54" y="53.34"/>
 <junction x="129.54" y="40.64"/>
+</segment>
+<segment>
+<wire x1="-5.08" y1="76.2" x2="-15.24" y2="76.2" width="0.1524" layer="91"/>
+<label x="-12.7" y="76.454" size="1.778" layer="95"/>
+<pinref part="BOOT1" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="PB15" class="0">
@@ -4862,6 +4885,16 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <pinref part="U1" gate="G$1" pin="PB2"/>
 <label x="15.24" y="68.58" size="1.778" layer="95"/>
 </segment>
+<segment>
+<wire x1="-25.4" y1="132.08" x2="-35.56" y2="132.08" width="0.1524" layer="91"/>
+<label x="-35.052" y="132.588" size="1.778" layer="95"/>
+<pinref part="R13" gate="G$1" pin="1"/>
+</segment>
+<segment>
+<wire x1="-35.56" y1="76.2" x2="-25.4" y2="76.2" width="0.1524" layer="91"/>
+<label x="-35.56" y="76.454" size="1.778" layer="95"/>
+<pinref part="BOOT1" gate="G$1" pin="1"/>
+</segment>
 </net>
 <net name="PD2" class="0">
 <segment>
@@ -5018,13 +5051,9 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 </net>
 <net name="RESET#" class="0">
 <segment>
-<wire x1="-35.56" y1="152.4" x2="-25.4" y2="152.4" width="0.1524" layer="91"/>
-<wire x1="-25.4" y1="152.4" x2="-25.4" y2="147.32" width="0.1524" layer="91"/>
-<label x="-35.052" y="152.908" size="1.778" layer="95"/>
+<wire x1="-35.56" y1="147.32" x2="-25.4" y2="147.32" width="0.1524" layer="91"/>
+<label x="-35.052" y="147.828" size="1.778" layer="95"/>
 <pinref part="R1" gate="G$1" pin="1"/>
-<pinref part="C21" gate="G$1" pin="1"/>
-<wire x1="-25.4" y1="152.4" x2="-22.86" y2="152.4" width="0.1524" layer="91"/>
-<junction x="-25.4" y="152.4"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="NRST"/>
@@ -5046,6 +5075,11 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <label x="-35.052" y="122.682" size="1.778" layer="95"/>
 <pinref part="RESET" gate="G$1" pin="1"/>
 </segment>
+<segment>
+<pinref part="C21" gate="G$1" pin="1"/>
+<wire x1="-35.56" y1="152.4" x2="-22.86" y2="152.4" width="0.1524" layer="91"/>
+<label x="-35.306" y="152.908" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="PC13" class="0">
 <segment>
@@ -5062,16 +5096,6 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <wire x1="-35.56" y1="38.1" x2="-27.94" y2="38.1" width="0.1524" layer="91"/>
 <label x="-35.56" y="38.1" size="1.778" layer="95"/>
 <pinref part="R4" gate="G$1" pin="2"/>
-</segment>
-<segment>
-<wire x1="-27.94" y1="116.84" x2="-35.56" y2="116.84" width="0.1524" layer="91"/>
-<label x="-35.052" y="117.602" size="1.778" layer="95"/>
-<pinref part="SW1" gate="G$1" pin="1"/>
-</segment>
-<segment>
-<wire x1="-25.4" y1="142.24" x2="-35.56" y2="142.24" width="0.1524" layer="91"/>
-<label x="-35.052" y="142.494" size="1.778" layer="95"/>
-<pinref part="R5" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="PC8" class="0">
@@ -5345,8 +5369,8 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <pinref part="P2" gate="G$1" pin="3"/>
 </segment>
 <segment>
-<wire x1="-35.56" y1="76.2" x2="-27.94" y2="76.2" width="0.1524" layer="91"/>
-<label x="-35.56" y="76.2" size="1.778" layer="95"/>
+<wire x1="-35.56" y1="71.12" x2="-27.94" y2="71.12" width="0.1524" layer="91"/>
+<label x="-35.56" y="71.12" size="1.778" layer="95"/>
 <pinref part="RSV0" gate="G$1" pin="1"/>
 </segment>
 </net>
@@ -5357,8 +5381,8 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <pinref part="P2" gate="G$1" pin="5"/>
 </segment>
 <segment>
-<wire x1="-35.56" y1="73.66" x2="-27.94" y2="73.66" width="0.1524" layer="91"/>
-<label x="-35.56" y="73.66" size="1.778" layer="95"/>
+<wire x1="-35.56" y1="68.58" x2="-27.94" y2="68.58" width="0.1524" layer="91"/>
+<label x="-35.56" y="68.58" size="1.778" layer="95"/>
 <pinref part="RSV1" gate="G$1" pin="1"/>
 </segment>
 </net>
@@ -5500,8 +5524,8 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <pinref part="P2" gate="G$1" pin="19"/>
 </segment>
 <segment>
-<wire x1="-35.56" y1="68.58" x2="-27.94" y2="68.58" width="0.1524" layer="91"/>
-<label x="-35.56" y="68.58" size="1.778" layer="95"/>
+<wire x1="-35.56" y1="63.5" x2="-27.94" y2="63.5" width="0.1524" layer="91"/>
+<label x="-35.56" y="63.5" size="1.778" layer="95"/>
 <pinref part="RSV3" gate="G$1" pin="1"/>
 </segment>
 </net>
@@ -5512,9 +5536,21 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <pinref part="P2" gate="G$1" pin="17"/>
 </segment>
 <segment>
-<wire x1="-35.56" y1="71.12" x2="-27.94" y2="71.12" width="0.1524" layer="91"/>
-<label x="-35.56" y="71.12" size="1.778" layer="95"/>
+<wire x1="-35.56" y1="66.04" x2="-27.94" y2="66.04" width="0.1524" layer="91"/>
+<label x="-35.56" y="66.04" size="1.778" layer="95"/>
 <pinref part="RSV2" gate="G$1" pin="1"/>
+</segment>
+</net>
+<net name="PC14" class="0">
+<segment>
+<wire x1="-27.94" y1="116.84" x2="-35.56" y2="116.84" width="0.1524" layer="91"/>
+<label x="-35.052" y="117.602" size="1.778" layer="95"/>
+<pinref part="SW1" gate="G$1" pin="1"/>
+</segment>
+<segment>
+<wire x1="-25.4" y1="142.24" x2="-35.56" y2="142.24" width="0.1524" layer="91"/>
+<label x="-35.052" y="142.494" size="1.778" layer="95"/>
+<pinref part="R5" gate="G$1" pin="1"/>
 </segment>
 </net>
 </nets>

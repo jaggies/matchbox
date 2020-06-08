@@ -23,10 +23,11 @@ Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
         _clear(1), _frame(0), _currentFont(getFont("roboto_bold_10")),
         _xres(LCD_XRES), _yres(LCD_YRES), _depth(LCD_DEPTH), _line_size(LCD_XRES*LCD_DEPTH/8),
         _refreshBuffer(new Frame()), _doSwap(true), _disableRefresh(false), _enabled(false),
-        _red(0), _grn(0), _blu(0)
+        _red(0), _grn(0), _blu(0), _scanIncrement(sizeof(Line) * 8), _rasterX(0), _rasterY(0), _rasterOffset(0)
 {
     bool doubleBuffer = config.doubleBuffer;
     _writeBuffer = doubleBuffer ? new Frame() : _refreshBuffer;
+    moveTo(0,0); // force _rasterOffset calculation
     memset(_fg, 0, sizeof(_fg));
     memset(_bg, 0xff, sizeof(_bg));
 }
@@ -81,6 +82,7 @@ void Lcd::refreshFrame() {
     }
     if (_doSwap) {
         std::swap(_refreshBuffer, _writeBuffer);
+        moveTo(_rasterX, _rasterY); // force address calculation
         _doSwap = false;
     }
 #ifndef BLE_PRESENT
@@ -129,27 +131,32 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     }
 }
 
-void Lcd::line(int x0, int y0, int x1, int y1) {
-	int dx = abs(x1-x0);
-	int dy = abs(y1-y0);
-	const int stepX = x0 < x1 ? 1 : -1;
-	const int stepY = y0 < y1 ? 1 : -1;
+void Lcd::line(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
+    moveTo(x0, y0);
+    lineTo(x1, y1);
+}
+
+void Lcd::lineTo(int16_t x1, int16_t y1) {
+	int dx = abs(x1-_rasterX);
+	int dy = abs(y1-_rasterY);
+	const int stepX = _rasterX < x1 ? 1 : -1;
+	const int stepY = _rasterY < y1 ? 1 : -1;
 	int err = dx - dy;
-	while (x0 != x1 || y0 != y1) {
-		setPixel(x0, y0); // TODO: optimize with bit banding
+	while (_rasterX != x1 || _rasterY != y1) {
+		setPixel();
 		int e2 = err << 1;
 		if (e2 <  dx) {
 		   err += dx;
-		   y0 += stepY;
+		   stepY > 0 ? incY() : decY(); // TODO: resolve outside of this loop
 		}
 		if (e2 > -dy) {
 		   err -= dy;
-		   x0 += stepX;
+		   stepX > 0 ? incX() : decX(); // TODO: resolve outside of this loop
 		}
 	}
 }
 
-void Lcd::circle(int x0, int y0, int radius)
+void Lcd::circle(int16_t x0, int16_t y0, int16_t radius)
 {
 	int f = 1 - radius;
 	int ddF_x = 0;
@@ -180,7 +187,7 @@ void Lcd::circle(int x0, int y0, int radius)
 	}
 }
 
-void Lcd::rect(int x0, int y0, int x1, int y1, bool fill)
+void Lcd::rect(int16_t x0, int16_t y0, int16_t x1, int16_t y1, bool fill)
 {
 	if (fill) {
 		const int xmin = std::min(x0, x1);

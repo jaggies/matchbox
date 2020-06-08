@@ -48,9 +48,14 @@ class Lcd {
 		void setColor(uint8_t r, uint8_t g, uint8_t b);
 		void clear(uint8_t r, uint8_t g, uint8_t b);
 		void setPixel(uint16_t x, uint16_t y);
-		void circle(int x0, int y0, int radius);
-		void line(int x0, int y0, int x1, int y1);
-		void rect(int x0, int y0, int x1, int y1, bool fill = true);
+		void circle(int16_t x0, int16_t y0, int16_t radius);
+		void line(int16_t x0, int16_t y0, int16_t x1, int16_t y1);
+		void rect(int16_t x0, int16_t y0, int16_t x1, int16_t y1, bool fill = true);
+
+		// High performance routines
+		void moveTo(int16_t x, int16_t y);
+		void lineTo(int16_t x, int16_t y);
+		void setPixel();
 
 		bool setFont(const char* name);
 		inline int putChar(uint8_t c, int x, int y) {
@@ -93,6 +98,12 @@ class Lcd {
 		static void refreshLineCallback(void* arg);
 		void refreshFrame();
 
+		// High performance raster operations
+		void incX();
+		void decX();
+		void incY();
+		void decY();
+
 		Spi& _spi;
 		Config _config;
 		uint8_t _frame; // refresh frame count
@@ -107,6 +118,11 @@ class Lcd {
 		volatile bool _doSwap; // trigger swapBuffer on next frame refresh
         volatile bool _disableRefresh;
         volatile bool _enabled;
+
+        uint32_t _scanIncrement; // in pixels
+        uint32_t* _rasterOffset; // in pixels
+        int16_t  _rasterX;
+        int16_t  _rasterY;
 };
 
 #define BITBAND_SRAM_REF 0x20000000
@@ -115,38 +131,49 @@ class Lcd {
 #define DO_BITBAND
 
 inline void Lcd::setColor(uint8_t r, uint8_t g, uint8_t b) {
-    _red = r;
-    _grn = g;
-    _blu = b;
+    // In bitbanding mode, non-zero means the bit is set
+    _red = r ? 1 : 0;
+    _grn = g ? 1 : 0;
+    _blu = b ? 1 : 0;
+}
+
+inline void Lcd::incX() {
+    _rasterX++;
+    _rasterOffset += _depth;
+}
+
+inline void Lcd::decX() {
+    _rasterX--;
+    _rasterOffset -= _depth;
+}
+
+inline void Lcd::incY() {
+    _rasterY++;
+    _rasterOffset += _scanIncrement;
+}
+
+inline void Lcd::decY() {
+    _rasterY--;
+    _rasterOffset -= _scanIncrement;
+}
+
+inline void Lcd::moveTo(int16_t x, int16_t y) {
+    // Compute bit address of pixel beyond line cmd and row from Line structure
+    _rasterOffset = (uint32_t*) BITBAND_SRAM((int)&_writeBuffer->line[y].data[0], x * _depth);
+    _rasterX = x;
+    _rasterY = y;
+}
+
+inline void Lcd::setPixel() {
+    _rasterOffset[0] = _red;
+    _rasterOffset[1] = _grn;
+    _rasterOffset[2] = _blu;
 }
 
 inline void Lcd::setPixel(uint16_t x, uint16_t y)
 {
-#ifdef DO_BITBAND
-    uint32_t pixaddr = x * _depth;
-    uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int)&_writeBuffer->line[y].data[0], pixaddr);
-    *pixel++ = _red ? 1 : 0;
-    *pixel++ = _grn ? 1 : 0;
-    *pixel = _blu ? 1 : 0;
-#else
-    uint16_t rbitaddr = x * _depth + 0;
-    uint16_t rbyteaddr = rbitaddr / 8;
-    uint16_t rbit = rbitaddr % 8;
-    _frameBuffer[y].data[rbyteaddr] &= ~(1 << rbit);
-    _frameBuffer[y].data[rbyteaddr] |= r ? (1 << rbit) : 0;
-
-    uint16_t gbitaddr = x * _depth + 1;
-    uint16_t gbyteaddr = gbitaddr / 8;
-    uint16_t gbit = gbitaddr % 8;
-    _frameBuffer[y].data[gbyteaddr] &= ~(1 << gbit);
-    _frameBuffer[y].data[gbyteaddr] |= g ? (1 << gbit) : 0;
-
-    uint16_t bbitaddr = x * _depth + 2;
-    uint16_t bbyteaddr = bbitaddr / 8;
-    uint16_t bbit = bbitaddr % 8;
-    _frameBuffer[y].data[bbyteaddr] &= ~(1 << bbit);
-    _frameBuffer[y].data[bbyteaddr] |= b ? (1 << bbit) : 0;
-#endif
+    moveTo(x, y);
+    setPixel();
 }
 
 #endif /* LCD_H_ */

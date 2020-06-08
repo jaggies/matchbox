@@ -94,8 +94,8 @@ class Lcd {
 		struct Frame {
 		        Frame() : sync1(0), sync2(0) { }
 		        Line line[LCD_YRES];
-		        const uint8_t sync1; // final sync bytes to simplify SPI streaming
-		        const uint8_t sync2;
+		        uint8_t sync1; // final sync bytes to simplify SPI streaming
+		        uint8_t sync2;
 		};
 
 		// Draws a horizontal span at the current position

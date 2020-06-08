@@ -112,36 +112,32 @@ void Lcd::span(int16_t dx) {
 
 void
 Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
-    uint32_t p[3];
-    if (r == 0 && g == 0 && b == 0) {
-        bzero(_writeBuffer, sizeof(Frame));
-    } else if (r == 1 && g == 1 && b == 1) {
-        memset(_writeBuffer, 0xff, sizeof(Frame));
-    } else { // some other color
-        // Fill up local pixel byte array
-        uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) &p[0], 0); // addr of first pixel
-        r = r ? 1 : 0; g = g ? 1 : 0; b = b ? 1 : 0;
-        for (int i = 0; i < _depth * 8 * 4; i+=_depth) {
-            *pixel++ = r;
-            *pixel++ = g;
-            *pixel++ = b;
-        }
-        // Use int array to blast pixels
-        for (int j = 0; j < _yres; j++) {
-            uint32_t* pixels = (uint32_t*) &_writeBuffer->line[j].data[0];
-            for (int i = 0; i < _line_size/_depth/sizeof(p[0]); i++) {
-                *pixels++ = p[0];
-                *pixels++ = p[1];
-                *pixels++ = p[2];
-            }
+    // Fill up local pixel byte array
+    uint32_t* clear = (uint32_t*)&_writeBuffer->line[0].data[0];
+    uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) clear, 0);
+    r = r ? 1 : 0; g = g ? 1 : 0; b = b ? 1 : 0;
+    for (int i = 0; i < _depth * 8 * 4; i+=_depth) {
+        *pixel++ = r;
+        *pixel++ = g;
+        *pixel++ = b;
+    }
+    // Use int array to blast pixels
+    for (int j = 0; j < _yres; j++) {
+        uint32_t* pixels = (uint32_t*) &_writeBuffer->line[j].data[0];
+        for (int i = 0; i < _line_size/_depth/sizeof(clear[0]); i++) {
+            *pixels++ = clear[0];
+            *pixels++ = clear[1];
+            *pixels++ = clear[2];
         }
     }
+
     // Restore the cmd/row data. If this gets clobbered, the LCD won't update.
     const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
     for (int i = 0; i < _yres; i++) {
         _writeBuffer->line[i].cmd = cmd;
         _writeBuffer->line[i].row = i + 1;
     }
+    _writeBuffer->sync1 = _writeBuffer->sync2 = 0; // in case these get clobbered
 }
 
 void Lcd::line(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {

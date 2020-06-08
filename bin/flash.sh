@@ -5,5 +5,5 @@
 name=`basename $1`
 echo $name
 arm-none-eabi-objcopy -O ihex $1 /tmp/$name.hex
-python2.7 bin/dfu-convert -i /tmp/$name.hex /tmp/$name.dfu
+python3 bin/dfu-convert3 -i /tmp/$name.hex /tmp/$name.dfu
 dfu-util -d "0483:df11" -a0 -D /tmp/$name.dfu

@@ -103,27 +103,40 @@ void Lcd::refreshFrame() {
     _frame++; // Toggle common driver once per frame
 }
 
+void Lcd::span(int16_t dx) {
+    while (dx-- > 0) {
+        setPixel();
+        incX();
+    }
+}
+
 void
 Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     uint8_t p[3];
-    // TODO: handle monochrome displays and dithering...
-    uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) &p[0], 0); // addr of first pixel
-
-    r = r ? 1 : 0; g = g ? 1 : 0; b = b ? 1 : 0;
-    for (int i = 0; i < _depth * 8; i+=_depth) {
-        *pixel++ = r;
-        *pixel++ = g;
-        *pixel++ = b;
-    }
-    for (int j = 0; j < _yres; j++) {
-        uint8_t* pixels = &_writeBuffer->line[j].data[0];
-        for (int i = 0; i < _line_size/_depth; i++) {
-            *pixels++ = p[0];
-            *pixels++ = p[1];
-            *pixels++ = p[2];
+    if (r == 0 && g == 0 && b == 0) {
+        bzero(_writeBuffer, sizeof(Frame));
+    } else if (r == 1 && g == 1 && b == 1) {
+        memset(_writeBuffer, 0xff, sizeof(Frame));
+    } else { // some other color
+        // Fill up local pixel byte array
+        uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) &p[0], 0); // addr of first pixel
+        r = r ? 1 : 0; g = g ? 1 : 0; b = b ? 1 : 0;
+        for (int i = 0; i < _depth * 8; i+=_depth) {
+            *pixel++ = r;
+            *pixel++ = g;
+            *pixel++ = b;
+        }
+        // Use byte array to blast pixels
+        for (int j = 0; j < _yres; j++) {
+            uint8_t* pixels = &_writeBuffer->line[j].data[0];
+            for (int i = 0; i < _line_size/_depth; i++) {
+                *pixels++ = p[0];
+                *pixels++ = p[1];
+                *pixels++ = p[2];
+            }
         }
     }
-    // Initialize the cmd/row data. If this gets clobbered, the LCD won't update.
+    // Restore the cmd/row data. If this gets clobbered, the LCD won't update.
     const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
     for (int i = 0; i < _yres; i++) {
         _writeBuffer->line[i].cmd = cmd;
@@ -139,19 +152,23 @@ void Lcd::line(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
 void Lcd::lineTo(int16_t x1, int16_t y1) {
 	int dx = abs(x1-_rasterX);
 	int dy = abs(y1-_rasterY);
-	const int stepX = _rasterX < x1 ? 1 : -1;
-	const int stepY = _rasterY < y1 ? 1 : -1;
+	const int16_t incX = _rasterX < x1 ? 1 : -1;
+	const int16_t incY = _rasterY < y1 ? 1 : -1;
+	const int32_t stepX = _rasterX < x1 ? _depth : -_depth;
+	const int32_t stepY = _rasterY < y1 ? _scanIncrement : -_scanIncrement;
 	int err = dx - dy;
 	while (_rasterX != x1 || _rasterY != y1) {
 		setPixel();
 		int e2 = err << 1;
 		if (e2 <  dx) {
 		   err += dx;
-		   stepY > 0 ? incY() : decY(); // TODO: resolve outside of this loop
+		   _rasterY += incY;
+		   _rasterOffset += stepY;
 		}
 		if (e2 > -dy) {
 		   err -= dy;
-		   stepX > 0 ? incX() : decX(); // TODO: resolve outside of this loop
+		   _rasterX += incX;
+		   _rasterOffset += stepX;
 		}
 	}
 }
@@ -190,14 +207,13 @@ void Lcd::circle(int16_t x0, int16_t y0, int16_t radius)
 void Lcd::rect(int16_t x0, int16_t y0, int16_t x1, int16_t y1, bool fill)
 {
 	if (fill) {
+	    const int dx = abs(x1 - x0);
 		const int xmin = std::min(x0, x1);
-		const int xmax = std::max(x0, x1);
 		const int ymin = std::min(y0, y1);
 		const int ymax = std::max(y0, y1);
 		for (int j = ymin; j < ymax; j++) {
-		    for (int i = xmin; i < xmax; i++) {
-		        setPixel(i, j);
-		    }
+		    moveTo(xmin, j);
+		    span(dx);
 		}
 	} else {
 		line(x0, y0, x1, y0);

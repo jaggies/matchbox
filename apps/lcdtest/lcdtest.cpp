@@ -38,25 +38,40 @@ int main(void)
   return 0;
 }
 
-static void drawBars(Lcd& lcd, int vertical)
+static void drawBars(Lcd& lcd, bool vertical)
 {
-    for (int j = 0; j < 128; j++) {
-        for (int i = 0; i < 128; i++) {
-            uint8_t r, g, b;
-            int index = vertical ? j : i;
-            lcd.setColor((index >> 4) & 1, (index >> 5) & 1, (index >> 6) & 1);
-            lcd.setPixel(i,j);
+    if (vertical) {
+        int dx = lcd.getWidth() / 8;
+        int x = 0;
+        for (int i = 0; i < 8; i++) {
+            lcd.setColor((i&4) ? 1 : 0, (i&2) ? 1 : 0, (i&1) ? 1 : 0);
+            lcd.rect(x, 0, x + dx, lcd.getHeight() - 1);
+            x += dx;
+        }
+    } else {
+        int dy = lcd.getHeight() / 8;
+        int y = 0;
+        for (int i = 0; i < 8; i++) {
+            lcd.setColor((i&4) ? 1 : 0, (i&2) ? 1 : 0, (i&1) ? 1 : 0);
+            lcd.rect(0, y, lcd.getWidth() - 1, y + dy);
+            y += dy;
         }
     }
 }
 
 static void drawChecker(Lcd& lcd, int scale)
 {
+    int8_t oldclr = -1;
     for (int j = 0; j < 128; j++) {
+        lcd.moveTo(0,j);
         for (int i = 0; i < 128; i++) {
-            uint8_t pix = ((j>>(scale)) ^ (i>>(scale))) & 1;
-            lcd.setColor(pix, pix, pix);
-            lcd.setPixel(i,j);
+            int8_t clr = ((j ^ i) >> scale) & 1;
+            if (oldclr != clr) {
+                lcd.setColor(clr, clr, clr);
+                oldclr = clr;
+            }
+            lcd.setPixel();
+            lcd.incX();
         }
     }
 }
@@ -65,11 +80,10 @@ static void drawAdc(Lcd& lcd, const uint16_t* values, int n, uint8_t r, uint8_t 
 {
     if (useLine) {
         lcd.setColor(r, g, b);
-        for (int x0 = 0; x0 < n; x0++) {
-            int y0 = values[x0 & 0x7f] & 0x7f;
-            int x1 = x0 + 1;
-            int y1 = values[x1 & 0x7f] & 0x7f;
-            lcd.line(x0, y0, x1, y1);
+        lcd.moveTo(0, values[0] & 0x7f);
+        for (int x = 0; x < n; x++) {
+            int y = values[x & 0x7f] & 0x7f;
+            lcd.lineTo(x, y);
         }
     } else {
         lcd.setColor(r, g, b);
@@ -106,10 +120,10 @@ void buttonHandler(uint32_t pin, void* data) {
 
 void StartDefaultTask(void const * argument)
 {
-  uint8_t mode = 24;
+  uint8_t mode = 0;
 
   Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST));
-  Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(1));
+  Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
   Adc adc(Adc::AD1, lcd.getWidth());
   Button b1(SW1_PIN, buttonHandler, &mode);
   uint16_t samples[lcd.getWidth()];
@@ -127,22 +141,16 @@ void StartDefaultTask(void const * argument)
   while (1) {
     toggleLed();
     int tmp = mode % 36;
-    bool doSwap = 1;
+    bool doSwap = true;
     if (tmp == 0) {
-        int k = frame >> 5;
+        int k = frame;
         lcd.clear(k & 1, k & 2, k & 4);
     } else if (tmp < 3) {
         drawBars(lcd, tmp == 2);
     } else if (tmp < 12) {
         drawChecker(lcd, tmp == 11 ? (frame&0x7) : (tmp - 3));
     } else if (tmp < 28) {
-        static int accum = 0;
-        if (++accum == 16) {
-            lcd.clear(1,1,1);
-            accum = 0;
-        } else {
-            doSwap = false;
-        }
+        lcd.clear(1,1,1);
         drawAdc(lcd, samples, lcd.getWidth(), mode&1, mode&2, mode&4, (mode %36) >= 20);
     } else {
         drawCircles(lcd, (frame>>5) & 1, (frame>>6) & 1, (frame>>7) & 1,

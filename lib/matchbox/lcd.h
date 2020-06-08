@@ -56,6 +56,10 @@ class Lcd {
 		void moveTo(int16_t x, int16_t y);
 		void lineTo(int16_t x, int16_t y);
 		void setPixel();
+        void incX();
+        void decX();
+        void incY();
+        void decY();
 
 		bool setFont(const char* name);
 		inline int putChar(uint8_t c, int x, int y) {
@@ -94,15 +98,12 @@ class Lcd {
 		        const uint8_t sync2;
 		};
 
+		// Draws a horizontal span at the current position
+		void span(int16_t dx);
+
 		static void refreshFrameCallback(void* arg);
 		static void refreshLineCallback(void* arg);
 		void refreshFrame();
-
-		// High performance raster operations
-		void incX();
-		void decX();
-		void incY();
-		void decY();
 
 		Spi& _spi;
 		Config _config;

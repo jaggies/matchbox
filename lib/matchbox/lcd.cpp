@@ -153,20 +153,21 @@ void Lcd::lineTo(int16_t x1, int16_t y1) {
 	const int32_t stepX = _rasterX < x1 ? _depth : -_depth;
 	const int32_t stepY = _rasterY < y1 ? _scanIncrement : -_scanIncrement;
 	int err = dx - dy;
-	while (_rasterX != x1 || _rasterY != y1) {
+	int pixels = std::max(dx, dy);
+	while (pixels--) {
 		setPixel();
 		int e2 = err << 1;
 		if (e2 <  dx) {
 		   err += dx;
-		   _rasterY += incY;
 		   _rasterOffset += stepY;
 		}
 		if (e2 > -dy) {
 		   err -= dy;
-		   _rasterX += incX;
 		   _rasterOffset += stepX;
 		}
 	}
+	_rasterX = x1;
+	_rasterY = y1;
 }
 
 void Lcd::circle(int16_t x0, int16_t y0, int16_t radius)

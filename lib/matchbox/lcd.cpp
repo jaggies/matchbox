@@ -112,7 +112,7 @@ void Lcd::span(int16_t dx) {
 
 void
 Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
-    uint8_t p[3];
+    uint32_t p[3];
     if (r == 0 && g == 0 && b == 0) {
         bzero(_writeBuffer, sizeof(Frame));
     } else if (r == 1 && g == 1 && b == 1) {
@@ -121,15 +121,15 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
         // Fill up local pixel byte array
         uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) &p[0], 0); // addr of first pixel
         r = r ? 1 : 0; g = g ? 1 : 0; b = b ? 1 : 0;
-        for (int i = 0; i < _depth * 8; i+=_depth) {
+        for (int i = 0; i < _depth * 8 * 4; i+=_depth) {
             *pixel++ = r;
             *pixel++ = g;
             *pixel++ = b;
         }
-        // Use byte array to blast pixels
+        // Use int array to blast pixels
         for (int j = 0; j < _yres; j++) {
-            uint8_t* pixels = &_writeBuffer->line[j].data[0];
-            for (int i = 0; i < _line_size/_depth; i++) {
+            uint32_t* pixels = (uint32_t*) &_writeBuffer->line[j].data[0];
+            for (int i = 0; i < _line_size/_depth/sizeof(p[0]); i++) {
                 *pixels++ = p[0];
                 *pixels++ = p[1];
                 *pixels++ = p[2];

@@ -13,7 +13,6 @@
 #include "pin.h"
 
 osThreadId defaultTaskHandle;
-static uint8_t mode;
 
 void StartDefaultTask(void const * argument);
 
@@ -24,7 +23,7 @@ static void toggleLed() {
 
 int main(void)
 {
-  MatchBox* mb = new MatchBox();
+  MatchBox* mb = new MatchBox(MatchBox::C24MHz);
 
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
@@ -97,7 +96,7 @@ static void adcCallback(const uint16_t* values, int n, void* arg) {
 void buttonHandler(uint32_t pin, void* data) {
     int &mode = *(int*) data;
     switch (pin) {
-        case SW2_PIN:
+        case SW1_PIN:
             mode++;
             break;
         default:
@@ -107,10 +106,12 @@ void buttonHandler(uint32_t pin, void* data) {
 
 void StartDefaultTask(void const * argument)
 {
+  uint8_t mode = 24;
+
   Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST));
   Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(1));
   Adc adc(Adc::AD1, lcd.getWidth());
-//  Button sw2(SW2_PIN, buttonHandler, &mode);
+  Button b1(SW1_PIN, buttonHandler, &mode);
   uint16_t samples[lcd.getWidth()];
 
   pinInitOutput(LED_PIN, 1);

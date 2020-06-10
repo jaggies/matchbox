@@ -103,13 +103,6 @@ void Lcd::refreshFrame() {
     _frame++; // Toggle common driver once per frame
 }
 
-void Lcd::span(int16_t dx) {
-    while (dx-- > 0) {
-        setPixel();
-        incX();
-    }
-}
-
 void
 Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     // Fill up local pixel byte array
@@ -138,11 +131,6 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
         _writeBuffer->line[i].row = i + 1;
     }
     _writeBuffer->sync1 = _writeBuffer->sync2 = 0; // in case these get clobbered
-}
-
-void Lcd::line(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
-    moveTo(x0, y0);
-    lineTo(x1, y1);
 }
 
 void Lcd::lineTo(int16_t x1, int16_t y1) {

@@ -165,10 +165,22 @@ inline void Lcd::moveTo(int16_t x, int16_t y) {
     _rasterY = y;
 }
 
+inline void Lcd::line(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
+    moveTo(x0, y0);
+    lineTo(x1, y1);
+}
+
 inline void Lcd::setPixel() {
     _rasterOffset[0] = _red;
     _rasterOffset[1] = _grn;
     _rasterOffset[2] = _blu;
+}
+
+inline void Lcd::span(int16_t dx) {
+    while (dx-- > 0) {
+        setPixel();
+        incX();
+    }
 }
 
 inline void Lcd::setPixel(uint16_t x, uint16_t y)

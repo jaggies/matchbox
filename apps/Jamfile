@@ -10,3 +10,4 @@ SubInclude TOP apps pincheck ;
 SubInclude TOP apps sdio_bsp ;
 SubInclude TOP apps sdio_test ;
 SubInclude TOP apps sdio_dma_test ;
+SubInclude TOP apps threadtest ;

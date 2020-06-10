@@ -86,7 +86,7 @@ MatchBox::MatchBox(ClockSpeed clkSpeed) : _clkSpeed(clkSpeed) {
     HAL_Init();
     gpioInit();
     maybeJumpToBootloader();
-    systemClockConfig();
+    systemClockConfig(_clkSpeed);
     rtcInit();
     UsbSerial::getInstance(); // force initialization here
 }
@@ -123,9 +123,12 @@ void MatchBox::gpioInit(void) {
 //    pinInitOutput(POWER_PIN, 1);
 }
 
-void MatchBox::systemClockConfig(void) {
+void MatchBox::systemClockConfig(ClockSpeed speed) {
+
     RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
     RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
+
+    _clkSpeed = speed;
 
     __HAL_RCC_PWR_CLK_ENABLE();
 
@@ -158,7 +161,7 @@ void MatchBox::systemClockConfig(void) {
 
     HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-    /* SysTick_IRQn interrupt configuration */
+    /* SysTick_IRQn interrupt configuration TODO: why is this here? */
     HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
 }
 
@@ -179,7 +182,7 @@ void MatchBox::rtcInit(void) {
     HAL_PWR_EnableBkUpAccess();
     __HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
     __HAL_RCC_PWR_CLK_ENABLE();
-//    __HAL_RCC_RTC_CONFIG();
+//    __HAL_RCC_RTC_CONFIG(RCCEx_Periph_Clock_Selection);
     __HAL_RCC_RTC_ENABLE();
     HAL_RTC_Init(&hrtc);
 }

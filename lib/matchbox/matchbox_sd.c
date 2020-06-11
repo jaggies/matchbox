@@ -162,7 +162,7 @@ uint8_t BSP_SD_IsDetected(void) {
  * @retval BSP_SD_OK or underlying error
  */
 HAL_StatusTypeDef BSP_SD_ReadBlocks(uint32_t *data, uint64_t readAddr, uint32_t blockCount) {
-    return HAL_SD_ReadBlocks(&uSdHandle, data, readAddr, blockCount, SD_IO_TIMEOUT);
+    return HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, readAddr, blockCount, SD_IO_TIMEOUT);
 }
 
 /**
@@ -174,7 +174,7 @@ HAL_StatusTypeDef BSP_SD_ReadBlocks(uint32_t *data, uint64_t readAddr, uint32_t 
  * @retval HAL_OK or underlying error
  */
 HAL_StatusTypeDef BSP_SD_WriteBlocks(uint32_t *data, uint64_t writeAddr, uint32_t blockCount) {
-    return HAL_SD_WriteBlocks(&uSdHandle, data, writeAddr, blockCount, SD_IO_TIMEOUT);
+    return HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, writeAddr, blockCount, SD_IO_TIMEOUT);
 }
 
 /**
@@ -187,7 +187,7 @@ HAL_StatusTypeDef BSP_SD_WriteBlocks(uint32_t *data, uint64_t writeAddr, uint32_
  */
 HAL_StatusTypeDef BSP_SD_ReadBlocks_DMA(uint32_t *data, uint64_t readAddr, uint32_t blockCount) {
     HAL_StatusTypeDef status;
-    if ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, data, readAddr, blockCount)) != HAL_OK) {
+    if ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, readAddr, blockCount)) != HAL_OK) {
         return status;
     }
 
@@ -205,7 +205,7 @@ HAL_StatusTypeDef BSP_SD_ReadBlocks_DMA(uint32_t *data, uint64_t readAddr, uint3
  */
 HAL_StatusTypeDef BSP_SD_WriteBlocks_DMA(uint32_t *data, uint64_t writeAddr, uint32_t blockCount) {
     HAL_StatusTypeDef status;
-    if ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, data, writeAddr, blockCount)) != HAL_OK) {
+    if ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, writeAddr, blockCount)) != HAL_OK) {
         return status;
     }
 

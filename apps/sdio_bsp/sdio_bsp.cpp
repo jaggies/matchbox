@@ -90,11 +90,11 @@ void StartDefaultTask(void const * argument) {
         for (int i = 0; i < sizeof(buff); i++) {
             buff[i] = rand() & 0xff;
         }
-        if ((sdStatus = BSP_SD_WriteBlocks((uint32_t*)&buff[0], count * 512, 1)) != BSP_SD_OK) {
+        if ((sdStatus = BSP_SD_WriteBlocks((uint32_t*)&buff[0], count * 512, 1)) != HAL_OK) {
             printf("write block %d failed with status=%d\n", count, sdStatus);
             osDelay(1000);
         }
-        if ((sdStatus = BSP_SD_ReadBlocks((uint32_t*)&tmp[0], count * 512, 1)) != BSP_SD_OK) {
+        if ((sdStatus = BSP_SD_ReadBlocks((uint32_t*)&tmp[0], count * 512, 1)) != HAL_OK) {
             printf("read block %d failed with status=%d\n", count, sdStatus);
             osDelay(1000);
         }

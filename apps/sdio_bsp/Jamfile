@@ -1,7 +1,8 @@
 SubDir TOP apps sdio_bsp ;
-SubDirHdrs $(TOP) lib matchbox ;
+SubDirHdrs $(TOP) lib bridge ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;
+SubDirHdrs $(TOP) lib matchbox ;
 SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
 SubDirHdrs $(TOP) lib hal CMSIS Include ;
 SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Core Inc ;

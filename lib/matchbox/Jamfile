@@ -18,10 +18,8 @@ Library libmatchbox :
 	gpio.cpp
 	hal_msp.c
 	hal_timebase.c
-	handlers.cpp
 	lcd.cpp
 	matchbox.cpp
-	matchbox_sd.c
 	syscalls.c
 	spi.cpp
 	usart.cpp

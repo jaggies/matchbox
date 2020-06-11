@@ -5,8 +5,8 @@
  *      Author: jmiller
  */
 #include "handlers.h"
-#include "matchbox_sd.h"
-#include "util.h"
+#include "stm32f415_matchbox_sd.h"
+//#include "util.h"
 
 #define SD_DETECT_PIN                    GPIO_PIN_8
 #define SD_DETECT_GPIO_PORT              GPIOB
@@ -72,10 +72,10 @@ HAL_StatusTypeDef HAL_SD_CheckWriteOperation(SD_HandleTypeDef* handle, uint32_t 
  * @brief  Initializes the SD card device.
  * @retval SD status.
  */
-HAL_StatusTypeDef BSP_SD_Init(void) {
+uint8_t BSP_SD_Init(void) {
     /* Check if the SD card is plugged in the slot */
     if (!BSP_SD_IsDetected()) {
-        return HAL_ERROR;
+        return MSD_ERROR;
     }
 
     /* Enable SDIO and DMA2 clocks */
@@ -161,8 +161,10 @@ uint8_t BSP_SD_IsDetected(void) {
  * @param  blockCount: Number of SD blocks to read
  * @retval BSP_SD_OK or underlying error
  */
-HAL_StatusTypeDef BSP_SD_ReadBlocks(uint32_t *data, uint64_t readAddr, uint32_t blockCount) {
-    return HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, readAddr, blockCount, SD_IO_TIMEOUT);
+uint8_t BSP_SD_ReadBlocks(uint32_t *data, uint32_t readAddr, uint32_t blockCount, uint32_t timeout) {
+    if (HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, readAddr, blockCount, timeout) != HAL_OK)
+        return MSD_ERROR;
+    return MSD_OK;
 }
 
 /**
@@ -173,8 +175,10 @@ HAL_StatusTypeDef BSP_SD_ReadBlocks(uint32_t *data, uint64_t readAddr, uint32_t 
  * @param  blockCount: Number of SD blocks to write
  * @retval HAL_OK or underlying error
  */
-HAL_StatusTypeDef BSP_SD_WriteBlocks(uint32_t *data, uint64_t writeAddr, uint32_t blockCount) {
-    return HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, writeAddr, blockCount, SD_IO_TIMEOUT);
+uint8_t BSP_SD_WriteBlocks(uint32_t *data, uint32_t writeAddr, uint32_t blockCount, uint32_t timeout) {
+    return HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, writeAddr, blockCount, timeout)
+            != HAL_OK ? MSD_ERROR : MSD_OK;
+
 }
 
 /**
@@ -185,14 +189,12 @@ HAL_StatusTypeDef BSP_SD_WriteBlocks(uint32_t *data, uint64_t writeAddr, uint32_
  * @param  blockCount: Number of SD blocks to read
  * @retval SD status
  */
-HAL_StatusTypeDef BSP_SD_ReadBlocks_DMA(uint32_t *data, uint64_t readAddr, uint32_t blockCount) {
-    HAL_StatusTypeDef status;
-    if ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, readAddr, blockCount)) != HAL_OK) {
-        return status;
-    }
+uint8_t BSP_SD_ReadBlocks_DMA(uint32_t *data, uint32_t readAddr, uint32_t blockCount) {
+    return HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, readAddr, blockCount)
+        != HAL_OK ? MSD_ERROR : MSD_OK;
 
     // Wait for operation to complete
-    return HAL_SD_CheckReadOperation(&uSdHandle, SD_IO_TIMEOUT);
+    // return HAL_SD_CheckReadOperation(&uSdHandle, SD_IO_TIMEOUT);
 }
 
 /**
@@ -203,14 +205,12 @@ HAL_StatusTypeDef BSP_SD_ReadBlocks_DMA(uint32_t *data, uint64_t readAddr, uint3
  * @param  blockCount: Number of SD blocks to write
  * @retval SD status
  */
-HAL_StatusTypeDef BSP_SD_WriteBlocks_DMA(uint32_t *data, uint64_t writeAddr, uint32_t blockCount) {
-    HAL_StatusTypeDef status;
-    if ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, writeAddr, blockCount)) != HAL_OK) {
-        return status;
-    }
+uint8_t BSP_SD_WriteBlocks_DMA(uint32_t *data, uint32_t writeAddr, uint32_t blockCount) {
+    return HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, writeAddr, blockCount)
+            != HAL_OK ? MSD_ERROR : MSD_OK;
 
     // Wait for operation to complete
-    return HAL_SD_CheckWriteOperation(&uSdHandle, SD_IO_TIMEOUT);
+    //return HAL_SD_CheckWriteOperation(&uSdHandle, SD_IO_TIMEOUT);
 }
 
 /**
@@ -219,8 +219,9 @@ HAL_StatusTypeDef BSP_SD_WriteBlocks_DMA(uint32_t *data, uint64_t writeAddr, uin
  * @param  EndAddr: End byte address
  * @retval SD status
  */
-HAL_StatusTypeDef BSP_SD_Erase(uint64_t startAddr, uint64_t endAddr) {
-    return HAL_SD_Erase(&uSdHandle, startAddr, endAddr);
+uint8_t BSP_SD_Erase(uint32_t startAddr, uint32_t endAddr) {
+    return HAL_SD_Erase(&uSdHandle, startAddr, endAddr)
+            != HAL_OK ? MSD_ERROR : MSD_OK;
 }
 
 HAL_StatusTypeDef sdDmaInit(void) {
@@ -245,16 +246,15 @@ HAL_StatusTypeDef sdDmaInit(void) {
     /* Associate the DMA handle */
     __HAL_LINKDMA(&uSdHandle, hdmarx, dmaRxHandle);
 
-    HAL_StatusTypeDef status;
 
     /* Deinitialize the stream for new transfer */
-    if ((status = HAL_DMA_DeInit(&dmaRxHandle)) != HAL_OK) {
-        return status;
+    if (HAL_DMA_DeInit(&dmaRxHandle) != HAL_OK) {
+        return MSD_ERROR;
     }
 
     /* Configure the DMA stream */
-    if ((status = HAL_DMA_Init(&dmaRxHandle)) != HAL_OK) {
-        return status;
+    if (HAL_DMA_Init(&dmaRxHandle) != HAL_OK) {
+        return MSD_ERROR;
     }
 
     /* Configure DMA Tx parameters */
@@ -276,13 +276,13 @@ HAL_StatusTypeDef sdDmaInit(void) {
     __HAL_LINKDMA(&uSdHandle, hdmatx, dmaTxHandle);
 
     /* Deinitialize the stream for new transfer */
-    if ((status = HAL_DMA_DeInit(&dmaTxHandle)) != HAL_OK) {
-        return status;
+    if (HAL_DMA_DeInit(&dmaTxHandle) != HAL_OK) {
+        return MSD_ERROR;
     }
 
     /* Configure the DMA stream */
-    if ((status = HAL_DMA_Init(&dmaTxHandle)) != HAL_OK) {
-        return status;
+    if (HAL_DMA_Init(&dmaTxHandle) != HAL_OK) {
+        return MSD_ERROR;
     }
 
     /* NVIC configuration for DMA transfer complete interrupt */
@@ -353,7 +353,19 @@ HAL_StatusTypeDef sdPinInit(void) {
  * @brief  Get SD information about specific SD card.
  * @param  CardInfo: Pointer to HAL_SD_CardInfoTypeDef structure
  */
-HAL_StatusTypeDef BSP_SD_GetCardInfo(HAL_SD_CardInfoTypeDef *CardInfo) {
-    /* Get SD card Information */
-    return HAL_SD_GetCardInfo(&uSdHandle, CardInfo);
+uint8_t BSP_SD_GetCardInfo(HAL_SD_CardInfoTypeDef *CardInfo) {
+    return HAL_SD_GetCardInfo(&uSdHandle, CardInfo) != HAL_OK ? MSD_ERROR : MSD_OK;
 }
+
+/**
+  * @brief  Gets the current SD card data status.
+  * @retval Data transfer state.
+  *          This value can be one of the following values:
+  *            @arg  SD_TRANSFER_OK: No data transfer is acting
+  *            @arg  SD_TRANSFER_BUSY: Data transfer is acting
+  */
+uint8_t BSP_SD_GetCardState(void)
+{
+  return((HAL_SD_GetCardState(&uSdHandle) == HAL_SD_CARD_TRANSFER ) ? SD_TRANSFER_OK : SD_TRANSFER_BUSY);
+}
+

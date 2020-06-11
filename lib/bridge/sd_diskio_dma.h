@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
-  * @file    sd_diskio_dma_rtos_template.h
+  * @file    sd_diskio_dma_template.h
   * @author  MCD Application Team
-  * @brief   Header for sd_diskio_dma_rtos.c module. This is template file that
-             needs to be adjusted and copied into the application project.
+  * @brief   Header for sd_diskio_dma_template.c module.This file needs to be
+             customized then copied into the application project
   ******************************************************************************
   * @attention
   *
@@ -22,7 +22,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32xxxxx_{eval}{discovery}_sd.h"
-#include "cmsis_os.h"
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

@@ -5,16 +5,19 @@
  *      Author: jmiller
  */
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 #include "stm32f4xx_hal.h"
 #include "matchbox.h"
 #include "pin.h"
 
+#define MAX_TIMEOUT 4000 // 4 seconds
+
 osThreadId defaultTaskHandle;
 
 static SD_HandleTypeDef uSdHandle;
-static HAL_SD_CardInfoTypedef uSdCardInfo;
+//static HAL_SD_CardInfoTypedef uSdCardInfo;
 
 void StartDefaultTask(void const * argument);
 
@@ -83,27 +86,27 @@ bool sdInit() {
     uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
     uSdHandle.Init.ClockDiv            = SDIO_TRANSFER_CLK_DIV;
 
-    HAL_SD_ErrorTypedef status;
-    if((status = HAL_SD_Init(&uSdHandle, &uSdCardInfo)) != SD_OK) {
+    HAL_StatusTypeDef status;
+    if((status = HAL_SD_Init(&uSdHandle /*, &uSdCardInfo*/)) != HAL_OK) {
         printf("Failed to init sd: status=%d\n", status);
         return false;
     }
 
-    if((status = HAL_SD_WideBusOperation_Config(&uSdHandle, SDIO_BUS_WIDE_4B)) != SD_OK) {
-        printf("Failed to init wide bus mode, status=%d\n", status);
-        return false;
-    }
+//    if((status = HAL_SD_WideBusOperation_Config(&uSdHandle, SDIO_BUS_WIDE_4B)) != HAL_OK) {
+//        printf("Failed to init wide bus mode, status=%d\n", status);
+//        return false;
+//    }
 
     /* NVIC configuration for SDIO interrupts */
     HAL_NVIC_SetPriority(SDIO_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(SDIO_IRQn);
 
     // try high speed mode
-    if ((status = HAL_SD_HighSpeed(&uSdHandle)) != SD_OK) {
-        printf("Failed to set high speed mode, status=%d\n", status);
-        while(1)
-            ;
-    }
+//    if ((status = HAL_SD_HighSpeed(&uSdHandle)) != HAL_OK) {
+//        printf("Failed to set high speed mode, status=%d\n", status);
+//        while(1)
+//            ;
+//    }
 
     // enable interrupts for errors (tx underflow)
 //    __HAL_SD_SDIO_ENABLE_IT(&uSdHandle, (SDIO_IT_DCRCFAIL |\
@@ -115,8 +118,8 @@ bool sdInit() {
 }
 
 bool readBlock(void* data, uint64_t addr) {
-    HAL_SD_ErrorTypedef status;
-    if ((status = HAL_SD_ReadBlocks(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
+    HAL_StatusTypeDef status;
+    if ((status = HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, addr, 1, MAX_TIMEOUT)) != HAL_OK) {
         printf("Failed to read block: status = %d\n", status);
         return false;
     }
@@ -124,8 +127,8 @@ bool readBlock(void* data, uint64_t addr) {
 }
 
 int writeBlock(void* data, uint64_t addr) {
-    HAL_SD_ErrorTypedef status;
-    if ((status = HAL_SD_WriteBlocks(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
+    HAL_StatusTypeDef status;
+    if ((status = HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, addr, 1, MAX_TIMEOUT)) != HAL_OK) {
         printf("Failed to write block: status = %d\n", status);
         return false;
     }
@@ -150,7 +153,7 @@ void dumpBlock(uint8_t* data, int count) {
     }
 }
 
-extern "C" int SDGetStatus(SD_HandleTypeDef *hsd);
+//extern "C" int SDGetStatus(SD_HandleTypeDef *hsd);
 
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
@@ -181,8 +184,8 @@ void StartDefaultTask(void const * argument) {
         int tWriteStart = MatchBox::getTimer();
         writeBlock(&buff[0], count * 512);
         tWriteTime += (MatchBox::getTimer() - tWriteStart);
-        while (0x100 != (SDGetStatus(&uSdHandle) & 0x100))
-            ;
+//        while (0x100 != (SDGetStatus(&uSdHandle) & 0x100))
+//            ;
         int tReadStart = MatchBox::getTimer();
         readBlock(&tmp[0], count * 512);
         tReadTime += (MatchBox::getTimer() - tReadStart);

@@ -5,6 +5,7 @@
  *      Author: jmiller
  */
 
+#include <cstdio>
 #include "matchbox.h"
 #include "util.h"
 

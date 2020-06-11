@@ -5,8 +5,9 @@
  *      Author: jmiller
  */
 
-#include <string.h> // memcmmp
-#include <stdlib.h> // rand()
+#include <cstdio>
+#include <cstring> // memcmmp
+#include <cstdlib> // rand()
 #include "matchbox.h"
 #include "matchbox_sd.h"
 #include "pin.h"
@@ -48,7 +49,7 @@ void StartDefaultTask(void const * argument) {
     Pin det(SDIO_DET,
             Pin::Config().setMode(Pin::MODE_INPUT).setEdge(Pin::EDGE_FALLING).setPull(Pin::PULL_UP),
             detectCb, (void*) 0);
-    HAL_SD_CardInfoTypedef info = { 0 };
+    HAL_SD_CardInfoTypeDef info = { 0 };
     HAL_StatusTypeDef halStatus;
     if (!BSP_SD_IsDetected()) {
         printf("No SD card detected\n");
@@ -60,19 +61,23 @@ void StartDefaultTask(void const * argument) {
         while (1)
             ;
     }
-    HAL_SD_ErrorTypedef sdStatus;
-    if ((sdStatus = BSP_SD_GetCardInfo(&info)) != SD_OK) {
+    HAL_StatusTypeDef sdStatus;
+    if ((sdStatus = BSP_SD_GetCardInfo(&info)) != HAL_OK) {
         printf("Couldn't get card info, status=%d\n", sdStatus);
         while (1)
             ;
     }
     printf("IsDetected: %d\n", BSP_SD_IsDetected());
     printf("Type: %x\n", info.CardType);
-    printf("Block size: %d\n", info.CardBlockSize);
-    printf("Capacity: %x\n", info.CardCapacity);
-    printf("ManufacturerID: %x\n", info.SD_cid.ManufacturerID);
-    printf("Mfg date: %04x\n", info.SD_cid.ManufactDate);
-    printf("SN: %08x\n\n", info.SD_cid.ProdSN);
+
+    printf("Block size: %d\n", info.BlockSize);
+    printf("Capacity: %d (blocks)\n", info.BlockNbr);
+
+    // HAL_SD_GetCardCID(SD_HandleTypeDef *hsd, HAL_SD_CardCIDTypeDef *pCID)
+//    printf("ManufacturerID: %x\n", info.SD_cid.ManufacturerID);
+//    printf("Mfg date: %04x\n", info.SD_cid.ManufactDate);
+//    printf("SN: %08x\n\n", info.SD_cid.ProdSN);
+
 #ifdef USE_DMA
     printf("Starting BSP SDIO tests (DMA)\n");
 #else
@@ -81,16 +86,15 @@ void StartDefaultTask(void const * argument) {
     int count = 0;
     while (1) {
         uint8_t buff[512];
-        HAL_SD_ErrorTypedef status;
         uint8_t tmp[sizeof(buff)]; // temporary read buffer for verification
         for (int i = 0; i < sizeof(buff); i++) {
             buff[i] = rand() & 0xff;
         }
-        if ((sdStatus = BSP_SD_WriteBlocks((uint32_t*)&buff[0], count * 512, 512, 1)) != SD_OK) {
+        if ((sdStatus = BSP_SD_WriteBlocks((uint32_t*)&buff[0], count * 512, 1)) != BSP_SD_OK) {
             printf("write block %d failed with status=%d\n", count, sdStatus);
             osDelay(1000);
         }
-        if ((sdStatus = BSP_SD_ReadBlocks((uint32_t*)&tmp[0], count * 512, 512, 1)) != SD_OK) {
+        if ((sdStatus = BSP_SD_ReadBlocks((uint32_t*)&tmp[0], count * 512, 1)) != BSP_SD_OK) {
             printf("read block %d failed with status=%d\n", count, sdStatus);
             osDelay(1000);
         }

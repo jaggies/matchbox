@@ -5,8 +5,9 @@
  *      Author: jmiller
  */
 
-#include <assert.h>
-#include <string.h> // memcpy()
+#include <cstdio>
+#include <cassert>
+#include <cstring> // memcpy()
 #include "matchbox.h"
 #include "lcd.h"
 #include "adc.h"

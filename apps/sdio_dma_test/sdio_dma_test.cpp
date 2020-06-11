@@ -7,8 +7,9 @@
 
 //#define DEBUG
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 #include "stm32f4xx_hal.h"
 #include "matchbox.h"
 #include "pin.h"
@@ -35,7 +36,7 @@ enum DeathCode {
 
 static osThreadId defaultTaskHandle;
 static SD_HandleTypeDef uSdHandle;
-static HAL_SD_CardInfoTypedef uSdCardInfo;
+static HAL_SD_CardInfoTypeDef uSdCardInfo;
 static Pin* led;
 
 void StartDefaultTask(void const * argument);
@@ -184,13 +185,13 @@ bool sdInit() {
     uSdHandle.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
     uSdHandle.Init.ClockDiv = SDIO_TRANSFER_CLK_DIV;
 
-    HAL_SD_ErrorTypedef status;
-    if ((status = HAL_SD_Init(&uSdHandle, &uSdCardInfo)) != SD_OK) {
+    HAL_StatusTypeDef status;
+    if ((status = HAL_SD_Init(&uSdHandle)) != HAL_OK) {
         error("Failed to init sd: status=%d\n", status);
         return false;
     }
 
-    if ((status = HAL_SD_WideBusOperation_Config(&uSdHandle, SDIO_BUS_WIDE_4B)) != SD_OK) {
+    if ((status = HAL_SD_ConfigWideBusOperation(&uSdHandle, SDIO_BUS_WIDE_4B)) != HAL_OK) {
         error("Failed to init wide bus mode, status=%d\n", status);
         return false;
     }
@@ -201,41 +202,41 @@ bool sdInit() {
     HAL_NVIC_EnableIRQ(SDIO_IRQn);
 
     // try high speed mode
-    if ((status = HAL_SD_HighSpeed(&uSdHandle)) != SD_OK) {
-        error("Failed to set high speed mode, status=%d\n", status);
-        MatchBox::blinkOfDeath(*led, (MatchBox::BlinkCode) SDIO_HS_MODE);
-    }
+//    if ((status = HAL_SD_HighSpeed(&uSdHandle)) != HAL_OK) {
+//        error("Failed to set high speed mode, status=%d\n", status);
+//        MatchBox::blinkOfDeath(*led, (MatchBox::BlinkCode) SDIO_HS_MODE);
+//    }
 
     return true;
 }
 
 int readBlock(void* data, uint64_t addr) {
-    HAL_SD_ErrorTypedef status;
-    if ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
+    HAL_StatusTypeDef status;
+    if ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, addr, 1)) != HAL_OK) {
         error("Failed to read block: status = %d\n", status);
         return 0;
     }
-    debug("%s: check\n", __func__);
-    if ((status = HAL_SD_CheckReadOperation(&uSdHandle, -1)) != SD_OK) {
-        error("HAL_SD_CheckReadOperation() failed, status=%d\n", status);
-        return 0;
-    }
+    debug("%s: check (REMOVED) \n", __func__);
+//    if ((status = HAL_SD_CheckReadOperation(&uSdHandle, -1)) != SD_OK) {
+//        error("HAL_SD_CheckReadOperation() failed, status=%d\n", status);
+//        return 0;
+//    }
     debug("%s: done\n", __func__);
     return 1;
 }
 
 int writeBlock(void* data, uint64_t addr) {
-    HAL_SD_ErrorTypedef status;
+    HAL_StatusTypeDef status;
     debug("%s\n", __func__);
-    if ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint32_t*) data, addr, 512, 1)) != SD_OK) {
+    if ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, addr, 1)) != HAL_OK) {
         error("Failed to write block: status = %d\n", status);
         return 0;
     }
-    debug("%s: check\n", __func__);
-    if ((status = HAL_SD_CheckWriteOperation(&uSdHandle, -1)) != SD_OK) {
-        error("HAL_SD_CheckWriteOperation() failed, status=%d\n", status);
-        return 0;
-    }
+//    debug("%s: check (REMOVED) \n", __func__);
+//    if ((status = HAL_SD_CheckWriteOperation(&uSdHandle, -1)) != HAL_OK) {
+//        error("HAL_SD_CheckWriteOperation() failed, status=%d\n", status);
+//        return 0;
+//    }
     debug("%s: done\n", __func__);
     return 1;
 }
@@ -274,8 +275,8 @@ extern "C" {
 }
 
 void SDIO_IRQHandler(void) {
-    int fl = __HAL_SD_SDIO_GET_FLAG(&uSdHandle, SDIO_FLAG_DATAEND);
-    debug("%s: end=%d\n", __func__, fl);
+//    int fl = __HAL_SD_SDIO_GET_FLAG(&uSdHandle, SDIO_FLAG_DATAEND);
+//    debug("%s: end=%d\n", __func__, fl);
     HAL_SD_IRQHandler(&uSdHandle);
 }
 

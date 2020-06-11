@@ -5,8 +5,9 @@
  *      Author: jmiller
  */
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
 #include "matchbox.h"
 #include "ff.h"
 #include "ff_gen_drv.h"

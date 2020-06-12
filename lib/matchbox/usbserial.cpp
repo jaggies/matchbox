@@ -101,7 +101,6 @@ int8_t UsbSerial::Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
 
 int8_t UsbSerial::Receive_FS(uint8_t* buf, uint32_t *len) {
     UsbSerial* thisPtr = UsbSerial::getInstance();
-    USBD_CDC_SetRxBuffer(&thisPtr->_usbDevice, &buf[0]);
     USBD_CDC_ReceivePacket(&thisPtr->_usbDevice);
 
     // TODO: Consume this instead of echoing it back

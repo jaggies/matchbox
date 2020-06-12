@@ -19,7 +19,7 @@ LINK = $(C++) ;
 OPTIM = -Os -g ;
 DEFINES = __STM32__ ARM_MATH_CM4 __FPU_PRESENT=1U STM32F415xx HSE_VALUE=16000000 ;
 #DEFINES += USE_FULL_ASSERT ;
-#DEFINES += DEBUG ;
+DEFINES += DEBUG ;
 #DEFINES += "\"assert_param(a)=\"" ; # Temporarily disable warnings about implicit assert_param()
 #DEFINES += USE_HW_RTC ;
 

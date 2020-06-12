@@ -16,17 +16,10 @@
 osThreadId defaultTaskHandle;
 void StartDefaultTask(void const * argument);
 
-#define USE_DMA
-
-#ifdef USE_DMA
-#define BSP_SD_WriteBlocks BSP_SD_WriteBlocks_DMA
-#define BSP_SD_ReadBlocks BSP_SD_ReadBlocks_DMA
-#endif
-
 int main(void) {
     MatchBox* mb = new MatchBox();
 
-    osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
+    osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 1, 2048);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* Start scheduler */
@@ -44,28 +37,65 @@ void detectCb(uint32_t pin, void* arg) {
     printf("SD DETECT!\n");
 }
 
+void ioTest(const int count, bool useDma = false) {
+    static uint8_t buff[512];
+    static uint8_t tmp[sizeof(buff)]; // temporary read buffer for verification
+    for (int block = 0; block < count; block++) {
+        memset(buff, block, sizeof(buff));
+        if (useDma) {
+            if (BSP_SD_WriteBlocks_DMA((uint32_t*)&buff[0], block, 1) != HAL_OK) {
+                printf("write block %d failed\n", block);
+                osDelay(1000);
+            }
+            if (BSP_SD_ReadBlocks_DMA((uint32_t*)&tmp[0], block, 1) != HAL_OK) {
+                printf("read block %d failed\n", block);
+                osDelay(1000);
+            }
+        } else {
+            if (BSP_SD_WriteBlocks((uint32_t*) &buff[0], block, 1, 1000) != HAL_OK) {
+                printf("write block %d failed\n", block);
+                osDelay(1000);
+            }
+            if (BSP_SD_ReadBlocks((uint32_t*) &tmp[0], block, 1, 1000) != HAL_OK) {
+                printf("read block %d failed\n", block);
+                osDelay(1000);
+            }
+        }
+        if (0 != memcmp(tmp, buff, sizeof(buff))) {
+            error("*** readback error: blocks differ! ***\n");
+            osDelay(1000);
+        } else {
+            if (!(count % 64)) {
+                printf("\n");
+                printf("Block %08x", block);
+            } else {
+                printf(".");
+            }
+        }
+    }
+}
+
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
-    Pin det(SDIO_DET,
-            Pin::Config().setMode(Pin::MODE_INPUT).setEdge(Pin::EDGE_FALLING).setPull(Pin::PULL_UP),
-            detectCb, (void*) 0);
+    Pin det(SDIO_DET, Pin::Config()
+        .setMode(Pin::MODE_INPUT)
+        .setEdge(Pin::EDGE_FALLING)
+        .setPull(Pin::PULL_UP), detectCb, (void*) 0);
     HAL_SD_CardInfoTypeDef info = { 0 };
-    HAL_StatusTypeDef halStatus;
+
     if (!BSP_SD_IsDetected()) {
         printf("No SD card detected\n");
-        while (1)
-            ;
+        osDelay(500);
     }
-    if (BSP_SD_Init() != MSD_OK) {
-        printf("Can't init SD card\n");
-        while (1)
-            ;
+
+    while (BSP_SD_Init() != MSD_OK) {
+        printf("Failed to initialize SD card...\n");
+        osDelay(500);
     }
-    HAL_StatusTypeDef sdStatus;
-    if (BSP_SD_GetCardInfo(&info) != MSD_OK) {
-        printf("Couldn't get card info\n");
-        while (1)
-            ;
+
+    while(BSP_SD_GetCardInfo(&info) != MSD_OK) {
+        printf("Waiting for card info...\n");
+        osDelay(500);
     }
     printf("IsDetected: %d\n", BSP_SD_IsDetected());
     printf("Type: %x\n", info.CardType);
@@ -78,37 +108,14 @@ void StartDefaultTask(void const * argument) {
 //    printf("Mfg date: %04x\n", info.SD_cid.ManufactDate);
 //    printf("SN: %08x\n\n", info.SD_cid.ProdSN);
 
-#ifdef USE_DMA
-    printf("Starting BSP SDIO tests (DMA)\n");
-#else
     printf("Starting BSP SDIO tests\n");
-#endif
     int count = 0;
     while (1) {
-        uint8_t buff[512];
-        uint8_t tmp[sizeof(buff)]; // temporary read buffer for verification
-        for (int i = 0; i < sizeof(buff); i++) {
-            buff[i] = rand() & 0xff;
-        }
-        if (BSP_SD_WriteBlocks((uint32_t*)&buff[0], count * 512, 1) != HAL_OK) {
-            printf("write block %d failed\n", count);
-            osDelay(1000);
-        }
-        if (BSP_SD_ReadBlocks((uint32_t*)&tmp[0], count * 512, 1) != HAL_OK) {
-            printf("read block %d failed\n", count);
-            osDelay(1000);
-        }
-        if (0 != memcmp(tmp, buff, sizeof(buff))) {
-            error("*** readback error: blocks differ! ***\n");
-            osDelay(1000);
-        } else {
-            if (!(count % 64)) {
-                printf("\n");
-                printf("Block %08x", count);
-            } else {
-                printf(".");
-            }
-        }
-        led.write(count++ & 1);
+        printf("Attempt %d\n", count);
+        led.write(++count & 1);
+        ioTest(100, false /* usedma */);
     }
+    printf("done\n");
+    while(1)
+        ;
 }

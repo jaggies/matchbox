@@ -59,15 +59,6 @@ __weak void DMA2_Stream3_IRQHandler(void) {
     HAL_DMA_IRQHandler(uSdHandle.hdmarx);
 }
 
-// TODO
-HAL_StatusTypeDef HAL_SD_CheckReadOperation(SD_HandleTypeDef* handle, uint32_t timeout) {
-    return HAL_OK; // TODO: code archeology to find what this used to do...
-}
-
-HAL_StatusTypeDef HAL_SD_CheckWriteOperation(SD_HandleTypeDef* handle, uint32_t timeout) {
-    return HAL_OK; // TODO: code archeology to find what this used to do...
-}
-
 /**
  * @brief  Initializes the SD card device.
  * @retval SD status.
@@ -105,20 +96,20 @@ uint8_t BSP_SD_Init(void) {
     uSdHandle.Init.ClockDiv = SDIO_TRANSFER_CLK_DIV;
 
     if (HAL_SD_Init(&uSdHandle /*, &uSdCardInfo*/) != HAL_OK) {
-       return HAL_ERROR;
+       return MSD_ERROR;
     }
 
     /* Configure SD wide bus width */
     if (HAL_SD_ConfigWideBusOperation(&uSdHandle, SDIO_BUS_WIDE_4B) != HAL_OK) {
-        return HAL_ERROR;
+        return MSD_ERROR;
     }
 
     if (sdPinInit() != HAL_OK) {
-       return HAL_ERROR;
+       return MSD_ERROR;
     }
 
     if (sdDmaInit() != HAL_OK) {
-       return HAL_ERROR;
+       return MSD_ERROR;
     }
 
     return HAL_OK;
@@ -192,9 +183,6 @@ uint8_t BSP_SD_WriteBlocks(uint32_t *data, uint32_t writeAddr, uint32_t blockCou
 uint8_t BSP_SD_ReadBlocks_DMA(uint32_t *data, uint32_t readAddr, uint32_t blockCount) {
     return HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, readAddr, blockCount)
         != HAL_OK ? MSD_ERROR : MSD_OK;
-
-    // Wait for operation to complete
-    // return HAL_SD_CheckReadOperation(&uSdHandle, SD_IO_TIMEOUT);
 }
 
 /**
@@ -208,9 +196,6 @@ uint8_t BSP_SD_ReadBlocks_DMA(uint32_t *data, uint32_t readAddr, uint32_t blockC
 uint8_t BSP_SD_WriteBlocks_DMA(uint32_t *data, uint32_t writeAddr, uint32_t blockCount) {
     return HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, writeAddr, blockCount)
             != HAL_OK ? MSD_ERROR : MSD_OK;
-
-    // Wait for operation to complete
-    //return HAL_SD_CheckWriteOperation(&uSdHandle, SD_IO_TIMEOUT);
 }
 
 /**

@@ -37,6 +37,7 @@ class UsbSerial {
         static int8_t DeInit_FS(void);
         static int8_t Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length);
         static int8_t Receive_FS(uint8_t* pbuf, uint32_t *len);
+        static int8_t TxComplete_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum);
 
         uint8_t _rxBuffer[USB_RX_DATA_SIZE];
         uint8_t _txBuffer[USB_TX_DATA_SIZE];

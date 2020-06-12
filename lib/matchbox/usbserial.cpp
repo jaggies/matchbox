@@ -23,7 +23,8 @@ extern "C" {
         UsbSerial::Init_FS,
         UsbSerial::DeInit_FS,
         UsbSerial::Control_FS,
-        UsbSerial::Receive_FS
+        UsbSerial::Receive_FS,
+        UsbSerial::TxComplete_FS
     };
 }
 
@@ -56,6 +57,10 @@ int8_t UsbSerial::Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
 
 int8_t UsbSerial::Receive_FS(uint8_t* pbuf, uint32_t *len) {
     return UsbSerial::getInstance()->receive(pbuf, len);
+}
+
+int8_t UsbSerial::TxComplete_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum) {
+    return (0);
 }
 
 int8_t UsbSerial::init(void) {

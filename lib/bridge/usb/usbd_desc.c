@@ -27,16 +27,16 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
-#define USBD_VID                      0x0483
-#define USBD_PID                      0xbada  /* Replace '0xaaaa' with your device product ID */
-#define USBD_LANGID_STRING            0xbbb  /* Replace '0xbbb' with your device language ID */
+#define USBD_VID                      0x1209
+#define USBD_PID                      0x1000  /* Replace '0xaaaa' with your device product ID */
+#define USBD_LANGID_STRING            0x0000  /* Replace '0xbbb' with your device language ID */
 #define USBD_MANUFACTURER_STRING      "Hackdog, Inc" /* Add your manufacturer string */
-#define USBD_PRODUCT_HS_STRING        "MB serial(hs)" /* Add your product High Speed string */
-#define USBD_PRODUCT_FS_STRING        "MB serial(fs)" /* Add your product Full Speed string */
-#define USBD_CONFIGURATION_HS_STRING  "MB conf(hs)" /* Add your configuration High Speed string */
-#define USBD_INTERFACE_HS_STRING      "MB if(hs)" /* Add your Interface High Speed string */
-#define USBD_CONFIGURATION_FS_STRING  "MB conf(fs)" /* Add your configuration Full Speed string */
-#define USBD_INTERFACE_FS_STRING      "MB if(fs)" /* Add your Interface Full Speed string */
+#define USBD_PRODUCT_HS_STRING        "Matchbox HighSpeed Serial" /* Add your product High Speed string */
+#define USBD_PRODUCT_FS_STRING        "Matchbox FullSpeed Serial" /* Add your product Full Speed string */
+#define USBD_CONFIGURATION_HS_STRING  "Matchbox HighSpeed Configuration" /* Add your configuration High Speed string */
+#define USBD_INTERFACE_HS_STRING      "Matchbox HighSpeed Interface" /* Add your Interface High Speed string */
+#define USBD_CONFIGURATION_FS_STRING  "Matchbox FullSpeed Configuration" /* Add your configuration Full Speed string */
+#define USBD_INTERFACE_FS_STRING      "Matchbox FullSpeed Interface" /* Add your Interface Full Speed string */
 
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -185,8 +185,8 @@ HIBYTE(USBD_VID),                    /* wSVID[0]: Standard or Vendor ID. This sh
 
 0x00,                                /* bAlternateMode[0] Index of the Alternate Mode within the SVID as
                                         returned in response to a Discover Modes command. Example:
-                                        0 – first Mode entry
-                                        1 – second mode entry */
+                                        0 ï¿½ first Mode entry
+                                        1 ï¿½ second mode entry */
 
 USBD_BB_ALTMODE0_STRING_INDEX,           /* iAlternateModeString[0]: Index of string descriptor describing protocol.
                                         It is optional to support this string. */
@@ -196,8 +196,8 @@ HIBYTE(USBD_VID),                    /* wSVID[1]: Standard or Vendor ID. This sh
 
 0x01,                                /* bAlternateMode[1] Index of the Alternate Mode within the SVID as
                                         returned in response to a Discover Modes command. Example:
-                                        0 – first Mode entry
-                                        1 – second Mode entry */
+                                        0 ï¿½ first Mode entry
+                                        1 ï¿½ second Mode entry */
 
 USBD_BB_ALTMODE1_STRING_INDEX,           /* iAlternateModeString[1]: Index of string descriptor describing protocol.
                                         It is optional to support this string. */

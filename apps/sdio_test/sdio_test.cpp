@@ -92,10 +92,10 @@ bool sdInit() {
         return false;
     }
 
-//    if((status = HAL_SD_WideBusOperation_Config(&uSdHandle, SDIO_BUS_WIDE_4B)) != HAL_OK) {
-//        printf("Failed to init wide bus mode, status=%d\n", status);
-//        return false;
-//    }
+    if((status = HAL_SD_ConfigWideBusOperation(&uSdHandle, SDIO_BUS_WIDE_4B)) != HAL_OK) {
+        printf("Failed to init wide bus mode, status=%d\n", status);
+        return false;
+    }
 
     /* NVIC configuration for SDIO interrupts */
     HAL_NVIC_SetPriority(SDIO_IRQn, 5, 0);

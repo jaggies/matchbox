@@ -104,20 +104,20 @@ int _read(int file, char *ptr, int len)
     return result == USBD_OK ? len : 0;
 }
 
-extern int8_t usb_transmit(uint8_t* buf, uint16_t len);
-
 int _write(int file, char *data, int len)
 {
     int bytes_written;
-    int result = 0;
-    if (file == STDOUT_FILENO || file == STDERR_FILENO) {
-		int n = 10;
-        while (n-- && USBD_BUSY == usb_transmit(data, len)) {
-            osThreadYield();
-        }
-    } else {
-        errno = EBADF;
-        return -1;
+    int result = USBD_OK;
+    switch (file) {
+        case STDOUT_FILENO:
+        case STDERR_FILENO:
+            while (USBD_BUSY == usb_transmit(data, len)) {
+                osThreadYield();
+            }
+        break;
+        default:
+            errno = EBADF;
+            result = -1;
     }
     return result == USBD_OK ? bytes_written : 0;
 }

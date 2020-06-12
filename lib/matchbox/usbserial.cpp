@@ -9,26 +9,19 @@
 
 UsbSerial* UsbSerial::_instance;
 
-// TODO: Remove this stub!
-extern "C" void write(int, uint8_t*, uint32_t);
-static void doReceive(uint8_t* buff, uint32_t* len)
-{
-//    printf("rx:%p len=%d", buff, *len);
-    write(1, buff, *len);
-}
-
 extern "C" {
-    extern int8_t usb_transmit(uint8_t* buf, uint16_t len);
-    USBD_CDC_ItfTypeDef USBD_Interface_fops_FS = {
-        UsbSerial::Init_FS,
-        UsbSerial::DeInit_FS,
-        UsbSerial::Control_FS,
-        UsbSerial::Receive_FS,
-        UsbSerial::TxComplete_FS
-    };
+    extern void write(int, uint8_t*, uint32_t); // TODO: Remove this stub!
 }
 
-int8_t usb_transmit(uint8_t* buf, uint16_t len) {
+USBD_CDC_ItfTypeDef UsbSerial::USBD_Interface_fops_FS = {
+    UsbSerial::Init_FS,
+    UsbSerial::DeInit_FS,
+    UsbSerial::Control_FS,
+    UsbSerial::Receive_FS,
+    UsbSerial::TxComplete_FS
+};
+
+int8_t usb_transmit(uint8_t* buf, uint32_t len) {
     return UsbSerial::getInstance()->transmit(buf, len);
 }
 
@@ -44,35 +37,15 @@ UsbSerial::~UsbSerial() {
 }
 
 int8_t UsbSerial::Init_FS(void) {
-    return UsbSerial::getInstance()->init();
+    /* Set Application Buffers */
+    UsbSerial* thisPtr = UsbSerial::getInstance();
+    USBD_CDC_SetTxBuffer(&thisPtr->_usbDevice, thisPtr->_txBuffer, sizeof(thisPtr->_txBuffer));
+    USBD_CDC_SetRxBuffer(&thisPtr->_usbDevice, thisPtr->_rxBuffer);
+    return (USBD_OK);
 }
 
 int8_t UsbSerial::DeInit_FS(void) {
-    return UsbSerial::getInstance()->deInit();
-}
-
-int8_t UsbSerial::Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
-    return UsbSerial::getInstance()->control(cmd, pbuf, length);
-}
-
-int8_t UsbSerial::Receive_FS(uint8_t* pbuf, uint32_t *len) {
-    return UsbSerial::getInstance()->receive(pbuf, len);
-}
-
-int8_t UsbSerial::TxComplete_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum) {
-    return (0);
-}
-
-int8_t UsbSerial::init(void) {
-    /* Set Application Buffers */
-    USBD_CDC_SetTxBuffer(&_usbDevice, _txBuffer, 0);
-    USBD_CDC_SetRxBuffer(&_usbDevice, _rxBuffer);
-    return (USBD_OK);
-}
-
-int8_t UsbSerial::deInit(void) {
-    // TODO
-    return (USBD_OK);
+    return (USBD_OK); // TODO
 }
 
 /**
@@ -100,7 +73,7 @@ int8_t UsbSerial::deInit(void) {
  /*                                        4 - Space                            */
  /* 6      | bDataBits  |   1   | Number Data bits (5, 6, 7, 8 or 16).          */
  /*******************************************************************************/
-int8_t UsbSerial::control(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
+int8_t UsbSerial::Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
     switch (cmd) {
         case CDC_SEND_ENCAPSULATED_COMMAND:
         break;
@@ -126,14 +99,22 @@ int8_t UsbSerial::control(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
     return USBD_OK;
 }
 
-int8_t UsbSerial::receive(uint8_t* buf, uint32_t *len) {
-    USBD_CDC_SetRxBuffer(&_usbDevice, &buf[0]);
-    USBD_CDC_ReceivePacket(&_usbDevice);
-    doReceive(buf, len); // TODO
+int8_t UsbSerial::Receive_FS(uint8_t* buf, uint32_t *len) {
+    UsbSerial* thisPtr = UsbSerial::getInstance();
+    USBD_CDC_SetRxBuffer(&thisPtr->_usbDevice, &buf[0]);
+    USBD_CDC_ReceivePacket(&thisPtr->_usbDevice);
+
+    // TODO: Consume this instead of echoing it back
+    write(1, buf, *len);
+
     return USBD_OK;
 }
 
-int8_t UsbSerial::transmit(uint8_t* buf, uint16_t len) {
+int8_t UsbSerial::TxComplete_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum) {
+    return USBD_OK;
+}
+
+int8_t UsbSerial::transmit(uint8_t* buf, uint32_t len) {
     USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*) _usbDevice.pClassData;
     if (hcdc->TxState != 0) {
         return USBD_BUSY;

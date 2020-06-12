@@ -20,19 +20,14 @@ class UsbSerial {
         static UsbSerial* getInstance() {
             return _instance ? _instance : (_instance = new UsbSerial());
         }
-        int8_t transmit(uint8_t* buf, uint16_t len);
+        // Transmits len bytes. Returns USBD_BUSY if there's already a transmission in progress.
+        int8_t transmit(uint8_t* buf, uint32_t len);
     private:
         UsbSerial();
         ~UsbSerial();
 
-        // HAL interface methods
-        int8_t init(void);
-        int8_t deInit(void);
-        int8_t control(uint8_t cmd, uint8_t* pbuf, uint16_t length);
-        int8_t receive(uint8_t* buf, uint32_t *len);
-
-    public: // TODO: Find a way to keep these private
-        // HAL interface callback functions
+        // USB FullSpeed operations
+        static USBD_CDC_ItfTypeDef USBD_Interface_fops_FS;
         static int8_t Init_FS(void);
         static int8_t DeInit_FS(void);
         static int8_t Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length);
@@ -44,8 +39,12 @@ class UsbSerial {
         USBD_HandleTypeDef _usbDevice;
         static UsbSerial* _instance;
 };
-#else // not C++
-extern int8_t usb_transmit(uint8_t* buf, uint16_t len);
+
+extern "C" {
+int8_t usb_transmit(uint8_t* buf, uint32_t len);
+};
+#else // __cplusplus
+int8_t usb_transmit(uint8_t* buf, uint32_t len);
 #endif
 
 #endif /* USBSERIAL_H_ */

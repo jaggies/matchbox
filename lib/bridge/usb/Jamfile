@@ -1,0 +1,16 @@
+SubDir TOP lib bridge usb ;
+SubDirHdrs $(TOP) lib bridge ;
+#SubDirHdrs $(TOP) lib bridge bsp ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Core Inc ;
+SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
+SubDirHdrs $(TOP) lib hal STM32F4xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib hal CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib hal CMSIS Include ;
+
+SubDirHdrs $(TOP) lib hal Middlewares ST STM32_USB_Device_Library Core Inc ;
+
+Library libmatchbox :
+	usbd_cdc_if.c
+	usbd_desc.c
+	;

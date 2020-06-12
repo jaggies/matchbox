@@ -111,7 +111,8 @@ int _write(int file, char *data, int len)
     int bytes_written;
     int result = 0;
     if (file == STDOUT_FILENO || file == STDERR_FILENO) {
-        while (USBD_BUSY == usb_transmit(data, len)) {
+		int n = 10;
+        while (n-- && USBD_BUSY == usb_transmit(data, len)) {
             osThreadYield();
         }
     } else {

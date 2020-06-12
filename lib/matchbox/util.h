@@ -8,6 +8,8 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+#include <stdio.h>
+
 #define Number(a) (sizeof(a) / sizeof(a[0]))
 
  inline uint8_t bitSwap(uint8_t x)

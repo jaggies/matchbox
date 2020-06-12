@@ -88,7 +88,7 @@
 #define USBD_memset               memset
 #define USBD_memcpy               memcpy
 
-#define USBD_Delay   HAL_Delay
+#define USBD_Delay   osDelay
     
  /* DEBUG macros */  
 

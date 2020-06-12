@@ -12,6 +12,18 @@
 osThreadId defaultTaskHandle;
 void StartDefaultTask(void const * argument);
 
+void buttonHandler(uint32_t pin, void* data) {
+    int &count = *(int*) data;
+    switch (pin) {
+        case SW1_PIN:
+            count++;
+            printf("Hello, count = %d\n", count);
+            break;
+        default:
+            printf("Pin not handled: %d\n", pin);
+    }
+}
+
 int main(void) {
     MatchBox* mb = new MatchBox();
 
@@ -30,7 +42,8 @@ int main(void) {
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     int count = 0;
-    printf("Hello, world!\n");
+    Button b1(SW1_PIN, buttonHandler, &count);
+
     while (1) {
         led.write(count++ & 1);
         osDelay(250);

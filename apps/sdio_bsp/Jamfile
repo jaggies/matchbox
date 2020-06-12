@@ -1,5 +1,6 @@
 SubDir TOP apps sdio_bsp ;
 SubDirHdrs $(TOP) lib bridge ;
+SubDirHdrs $(TOP) lib bridge bsp ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;
 SubDirHdrs $(TOP) lib matchbox ;

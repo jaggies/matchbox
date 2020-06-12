@@ -5,6 +5,7 @@
  *      Author: jmiller
  */
 #include "usbserial.h"
+#include "usbd_desc.h" // matchbox custom usb device descriptor
 
 UsbSerial* UsbSerial::_instance;
 
@@ -18,8 +19,7 @@ static void doReceive(uint8_t* buff, uint32_t* len)
 
 extern "C" {
     extern int8_t usb_transmit(uint8_t* buf, uint16_t len);
-    extern USBD_DescriptorsTypeDef FS_Desc;
-    USBD_CDC_ItfTypeDef USBD_Interface_fops_FS= {
+    USBD_CDC_ItfTypeDef USBD_Interface_fops_FS = {
         UsbSerial::Init_FS,
         UsbSerial::DeInit_FS,
         UsbSerial::Control_FS,
@@ -33,7 +33,7 @@ int8_t usb_transmit(uint8_t* buf, uint16_t len) {
 
 UsbSerial::UsbSerial() {
     memset(&_usbDevice, 0, sizeof(_usbDevice));
-    USBD_Init(&_usbDevice, &FS_Desc, DEVICE_FS);
+    USBD_Init(&_usbDevice, &Matchbox_USB_Desc, DEVICE_FS);
     USBD_RegisterClass(&_usbDevice, &USBD_CDC);
     USBD_CDC_RegisterInterface(&_usbDevice, &USBD_Interface_fops_FS);
     USBD_Start(&_usbDevice);

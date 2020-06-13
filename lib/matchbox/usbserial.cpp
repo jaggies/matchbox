@@ -21,6 +21,13 @@ USBD_CDC_ItfTypeDef UsbSerial::USBD_Interface_fops_FS = {
     UsbSerial::TxComplete_FS
 };
 
+USBD_CDC_LineCodingTypeDef UsbSerial::linecoding = {
+    115200, /* baud rate*/
+    0x00, /* stop bits-1*/
+    0x00, /* parity - none*/
+    0x08 /* nb. of bits 8*/
+};
+
 int8_t usb_transmit(uint8_t* buf, uint32_t len) {
     return UsbSerial::getInstance()->transmit(buf, len);
 }
@@ -86,8 +93,18 @@ int8_t UsbSerial::Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
         case CDC_CLEAR_COMM_FEATURE:
         break;
         case CDC_SET_LINE_CODING: // see above
+            linecoding.bitrate = (uint32_t) (pbuf[0] | (pbuf[1] << 8) | (pbuf[2] << 16)
+                    | (pbuf[3] << 24));
+            linecoding.format = pbuf[4];
+            linecoding.paritytype = pbuf[5];
+            linecoding.datatype = pbuf[6];
         break;
         case CDC_GET_LINE_CODING: // see above
+            linecoding.bitrate = (uint32_t) (pbuf[0] | (pbuf[1] << 8) | (pbuf[2] << 16)
+                    | (pbuf[3] << 24));
+            linecoding.format = pbuf[4];
+            linecoding.paritytype = pbuf[5];
+            linecoding.datatype = pbuf[6];
         break;
         case CDC_SET_CONTROL_LINE_STATE:
         break;

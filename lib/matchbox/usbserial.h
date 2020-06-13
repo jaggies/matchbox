@@ -28,6 +28,7 @@ class UsbSerial {
 
         // USB FullSpeed operations
         static USBD_CDC_ItfTypeDef USBD_Interface_fops_FS;
+        static USBD_CDC_LineCodingTypeDef linecoding;
         static int8_t Init_FS(void);
         static int8_t DeInit_FS(void);
         static int8_t Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length);

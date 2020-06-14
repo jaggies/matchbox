@@ -15,6 +15,7 @@
 
 osThreadId defaultTaskHandle;
 void StartDefaultTask(void const * argument);
+const int timeout = 1000; // 1s
 
 int main(void) {
     MatchBox* mb = new MatchBox();
@@ -40,39 +41,41 @@ void detectCb(uint32_t pin, void* arg) {
 void ioTest(const int count, bool useDma) {
     static uint8_t buff[512];
     static uint8_t tmp[sizeof(buff)]; // temporary read buffer for verification
+    printf("Test %s DMA", useDma ? "with" : "without");
     for (int block = 0; block < count; block++) {
         memset(buff, block, sizeof(buff));
+        char fail = '.';
         if (useDma) {
-            if (BSP_SD_WriteBlocks_DMA((uint32_t*)&buff[0], block, 1) != HAL_OK) {
-                printf("write block %d failed\n", block);
-                osDelay(1000);
-            }
-            if (BSP_SD_ReadBlocks_DMA((uint32_t*)&tmp[0], block, 1) != HAL_OK) {
-                printf("read block %d failed\n", block);
-                osDelay(1000);
-            }
-        } else {
-            if (BSP_SD_WriteBlocks((uint32_t*) &buff[0], block, 1, 1000) != HAL_OK) {
-                printf("write block %d failed\n", block);
-                osDelay(1000);
-            }
-            if (BSP_SD_ReadBlocks((uint32_t*) &tmp[0], block, 1, 1000) != HAL_OK) {
-                printf("read block %d failed\n", block);
-                osDelay(1000);
-            }
-        }
-        if (0 != memcmp(tmp, buff, sizeof(buff))) {
-            error("*** readback error: blocks differ! ***\n");
-            osDelay(1000);
-        } else {
-            if (!(count % 64)) {
-                printf("\n");
-                printf("Block %08x", block);
+            if (BSP_SD_WriteBlocks_DMA((uint32_t*)&buff[0], block, 1) == HAL_OK) {
+                if (BSP_SD_ReadBlocks_DMA((uint32_t*)&tmp[0], block, 1) == HAL_OK) {
+                    if (0 != memcmp(tmp, buff, sizeof(buff))) {
+                        fail = 'c';
+                    }
+                } else {
+                    fail = 'r';
+                }
             } else {
-                printf(".");
+                fail = 'w';
+            }
+        } else {
+            if (BSP_SD_WriteBlocks((uint32_t*)&buff[0], block, 1, timeout) == HAL_OK) {
+                if (BSP_SD_ReadBlocks_DMA((uint32_t*)&tmp[0], block, timeout) == HAL_OK) {
+                    if (0 != memcmp(tmp, buff, sizeof(buff))) {
+                        fail = 'c';
+                    }
+                } else {
+                    fail = 'r';
+                }
+            } else {
+                fail = 'w';
             }
         }
+        if (0 == (block % 64)) {
+            printf("\nBlock %08x: ", block);
+        }
+        printf("%c", fail);
     }
+    printf("\n");
 }
 
 void StartDefaultTask(void const * argument) {
@@ -110,11 +113,11 @@ void StartDefaultTask(void const * argument) {
 
     printf("Starting BSP SDIO tests\n");
     int count = 0;
-    bool useDma = false;
-    while (1) {
-        printf("Attempt %d %s\n", count, useDma ? "with DMA" : "without DMA");
+    int n = 1;
+    while (n--) {
         led.write(++count & 1);
-        ioTest(100, useDma);
+        ioTest(64*8, true);
+        ioTest(64*8, false);
     }
     printf("done\n");
     while(1)

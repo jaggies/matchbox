@@ -207,6 +207,8 @@ void StartDefaultTask(void const * argument) {
     srand(HAL_GetTick());
 
     printf("Starting non-DMA\n");
+    printf("RCC_HCLK = %d\n", HAL_RCC_GetHCLKFreq());
+
     int block = 0;
     while (1) {
         for (int i = 0; i < sizeof(buff); i++) {

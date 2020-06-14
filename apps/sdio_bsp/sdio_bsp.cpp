@@ -37,7 +37,7 @@ void detectCb(uint32_t pin, void* arg) {
     printf("SD DETECT!\n");
 }
 
-void ioTest(const int count, bool useDma = false) {
+void ioTest(const int count, bool useDma) {
     static uint8_t buff[512];
     static uint8_t tmp[sizeof(buff)]; // temporary read buffer for verification
     for (int block = 0; block < count; block++) {
@@ -110,10 +110,11 @@ void StartDefaultTask(void const * argument) {
 
     printf("Starting BSP SDIO tests\n");
     int count = 0;
+    bool useDma = false;
     while (1) {
-        printf("Attempt %d\n", count);
+        printf("Attempt %d %s\n", count, useDma ? "with DMA" : "without DMA");
         led.write(++count & 1);
-        ioTest(100, false /* usedma */);
+        ioTest(100, useDma);
     }
     printf("done\n");
     while(1)

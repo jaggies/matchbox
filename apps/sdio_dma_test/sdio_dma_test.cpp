@@ -210,41 +210,43 @@ bool sdInit() {
     return true;
 }
 
-int readBlock(void* data, uint64_t addr) {
+bool readBlock(void* data, uint64_t addr) {
     HAL_StatusTypeDef status;
-    if ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, addr, 1)) != HAL_OK) {
-        error("Failed to read block: status = %d\n", status);
-        return 0;
+    debug("%s:\n", __func__);
+    while ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, addr, 1)) == HAL_BUSY) {
+        debug("\tbusy\n");
     }
-    debug("%s: check (REMOVED) \n", __func__);
-//    if ((status = HAL_SD_CheckReadOperation(&uSdHandle, -1)) != SD_OK) {
-//        error("HAL_SD_CheckReadOperation() failed, status=%d\n", status);
-//        return 0;
-//    }
-    debug("%s: done\n", __func__);
-    return 1;
+
+    if (status != HAL_OK) {
+        error("%\tfailed, status = %d\n", status);
+        return false;
+    }
+
+    debug("\tcomplete\n");
+    return true;
 }
 
-int writeBlock(void* data, uint64_t addr) {
+bool writeBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
-    debug("%s\n", __func__);
-    if ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, addr, 1)) != HAL_OK) {
-        error("Failed to write block: status = %d\n", status);
-        return 0;
+    debug("%s:\n", __func__);
+    while ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, block, 1))== HAL_BUSY) {
+        debug("\tbusy\n");
     }
-//    debug("%s: check (REMOVED) \n", __func__);
-//    if ((status = HAL_SD_CheckWriteOperation(&uSdHandle, -1)) != HAL_OK) {
-//        error("HAL_SD_CheckWriteOperation() failed, status=%d\n", status);
-//        return 0;
-//    }
-    debug("%s: done\n", __func__);
-    return 1;
+
+    if (status != HAL_OK) {
+        error("\tfailed, status = %d\n",status);
+        return false;
+    }
+
+    debug("\tcomplete\n");
+
+    return true;
 }
 
-void dumpBlock(uint8_t* data, int count) {
+void dumpBlock(uint8_t* data, int block) {
     for (int i = 0; i < 512; i++) {
         if ((i % 16) == 0) {
-            debug("%08x: ", count * 512 + i);
+            debug("%08x: ", block * 512 + i);
         }
         debug("%02x", data[i]);
         if ((i % 16) == 15) {
@@ -260,7 +262,6 @@ void dumpBlock(uint8_t* data, int count) {
 }
 
 extern "C" {
-    int SDGetStatus(SD_HandleTypeDef *hsd);
     void DMA2_Stream0_IRQHandler();
     void DMA2_Stream1_IRQHandler();
     void DMA2_Stream2_IRQHandler();
@@ -270,8 +271,6 @@ extern "C" {
     void DMA2_Stream6_IRQHandler();
     void DMA2_Stream7_IRQHandler();
     void SDIO_IRQHandler(void);
-    void HAL_SD_XferCpltCallback(SD_HandleTypeDef* hsd);
-    void HAL_SD_XferErrorCallback(SD_HandleTypeDef* hsd);
 }
 
 void SDIO_IRQHandler(void) {
@@ -280,28 +279,20 @@ void SDIO_IRQHandler(void) {
     HAL_SD_IRQHandler(&uSdHandle);
 }
 
-void DMA2_Stream0_IRQHandler() { debug("%s\n", __func__); }
-void DMA2_Stream1_IRQHandler() { debug("%s\n", __func__); }
-void DMA2_Stream2_IRQHandler() { debug("%s\n", __func__); }
-void DMA2_Stream4_IRQHandler() { debug("%s\n", __func__); }
-void DMA2_Stream5_IRQHandler() { debug("%s\n", __func__); }
-void DMA2_Stream7_IRQHandler() { debug("%s\n", __func__); }
-
-void HAL_SD_XferCpltCallback(SD_HandleTypeDef* hsd) {
-    debug("%s\n", __func__);
-}
-
-void HAL_SD_XferErrorCallback(SD_HandleTypeDef* hsd) {
-    error("%s\n", __func__);
-}
+void DMA2_Stream0_IRQHandler() { debug("OOPS: %s\n", __func__); }
+void DMA2_Stream1_IRQHandler() { debug("OOPS: %s\n", __func__); }
+void DMA2_Stream2_IRQHandler() { debug("OOPS: %s\n", __func__); }
+void DMA2_Stream4_IRQHandler() { debug("OOPS: %s\n", __func__); }
+void DMA2_Stream5_IRQHandler() { debug("OOPS: %s\n", __func__); }
+void DMA2_Stream7_IRQHandler() { debug("OOPS: %s\n", __func__); }
 
 void DMA2_Stream3_IRQHandler() {
-    debug("%s\n", __func__);
+    //debug("%s, rx=%p\n", __func__, uSdHandle.hdmarx);
     HAL_DMA_IRQHandler(uSdHandle.hdmarx);
 }
 
 void DMA2_Stream6_IRQHandler() {
-    debug("%s, tx=%p\n", __func__, uSdHandle.hdmatx);
+    //debug("%s, tx=%p\n", __func__, uSdHandle.hdmatx);
     HAL_DMA_IRQHandler(uSdHandle.hdmatx);
 }
 
@@ -318,7 +309,6 @@ void StartDefaultTask(void const * argument) {
         MatchBox::blinkOfDeath(_led, (MatchBox::BlinkCode) SDIO_DMA);
     }
 
-    int count = 0;
     uint8_t buff[512];
     if (uint32_t(&buff[0]) & 0x3 != 0) {
         error("Buffer not aligned!\n");
@@ -330,27 +320,39 @@ void StartDefaultTask(void const * argument) {
     srand(HAL_GetTick());
 
     printf("Starting DMA\n");
+    int block = 0;
     while (1) {
-        char tmp[sizeof(buff)]; // temporary read buffer, for verification
         for (int i = 0; i < sizeof(buff); i++) {
-            buff[i] = rand() & 0xff;
+            buff[i] = block; //rand() & 0xff;
         }
-        writeBlock(&buff[0], count * 512);
-//        while (0x100 != (SDGetStatus(&uSdHandle) & 0x100))
-//            ;
-//        printf("read..\n");
-        readBlock(&tmp[0], count * 512);
-        if (0 != memcmp(tmp, buff, sizeof(buff))) {
-            debug("*** readback error: blocks differ! ***\n");
-        } else {
-            if (!(count % 64)) {
-                printf("\n");
-                printf("Block %08x", count);
+
+        while (HAL_SD_GetState(&uSdHandle) != HAL_SD_CARD_READY) {
+            debug("%s: card not ready\n", __func__);
+        }
+
+        char fail = '.'; // no failure
+        if (writeBlock(&buff[0], block)) {
+            char tmp[sizeof(buff)]; // temporary read buffer, for verification
+            if (readBlock(&tmp[0], block)) {
+                if (0 != memcmp(tmp, buff, sizeof(buff))) {
+                    fail = 'c'; // failed to compare
+                }
             } else {
-                printf(".");
+                fail = 'r'; // failed to read
             }
+        } else {
+            fail = 'w'; // failed to write
         }
+
+        if (!(block % 64)) {
+            printf("\n");
+            printf("Block %08x: ", block);
+            osDelay(1000); // don't scroll too fast
+        }
+
+        printf("%c", fail);
+
         //dumpBlock(&buff[0], count);
-        _led.write(count++ & 1);
+        _led.write(block++ & 1);
     }
 }

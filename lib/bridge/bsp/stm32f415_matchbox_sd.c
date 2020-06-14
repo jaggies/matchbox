@@ -4,6 +4,9 @@
  *  Created on: Aug 27, 2016
  *      Author: jmiller
  */
+#include <stdio.h>
+#include "cmsis_os.h" // osThreadYield()
+#include "util.h"
 #include "handlers.h"
 #include "stm32f415_matchbox_sd.h"
 //#include "util.h"
@@ -153,9 +156,15 @@ uint8_t BSP_SD_IsDetected(void) {
  * @retval BSP_SD_OK or underlying error
  */
 uint8_t BSP_SD_ReadBlocks(uint32_t *data, uint32_t readAddr, uint32_t blockCount, uint32_t timeout) {
-    if (HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, readAddr, blockCount, timeout) != HAL_OK)
-        return MSD_ERROR;
-    return MSD_OK;
+    uint8_t status;
+    while ( (status = HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, readAddr, blockCount, timeout)
+            != HAL_OK) )
+        osThreadYield();
+
+    if (status != HAL_OK) {
+       debug("Error in %s: status = %d\n", __func__, status);
+    }
+    return (status != HAL_OK) ? MSD_ERROR : MSD_OK;
 }
 
 /**
@@ -167,8 +176,15 @@ uint8_t BSP_SD_ReadBlocks(uint32_t *data, uint32_t readAddr, uint32_t blockCount
  * @retval HAL_OK or underlying error
  */
 uint8_t BSP_SD_WriteBlocks(uint32_t *data, uint32_t writeAddr, uint32_t blockCount, uint32_t timeout) {
-    return HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, writeAddr, blockCount, timeout)
-            != HAL_OK ? MSD_ERROR : MSD_OK;
+    uint8_t status;
+    while ( (status = HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, writeAddr, blockCount, timeout))
+            == HAL_BUSY)
+        osThreadYield();
+
+    if (status != HAL_OK) {
+        debug("Error in %s: status = %d\n", __func__, status);
+    }
+    return (status != HAL_OK) ? MSD_ERROR : MSD_OK;
 
 }
 
@@ -181,8 +197,15 @@ uint8_t BSP_SD_WriteBlocks(uint32_t *data, uint32_t writeAddr, uint32_t blockCou
  * @retval SD status
  */
 uint8_t BSP_SD_ReadBlocks_DMA(uint32_t *data, uint32_t readAddr, uint32_t blockCount) {
-    return HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, readAddr, blockCount)
-        != HAL_OK ? MSD_ERROR : MSD_OK;
+    uint8_t status;
+    while ( (status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, readAddr, blockCount))
+            == HAL_BUSY)
+        osThreadYield();
+
+    if (status != HAL_OK) {
+        debug("Error in %s: status = %d\n", __func__, status);
+    }
+    return (status != HAL_OK) ? MSD_ERROR : MSD_OK;
 }
 
 /**
@@ -194,8 +217,15 @@ uint8_t BSP_SD_ReadBlocks_DMA(uint32_t *data, uint32_t readAddr, uint32_t blockC
  * @retval SD status
  */
 uint8_t BSP_SD_WriteBlocks_DMA(uint32_t *data, uint32_t writeAddr, uint32_t blockCount) {
-    return HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, writeAddr, blockCount)
-            != HAL_OK ? MSD_ERROR : MSD_OK;
+    uint8_t status;
+    while ( (status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, writeAddr, blockCount))
+            == HAL_BUSY)
+        osThreadYield();
+
+    if (status != HAL_OK) {
+        debug("Error in %s: status = %d\n", __func__, status);
+    }
+    return (status != HAL_OK) ? MSD_ERROR : MSD_OK;;
 }
 
 /**

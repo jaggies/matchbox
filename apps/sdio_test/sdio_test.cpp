@@ -11,13 +11,13 @@
 #include "stm32f4xx_hal.h"
 #include "matchbox.h"
 #include "pin.h"
+#include "util.h" // debug()
 
 #define MAX_TIMEOUT 4000 // 4 seconds
 
 osThreadId defaultTaskHandle;
 
 static SD_HandleTypeDef uSdHandle;
-//static HAL_SD_CardInfoTypedef uSdCardInfo;
 
 void StartDefaultTask(void const * argument);
 
@@ -88,7 +88,7 @@ bool sdInit() {
 
     HAL_StatusTypeDef status;
     if((status = HAL_SD_Init(&uSdHandle /*, &uSdCardInfo*/)) != HAL_OK) {
-        printf("Failed to init sd: status=%d\n", status);
+        printf("Failed to initialize SD card: status=%d\n", status);
         return false;
     }
 
@@ -117,18 +117,18 @@ bool sdInit() {
     return true;
 }
 
-bool readBlock(void* data, uint64_t addr) {
+bool readBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
-    if ((status = HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, addr, 1, MAX_TIMEOUT)) != HAL_OK) {
+    if ((status = HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, block, 1, MAX_TIMEOUT)) != HAL_OK) {
         printf("Failed to read block: status = %d\n", status);
         return false;
     }
     return true;
 }
 
-int writeBlock(void* data, uint64_t addr) {
+bool writeBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
-    if ((status = HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, addr, 1, MAX_TIMEOUT)) != HAL_OK) {
+    if ((status = HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, block, 1, MAX_TIMEOUT)) != HAL_OK) {
         printf("Failed to write block: status = %d\n", status);
         return false;
     }
@@ -152,8 +152,6 @@ void dumpBlock(uint8_t* data, int count) {
         }
     }
 }
-
-//extern "C" int SDGetStatus(SD_HandleTypeDef *hsd);
 
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
@@ -182,13 +180,22 @@ void StartDefaultTask(void const * argument) {
             buff[i] = rand() & 0xff;
         }
         int tWriteStart = MatchBox::getTimer();
-        writeBlock(&buff[0], count * 512);
+        writeBlock(&buff[0], count);
         tWriteTime += (MatchBox::getTimer() - tWriteStart);
-//        while (0x100 != (SDGetStatus(&uSdHandle) & 0x100))
-//            ;
+
+        while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_READY) {
+            debug("Card not ready after write\n");
+            osDelay(500);
+        }
+
         int tReadStart = MatchBox::getTimer();
-        readBlock(&tmp[0], count * 512);
+        readBlock(&tmp[0], count);
         tReadTime += (MatchBox::getTimer() - tReadStart);
+
+        while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_READY) {
+            debug("Card not ready after read\n");
+            osDelay(500);
+        }
 
         if (0 != memcmp(tmp, buff, sizeof(buff))) {
             printf("readback error: blocks differ!\n");

@@ -21,7 +21,7 @@ void StartDefaultTask(void const * argument);
 int main(void) {
     MatchBox* mb = new MatchBox(MatchBox::C72MHz);
 
-    osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
+    osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 1, 2048);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* Start scheduler */
@@ -155,22 +155,31 @@ void StartDefaultTask(void const * argument) {
         MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_LINK);
     }
 
+    debug("Entering loop\n");
+
     while (1) {
         uint32_t count = 0;
         srand(0); // reset seed so files contain same data
 
         // Find unused filename
-        int i = 0;
         char * fname = NULL;
-        while (1) {
+        for (int i = 0; i < 10; i++) {
             char buff[32];
             FILINFO info = { 0 };
             sprintf(buff, "file%04d.dat", i++);
-            if (f_stat(buff, &info) != FR_OK) {
+            debug("stat %s\n", buff);
+            if (f_stat(buff, &info) == FR_OK) {
+                debug("Skipping '%s'\n", buff);
+            } else {
                 // file not found, use it
                 fname = strndup(buff, sizeof(buff));
                 break;
             }
+        }
+        if (!fname) {
+            printf("Test done. No more filenames\n");
+            while (1)
+                ;
         }
 
         // Write file with random data...

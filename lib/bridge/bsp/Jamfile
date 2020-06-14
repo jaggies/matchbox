@@ -2,6 +2,7 @@ SubDir TOP lib bridge bsp ;
 
 SubDirHdrs $(TOP) lib bridge ;
 SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib matchbox ; #util.h
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FatFs src ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FatFs src drivers ;
 SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;

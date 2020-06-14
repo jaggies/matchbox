@@ -1,5 +1,5 @@
 /*
- * hello.cpp
+ * sdio_test.cpp
  *
  *  Created on: Jun 20, 2016
  *      Author: jmiller
@@ -11,20 +11,40 @@
 #include "stm32f4xx_hal.h"
 #include "matchbox.h"
 #include "pin.h"
-#include "util.h" // debug()
+#include "util.h"
 
-#define MAX_TIMEOUT 4000 // 4 seconds
+enum DeathCode {
+    SDIO_INIT = MatchBox::CODE_LAST, // blink codes start here
+    SDIO_DMA,
+    SDIO_DMA3,
+    SDIO_DMA6,
+    SDIO_HS_MODE,
+    BUFFER_NOT_ALIGNED
+};
 
-osThreadId defaultTaskHandle;
+#define DMA_NVIC_PRIORITY 6
+#define SD_NVIC_PRIORITY 5 // must be lower than DMA_NVIC_PRIORITY
+#define SD_DMAx_Tx_CHANNEL                DMA_CHANNEL_4
+#define SD_DMAx_Rx_CHANNEL                DMA_CHANNEL_4
+#define SD_DMAx_TxRx_CLK_ENABLE           __HAL_RCC_DMA2_CLK_ENABLE
+#define SD_DMAx_Tx_STREAM                 DMA2_Stream6
+#define SD_DMAx_Rx_STREAM                 DMA2_Stream3
+#define SD_DMAx_Tx_IRQn                   DMA2_Stream6_IRQn
+#define SD_DMAx_Rx_IRQn                   DMA2_Stream3_IRQn
 
+static osThreadId defaultTaskHandle;
 static SD_HandleTypeDef uSdHandle;
+static HAL_SD_CardInfoTypeDef uSdCardInfo;
+static Pin* led;
 
 void StartDefaultTask(void const * argument);
+
+static const int timeout = 1000; // 1s
 
 int main(void) {
     MatchBox* mb = new MatchBox();
 
-    osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
+    osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 1, 2048);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* Start scheduler */
@@ -119,36 +139,51 @@ bool sdInit() {
 
 bool readBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
-    if ((status = HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, block, 1, MAX_TIMEOUT)) != HAL_OK) {
-        printf("Failed to read block: status = %d\n", status);
+    debug("%s:\n", __func__);
+    while ((status = HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, block, 1, timeout)) == HAL_BUSY) {
+        debug("\tbusy\n");
+    }
+
+    if (status != HAL_OK) {
+        error("%\tfailed, status = %d\n", status);
         return false;
     }
+
+    debug("\tcomplete\n");
     return true;
 }
 
 bool writeBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
-    if ((status = HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, block, 1, MAX_TIMEOUT)) != HAL_OK) {
-        printf("Failed to write block: status = %d\n", status);
+    debug("%s:\n", __func__);
+    while ((status = HAL_SD_WriteBlocks(&uSdHandle, (uint8_t*) data, block, 1, timeout))== HAL_BUSY) {
+        debug("\tbusy\n");
+    }
+
+    if (status != HAL_OK) {
+        error("\tfailed, status = %d\n",status);
         return false;
     }
+
+    debug("\tcomplete\n");
+
     return true;
 }
 
-void dumpBlock(uint8_t* data, int count) {
+void dumpBlock(uint8_t* data, int block) {
     for (int i = 0; i < 512; i++) {
-        if ((i%16) == 0) {
-            printf("%08x: ", count * 512 + i);
+        if ((i % 16) == 0) {
+            debug("%08x: ", block * 512 + i);
         }
-        printf("%02x", data[i]);
-        if ((i%16) == 15) {
-            printf(" ");
+        debug("%02x", data[i]);
+        if ((i % 16) == 15) {
+            debug(" ");
             for (int j = 15; j > 0; j--) {
-                int ch = data[i-j];
-                ch = ch < 32 || ch > 127 ? '.':ch;
+                int ch = data[i - j];
+                ch = ch < 32 || ch > 127 ? '.' : ch;
                 printf("%c", ch);
             }
-            printf( (i%16) == 15 ? "\n" : " ");
+            debug((i % 16) == 15 ? "\n" : " ");
         }
     }
 }
@@ -157,63 +192,54 @@ void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     printf("initialize sdio\n");
     if (!sdInit()) {
-        printf("Failed to initialize sdio\n");
+        error("Failed to initialize sdio\n");
+        MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_INIT);
     }
-    int count = 0;
+
     uint8_t buff[512];
     if (uint32_t(&buff[0]) & 0x3 != 0) {
-        printf("Buffer not aligned!\n");
-        while (1)
-            ;
+        error("Buffer not aligned!\n");
+        MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) BUFFER_NOT_ALIGNED);
     }
     bzero(buff, sizeof(buff));
 
     // Seed with random value
     srand(HAL_GetTick());
 
-    int tReadTime = 0; // total read/write time
-    int tWriteTime = 0;
-    const int CHUNKING = 64; // 64 blocks at a time
+    printf("Starting non-DMA\n");
+    int block = 0;
     while (1) {
-        char tmp[512]; // temporary read buffer, for verification
-        for (int i = 0; i < 512; i++) {
-            buff[i] = rand() & 0xff;
-        }
-        int tWriteStart = MatchBox::getTimer();
-        writeBlock(&buff[0], count);
-        tWriteTime += (MatchBox::getTimer() - tWriteStart);
-
-        while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_READY) {
-            debug("Card not ready after write\n");
-            osDelay(500);
+        for (int i = 0; i < sizeof(buff); i++) {
+            buff[i] = block; //rand() & 0xff;
         }
 
-        int tReadStart = MatchBox::getTimer();
-        readBlock(&tmp[0], count);
-        tReadTime += (MatchBox::getTimer() - tReadStart);
-
-        while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_READY) {
-            debug("Card not ready after read\n");
-            osDelay(500);
+        while (HAL_SD_GetState(&uSdHandle) != HAL_SD_CARD_READY) {
+            debug("%s: card not ready\n", __func__);
         }
 
-        if (0 != memcmp(tmp, buff, sizeof(buff))) {
-            printf("readback error: blocks differ!\n");
-        } else {
-            if (!(count % CHUNKING)) {
-                float writeTime = tWriteTime / 1000.0f;
-                float readTime = tReadTime / 1000.0f;
-                printf("R(%0.2f kB/s) W(%0.2f kB/s)\n",
-                        float(CHUNKING*sizeof(buff)/1024 / readTime),
-                        float(CHUNKING*sizeof(buff)/1024 / writeTime));
-                tReadTime = tWriteTime = 0;
-                printf("Block %08x", count);
+        char fail = '.'; // no failure
+        if (writeBlock(&buff[0], block)) {
+            char tmp[sizeof(buff)]; // temporary read buffer, for verification
+            if (readBlock(&tmp[0], block)) {
+                if (0 != memcmp(tmp, buff, sizeof(buff))) {
+                    fail = 'c'; // failed to compare
+                }
             } else {
-                printf(".");
+                fail = 'r'; // failed to read
             }
+        } else {
+            fail = 'w'; // failed to write
         }
+
+        if (!(block % 64)) {
+            printf("\n");
+            printf("Block %08x: ", block);
+            osDelay(1000); // don't scroll too fast
+        }
+
+        printf("%c", fail);
+
         //dumpBlock(&buff[0], count);
-        led.write(count++ & 1);
-//        osDelay(10);
+        led.write(block++ & 1);
     }
 }

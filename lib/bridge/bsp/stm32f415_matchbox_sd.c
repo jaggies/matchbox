@@ -158,7 +158,7 @@ uint8_t BSP_SD_IsDetected(void) {
 uint8_t BSP_SD_ReadBlocks(uint32_t *data, uint32_t readAddr, uint32_t blockCount, uint32_t timeout) {
     uint8_t status;
     while ( (status = HAL_SD_ReadBlocks(&uSdHandle, (uint8_t*) data, readAddr, blockCount, timeout)
-            != HAL_OK) )
+            == HAL_BUSY) )
         osThreadYield();
 
     if (status != HAL_OK) {

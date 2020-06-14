@@ -12,6 +12,7 @@
 #include "lcd.h"
 #include "adc.h"
 #include "pin.h"
+#include "util.h"
 
 osThreadId defaultTaskHandle;
 
@@ -26,7 +27,7 @@ int main(void)
 {
   MatchBox* mb = new MatchBox(MatchBox::C24MHz);
 
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 1, 2048);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* Start scheduler */
@@ -123,13 +124,19 @@ void StartDefaultTask(void const * argument)
 {
   uint8_t mode = 0;
 
-  Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST));
+  Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST).setClockDiv(Spi::DIV32));
   Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
   Adc adc(Adc::AD1, lcd.getWidth());
   Button b1(SW1_PIN, buttonHandler, &mode);
   uint16_t samples[lcd.getWidth()];
 
   pinInitOutput(LED_PIN, 1);
+
+  int f;
+  debug("RCC_HCLK = %d\n", HAL_RCC_GetHCLKFreq());
+  debug("HAL_TickFreq = %d\n",
+          (f = HAL_GetTickFreq()) == HAL_TICK_FREQ_1KHZ ? 1000
+          : f == HAL_TICK_FREQ_100HZ ? 100 : f == HAL_TICK_FREQ_10HZ ? : 0);
 
   // Init LCD
   lcd.begin();

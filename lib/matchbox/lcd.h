@@ -102,7 +102,7 @@ class Lcd {
 		void span(int16_t dx);
 
 		static void refreshFrameCallback(void* arg);
-		static void refreshLineCallback(void* arg);
+
 		void refreshFrame();
 
 		Spi& _spi;

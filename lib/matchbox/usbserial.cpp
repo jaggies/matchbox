@@ -4,6 +4,7 @@
  *  Created on: Jul 10, 2016
  *      Author: jmiller
  */
+#include "cmsis_os.h"
 #include "usbserial.h"
 #include "usbd_desc.h" // matchbox custom usb device descriptor
 
@@ -28,8 +29,12 @@ USBD_CDC_LineCodingTypeDef UsbSerial::linecoding = {
     0x08 /* nb. of bits 8*/
 };
 
-int8_t usb_transmit(uint8_t* buf, uint32_t len) {
+int8_t usb_transmit(char* buf, size_t len) {
     return UsbSerial::getInstance()->transmit(buf, len);
+}
+
+size_t usb_receive(char* buf, size_t len) {
+    return UsbSerial::getInstance()->receive(buf, len);
 }
 
 UsbSerial::UsbSerial() {
@@ -116,25 +121,57 @@ int8_t UsbSerial::Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
     return USBD_OK;
 }
 
-int8_t UsbSerial::Receive_FS(uint8_t* buf, uint32_t *len) {
+int8_t UsbSerial::Receive_FS(uint8_t *buf, uint32_t *len) {
     UsbSerial* thisPtr = UsbSerial::getInstance();
-    USBD_CDC_ReceivePacket(&thisPtr->_usbDevice);
+    if (thisPtr->_usbDevice.dev_state != USBD_STATE_CONFIGURED) {
+        return USBD_FAIL;
+    }
 
-    // TODO: Consume this instead of echoing it back
-    write(1, buf, *len);
+    if (!buf || !len || *len <= 0) {
+        return USBD_FAIL;
+    }
 
-    return USBD_OK;
+    uint8_t result = USBD_OK;
+    do {
+        result = USBD_CDC_SetRxBuffer(&thisPtr->_usbDevice, &buf[0]);
+    } while (result != USBD_OK);
+
+    do {
+        result = USBD_CDC_ReceivePacket(&thisPtr->_usbDevice);
+    } while (result != USBD_OK);
+
+    while ((*len)--) {
+        if (thisPtr->_readFifo.isFull()) {
+            return USBD_FAIL;  // overrun
+        } else {
+            thisPtr->_readFifo.add(*buf++);
+        }
+    }
+    return (USBD_OK);
 }
 
 int8_t UsbSerial::TxComplete_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum) {
     return USBD_OK;
 }
 
-int8_t UsbSerial::transmit(uint8_t* buf, uint32_t len) {
+int8_t UsbSerial::transmit(char* buf, size_t len) {
     USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*) _usbDevice.pClassData;
     if (hcdc->TxState != 0) {
         return USBD_BUSY;
     }
-    USBD_CDC_SetTxBuffer(&_usbDevice, buf, len);
+    USBD_CDC_SetTxBuffer(&_usbDevice, (uint8_t*) buf, len);
     return USBD_CDC_TransmitPacket(&_usbDevice);
+}
+
+size_t UsbSerial::receive(char* buf, size_t nchar) {
+    size_t nread = 0;
+    while (nchar--) {
+        if (!_readFifo.isEmpty()) {
+            nread++;
+            _readFifo.remove((char*) buf++);
+        } else {
+            osThreadYield();
+        }
+    }
+    return nread;
 }

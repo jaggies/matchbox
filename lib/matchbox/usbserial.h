@@ -12,6 +12,9 @@
 #include "usbd_cdc.h"
 
 #ifdef __cplusplus
+
+#include "fifo.h"
+
 #define USB_RX_DATA_SIZE  64
 #define USB_TX_DATA_SIZE  64
 
@@ -21,7 +24,10 @@ class UsbSerial {
             return _instance ? _instance : (_instance = new UsbSerial());
         }
         // Transmits len bytes. Returns USBD_BUSY if there's already a transmission in progress.
-        int8_t transmit(uint8_t* buf, uint32_t len);
+        int8_t transmit(char* buf, size_t len);
+
+        // Reads received data from Fifo (filled by Receive_FS)
+        size_t receive(char* buf, size_t nchar);
     private:
         UsbSerial();
         ~UsbSerial();
@@ -38,14 +44,20 @@ class UsbSerial {
         uint8_t _rxBuffer[USB_RX_DATA_SIZE];
         uint8_t _txBuffer[USB_TX_DATA_SIZE];
         USBD_HandleTypeDef _usbDevice;
+        Fifo<char, size_t, USB_RX_DATA_SIZE> _readFifo;
         static UsbSerial* _instance;
 };
 
 extern "C" {
-int8_t usb_transmit(uint8_t* buf, uint32_t len);
+    // Ensure these have C bindings
+    int8_t usb_transmit(char* buf, size_t len);
+    size_t usb_receive(char* buf, size_t len);
 };
-#else // __cplusplus
-int8_t usb_transmit(uint8_t* buf, uint32_t len);
+
+#else // !__cplusplus
+    // Declare these for C apps
+    int8_t usb_transmit(char* buf, size_t len);
+    size_t usb_receive(char* buf, size_t len);
 #endif
 
 #endif /* USBSERIAL_H_ */

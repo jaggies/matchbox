@@ -24,8 +24,7 @@ enum DeathCode {
     BUFFER_NOT_ALIGNED
 };
 
-#define DMA_NVIC_PRIORITY 6
-#define SD_NVIC_PRIORITY 5 // must be lower than DMA_NVIC_PRIORITY
+#define SD_NVIC_PRIORITY 1 // must be lower than DMA_NVIC_PRIORITY
 #define SD_DMAx_Tx_CHANNEL                DMA_CHANNEL_4
 #define SD_DMAx_Rx_CHANNEL                DMA_CHANNEL_4
 #define SD_DMAx_TxRx_CLK_ENABLE           __HAL_RCC_DMA2_CLK_ENABLE
@@ -34,17 +33,17 @@ enum DeathCode {
 #define SD_DMAx_Tx_IRQn                   DMA2_Stream6_IRQn
 #define SD_DMAx_Rx_IRQn                   DMA2_Stream3_IRQn
 
+#define DMA_NVIC_PRIORITY 2
+
 static osThreadId defaultTaskHandle;
 static SD_HandleTypeDef uSdHandle;
-static HAL_SD_CardInfoTypeDef uSdCardInfo;
-static Pin* led;
 
 void StartDefaultTask(void const * argument);
 
 int main(void) {
     MatchBox* mb = new MatchBox(MatchBox::C168MHz);
 
-    osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
+    osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 1, 2048);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* Start scheduler */
@@ -81,13 +80,13 @@ bool sdDmaInit(void) {
 
     /* Deinitialize the stream for new transfer */
     if (HAL_DMA_DeInit(&dmaRxHandle) != HAL_OK) {
-        debug("Failed to DeInit Rx DMA\n");
+        printf("Failed to DeInit Rx DMA\n");
         result = false;
     }
 
     /* Configure the DMA stream */
     if (HAL_DMA_Init(&dmaRxHandle) != HAL_OK) {
-        debug("Failed to Init Rx DMA\n");
+        printf("Failed to Init Rx DMA\n");
         result = false;
     }
 
@@ -111,13 +110,13 @@ bool sdDmaInit(void) {
 
     /* Deinitialize the stream for new transfer */
     if (HAL_DMA_DeInit(&dmaTxHandle) != HAL_OK) {
-        error("Failed to DeInit Tx DMA\n");
+        printf("Failed to DeInit Tx DMA\n");
         result = false;
     }
 
     /* Configure the DMA stream */
     if (HAL_DMA_Init(&dmaTxHandle) != HAL_OK) {
-        error("Failed to Init Tx DMA\n");
+        printf("Failed to Init Tx DMA\n");
         result = false;
     }
 
@@ -210,34 +209,33 @@ bool sdInit() {
     return true;
 }
 
-bool readBlock(void* data, uint64_t addr) {
+bool readBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
-    debug("%s:\n", __func__);
-    while ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, addr, 1)) == HAL_BUSY) {
+    debug("%s %d ... ", __func__, block);
+    while ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, block, 1)) == HAL_BUSY) {
         debug("\tbusy\n");
     }
 
     if (status != HAL_OK) {
-        error("%\tfailed, status = %d\n", status);
+        debug("%failed, status = %d\n", status);
         return false;
     }
 
-    debug("\tcomplete\n");
+    debug("complete\n");
     return true;
 }
 
 bool writeBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
-    debug("%s:\n", __func__);
+    debug("%s %d ... ", __func__, block);
     while ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, block, 1))== HAL_BUSY) {
-        debug("\tbusy\n");
+        debug("\tbusy");
     }
 
     if (status != HAL_OK) {
-        error("\tfailed, status = %d\n",status);
+        debug("failed, status = %d\n",status);
         return false;
     }
-
     debug("\tcomplete\n");
 
     return true;
@@ -273,59 +271,59 @@ extern "C" {
     void SDIO_IRQHandler(void);
 }
 
+void DMA2_Stream0_IRQHandler() { debug("%s\n", __func__); }
+void DMA2_Stream1_IRQHandler() { debug("%s\n", __func__); }
+void DMA2_Stream2_IRQHandler() { debug("%s\n", __func__); }
+void DMA2_Stream4_IRQHandler() { debug("%s\n", __func__); }
+void DMA2_Stream5_IRQHandler() { debug("%s\n", __func__); }
+void DMA2_Stream7_IRQHandler() { debug("%s\n", __func__); }
+
+// overload SDIO_IRQHandler from stm32f415_matchbox_sd.c
 void SDIO_IRQHandler(void) {
-//    int fl = __HAL_SD_SDIO_GET_FLAG(&uSdHandle, SDIO_FLAG_DATAEND);
-//    debug("%s: end=%d\n", __func__, fl);
+//    debug("%s(overloaded)\n", __func__);
     HAL_SD_IRQHandler(&uSdHandle);
 }
 
-void DMA2_Stream0_IRQHandler() { debug("OOPS: %s\n", __func__); }
-void DMA2_Stream1_IRQHandler() { debug("OOPS: %s\n", __func__); }
-void DMA2_Stream2_IRQHandler() { debug("OOPS: %s\n", __func__); }
-void DMA2_Stream4_IRQHandler() { debug("OOPS: %s\n", __func__); }
-void DMA2_Stream5_IRQHandler() { debug("OOPS: %s\n", __func__); }
-void DMA2_Stream7_IRQHandler() { debug("OOPS: %s\n", __func__); }
-
 void DMA2_Stream3_IRQHandler() {
-    //debug("%s, rx=%p\n", __func__, uSdHandle.hdmarx);
+//    debug("%s, rx=%p\n", __func__, uSdHandle.hdmarx);
     HAL_DMA_IRQHandler(uSdHandle.hdmarx);
 }
 
 void DMA2_Stream6_IRQHandler() {
-    //debug("%s, tx=%p\n", __func__, uSdHandle.hdmatx);
+//    debug("%s, tx=%p\n", __func__, uSdHandle.hdmatx);
     HAL_DMA_IRQHandler(uSdHandle.hdmatx);
 }
 
 void StartDefaultTask(void const * argument) {
-    Pin _led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
-    led = &_led;
+    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     printf("Initializing SDIO DMA test...\n");
+
     if (!sdInit()) {
         error("Failed to initialize sdio\n");
-        MatchBox::blinkOfDeath(_led, (MatchBox::BlinkCode) SDIO_INIT);
+        MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_INIT);
     }
+
     if (!sdDmaInit()) {
-        debug("Failed to initialize sdio dma\n");
-        MatchBox::blinkOfDeath(_led, (MatchBox::BlinkCode) SDIO_DMA);
+        printf("Failed to initialize sdio dma\n");
+        MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_DMA);
     }
 
     uint8_t buff[512];
     if (uint32_t(&buff[0]) & 0x3 != 0) {
         error("Buffer not aligned!\n");
-        MatchBox::blinkOfDeath(_led, (MatchBox::BlinkCode) BUFFER_NOT_ALIGNED);
+        MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) BUFFER_NOT_ALIGNED);
     }
+
     bzero(buff, sizeof(buff));
 
     // Seed with random value
     srand(HAL_GetTick());
 
     printf("Starting DMA\n");
-    printf("RCC_HCLK = %d\n", HAL_RCC_GetHCLKFreq());
+
     int block = 0;
     while (1) {
-        for (int i = 0; i < sizeof(buff); i++) {
-            buff[i] = block; //rand() & 0xff;
-        }
+        memset(buff, block, sizeof(buff)); //rand() & 0xff;
 
         while (HAL_SD_GetState(&uSdHandle) != HAL_SD_CARD_READY) {
             debug("%s: card not ready\n", __func__);
@@ -333,27 +331,27 @@ void StartDefaultTask(void const * argument) {
 
         char fail = '.'; // no failure
         if (writeBlock(&buff[0], block)) {
-            char tmp[sizeof(buff)]; // temporary read buffer, for verification
-            if (readBlock(&tmp[0], block)) {
-                if (0 != memcmp(tmp, buff, sizeof(buff))) {
-                    fail = 'c'; // failed to compare
-                }
-            } else {
-                fail = 'r'; // failed to read
-            }
+//            char tmp[sizeof(buff)]; // temporary read buffer, for verification
+//            if (readBlock(&tmp[0], block)) {
+//                if (0 != memcmp(tmp, buff, sizeof(buff))) {
+//                    fail = 'c'; // failed to compare
+//                }
+//            } else {
+//                fail = 'r'; // failed to read
+//            }
         } else {
             fail = 'w'; // failed to write
         }
 
         if (!(block % 64)) {
-            printf("\n");
-            printf("Block %08x: ", block);
-            osDelay(1000); // don't scroll too fast
+            printf("\nBlock %08x: ", block);
         }
 
         printf("%c", fail);
 
+        osDelay(100); // don't go too fast
+
         //dumpBlock(&buff[0], count);
-        _led.write(block++ & 1);
+        led.write(block++ & 1);
     }
 }

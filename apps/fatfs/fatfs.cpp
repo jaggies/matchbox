@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include "matchbox.h"
+#include "stm32f415_matchbox_sd.h" // low-level BSP testing
 #include "ff.h"
 #include "ff_gen_drv.h"
 #include "sd_diskio.h"
@@ -144,6 +145,12 @@ void StartDefaultTask(void const * argument) {
     toggleLed(led); // off by default
 
     printf("FatFS Test...\n");
+
+    if (!BSP_SD_IsDetected()) {
+        printf("Waiting for SD card...\n");
+        while (!BSP_SD_IsDetected())
+            ;
+    }
 
     if (0 == FATFS_LinkDriver(&SD_Driver, &path[0])) {
         if (FR_OK == (status = f_mount(&FatFs, "", 0))) {

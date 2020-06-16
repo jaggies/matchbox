@@ -35,10 +35,16 @@ enum DeathCode {
 
 #define DMA_NVIC_PRIORITY 2
 
+static Pin* _led;
 static osThreadId defaultTaskHandle;
 static SD_HandleTypeDef uSdHandle;
 
 void StartDefaultTask(void const * argument);
+
+void toggleLed() {
+    static uint8_t toggle;
+    _led->write(toggle++ & 1);
+}
 
 int main(void) {
     MatchBox* mb = new MatchBox(MatchBox::C168MHz);
@@ -212,6 +218,9 @@ bool sdInit() {
 bool readBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
     debug("%s %d ... ", __func__, block);
+    while (HAL_DMA_GetState(uSdHandle.hdmarx) != HAL_DMA_STATE_READY) {
+        osThreadYield();
+    }
     while ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, block, 1)) == HAL_BUSY) {
         debug("\tbusy\n");
     }
@@ -228,6 +237,11 @@ bool readBlock(void* data, uint32_t block) {
 bool writeBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
     debug("%s %d ... ", __func__, block);
+
+//    while (HAL_SD_GetCardState(&uSdHandle) == HAL_SD_CARD_TRANSFER) {
+//        osThreadYield();
+//    }
+
     while ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, block, 1))== HAL_BUSY) {
         debug("\tbusy");
     }
@@ -291,11 +305,14 @@ void DMA2_Stream3_IRQHandler() {
 
 void DMA2_Stream6_IRQHandler() {
 //    debug("%s, tx=%p\n", __func__, uSdHandle.hdmatx);
+    toggleLed();
     HAL_DMA_IRQHandler(uSdHandle.hdmatx);
 }
 
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
+    _led = &led;
+
     printf("Initializing SDIO DMA test...\n");
 
     if (!sdInit()) {
@@ -352,6 +369,6 @@ void StartDefaultTask(void const * argument) {
         osDelay(100); // don't go too fast
 
         //dumpBlock(&buff[0], count);
-        led.write(block++ & 1);
+        block++;
     }
 }

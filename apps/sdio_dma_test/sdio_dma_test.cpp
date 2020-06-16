@@ -340,8 +340,6 @@ void StartDefaultTask(void const * argument) {
         MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) BUFFER_NOT_ALIGNED);
     }
 
-    bzero(buff, sizeof(buff));
-
     // Seed with random value
     srand(HAL_GetTick());
 
@@ -349,7 +347,9 @@ void StartDefaultTask(void const * argument) {
 
     int block = 0;
     while (1) {
-        memset(buff, block, sizeof(buff)); //rand() & 0xff;
+        for (int i = 0; i < sizeof(buff); i++) {
+            buff[i] = rand() & 0xff;
+        }
         char fail = '.'; // no failure
         if (writeBlock(&buff[0], block)) {
             char tmp[sizeof(buff)]; // temporary read buffer, for verification
@@ -365,7 +365,9 @@ void StartDefaultTask(void const * argument) {
         }
 
         if (!(block % 64)) {
-            printf("\nBlock %08x: ", block);
+            printf("\n");
+            // For some reason this doesn't print if newline is first!
+            printf("Block %08x: ", block);
         }
 
         printf("%c", fail);

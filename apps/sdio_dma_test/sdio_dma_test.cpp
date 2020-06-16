@@ -218,12 +218,20 @@ bool sdInit() {
 bool readBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
     debug("%s %d ... ", __func__, block);
-    while (HAL_DMA_GetState(uSdHandle.hdmarx) != HAL_DMA_STATE_READY) {
+    while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
         osThreadYield();
     }
+    // TODO: Check actual status before continuing
     while ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, block, 1)) == HAL_BUSY) {
         debug("\tbusy\n");
     }
+
+    // Wait for read to complete
+    while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
+        osThreadYield();
+    }
+
+    // TODO: Check actual status before continuing
 
     if (status != HAL_OK) {
         debug("%failed, status = %d\n", status);
@@ -340,21 +348,16 @@ void StartDefaultTask(void const * argument) {
     int block = 0;
     while (1) {
         memset(buff, block, sizeof(buff)); //rand() & 0xff;
-
-//        while (HAL_SD_GetState(&uSdHandle) != HAL_SD_CARD_READY) {
-//            debug("%s: card not ready\n", __func__);
-//        }
-
         char fail = '.'; // no failure
         if (writeBlock(&buff[0], block)) {
-//            char tmp[sizeof(buff)]; // temporary read buffer, for verification
-//            if (readBlock(&tmp[0], block)) {
-//                if (0 != memcmp(tmp, buff, sizeof(buff))) {
-//                    fail = 'c'; // failed to compare
-//                }
-//            } else {
-//                fail = 'r'; // failed to read
-//            }
+            char tmp[sizeof(buff)]; // temporary read buffer, for verification
+            if (readBlock(&tmp[0], block)) {
+                if (0 != memcmp(tmp, buff, sizeof(buff))) {
+                    fail = 'c'; // failed to compare
+                }
+            } else {
+                fail = 'r'; // failed to read
+            }
         } else {
             fail = 'w'; // failed to write
         }

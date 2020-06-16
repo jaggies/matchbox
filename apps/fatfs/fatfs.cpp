@@ -167,19 +167,19 @@ void StartDefaultTask(void const * argument) {
         MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_LINK);
     }
 
-    debug("Entering loop\n");
     toggleLed(led);
 
+    printf("Starting test...\n");
     while (1) {
         uint32_t count = 0;
         srand(0); // reset seed so files contain same data
 
         // Find unused filename
         char * fname = NULL;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             char buff[32];
             FILINFO info = { 0 };
-            sprintf(buff, "file%04d.dat", i++);
+            sprintf(buff, "file%04d.dat", i);
             debug("stat %s\n", buff);
             if (f_stat(buff, &info) == FR_OK) {
                 debug("Skipping '%s'\n", buff);
@@ -190,35 +190,35 @@ void StartDefaultTask(void const * argument) {
             }
         }
         if (!fname) {
-            printf("Test done. No more filenames\n");
+            printf("Test done. No more files\n");
             while (1)
                 ;
         }
 
         // Write file with random data...
-        printf("Writing %s\n", fname);
+        printf("Writing %s...", fname);
         const int blocks = 8192;
         int startTime = HAL_GetTick();
         if (!writeFile(fname, blocks, led)) {
-            error("Failed to write file %s\n", fname);
+            printf("failed\n");
             osDelay(1000);
             continue;
         } else {
             int timeNow = HAL_GetTick();
             float dt = float(timeNow - startTime) / 1000.0f;
-            printf("done(%0.2f kB/s)\n", (float) blocks*512 / dt / 1024.0f);
+            printf("done %0.2fkB/s\n", (float) blocks*512 / dt / 1024.0f);
         }
 
         // Verify data...
-        printf("Verifying %s\n", fname);
+        printf("Verifying %s...", fname);
         startTime = HAL_GetTick();
         if (!verifyFile(fname, blocks, led)) {
-            error("Failed to verify file %s\n", fname);
+            printf("failed\n");
             osDelay(1000);
         } else {
             int timeNow = HAL_GetTick();
             float dt = float(timeNow - startTime) / 1000.0f;
-            printf("verified(%0.2f kB/s)\n", (float) blocks*512 / dt / 1024.0f);
+            printf("verified %0.2fkB/s\n", (float) blocks*512 / dt / 1024.0f);
         }
 
         free(fname);

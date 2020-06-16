@@ -218,20 +218,17 @@ bool sdInit() {
 bool readBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
     debug("%s %d ... ", __func__, block);
-    while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
-        osThreadYield();
-    }
-    // TODO: Check actual status before continuing
+
     while ((status = HAL_SD_ReadBlocks_DMA(&uSdHandle, (uint8_t*) data, block, 1)) == HAL_BUSY) {
         debug("\tbusy\n");
     }
 
-    // Wait for read to complete
-    while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
-        osThreadYield();
+    // Wait for it to complete. TODO: could return and do other stuff if want async
+    if (status == HAL_OK) {
+        while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
+            osThreadYield();
+        }
     }
-
-    // TODO: Check actual status before continuing
 
     if (status != HAL_OK) {
         debug("%failed, status = %d\n", status);
@@ -245,12 +242,17 @@ bool readBlock(void* data, uint32_t block) {
 bool writeBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
     debug("%s %d ... ", __func__, block);
-    while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
-        osThreadYield();
-    }
+
     // TODO: Check actual status before continuing
     while ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, block, 1))== HAL_BUSY) {
         debug("\tbusy");
+    }
+
+    // Wait for it to complete
+    if (status == HAL_OK) {
+        while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
+            osThreadYield();
+        }
     }
 
     if (status != HAL_OK) {

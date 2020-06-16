@@ -126,8 +126,14 @@ bool verifyFile(const char* fname, int blocks, Pin& led) {
 
 enum DeathCode {
     SDIO_MOUNT = MatchBox::CODE_LAST, // blink codes start here
-    SDIO_LINK
+    SDIO_LINK,
+    SDIO_LABEL
 };
+
+void toggleLed(Pin& led) {
+    static int c;
+    led.write(c++ & 1);
+}
 
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
@@ -135,16 +141,22 @@ void StartDefaultTask(void const * argument) {
     FRESULT status;
     char path[4];
 
-    led.write(0); // off by default
+    toggleLed(led); // off by default
+
+    printf("FatFS Test...\n");
 
     if (0 == FATFS_LinkDriver(&SD_Driver, &path[0])) {
         if (FR_OK == (status = f_mount(&FatFs, "", 0))) {
             debug("Successfully mounted volume\n");
-            debug("Waiting for SD\n");
-            int t = 5;
-            while (t) {
-                debug("%d...\n", t--);
-                osDelay(1000);
+            toggleLed(led);
+            char label[32];
+            // Getting the label has the side effect of mounting the volume
+            if (FR_OK == f_getlabel(&path[0], &label[0], 0)) {
+                toggleLed(led);
+                printf("Opened volume '%s'\n", strlen(label) > 0 ? label : "NONAME");
+            } else {
+                error("Failed to get label!\n");
+                MatchBox::blinkOfDeath(led, (MatchBox::BlinkCode) SDIO_LABEL);
             }
         } else {
             error("Failed to open volume: status=%d\n", status);
@@ -156,6 +168,7 @@ void StartDefaultTask(void const * argument) {
     }
 
     debug("Entering loop\n");
+    toggleLed(led);
 
     while (1) {
         uint32_t count = 0;

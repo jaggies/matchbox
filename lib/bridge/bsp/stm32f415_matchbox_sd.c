@@ -62,6 +62,37 @@ __weak void DMA2_Stream3_IRQHandler(void) {
     HAL_DMA_IRQHandler(uSdHandle.hdmarx);
 }
 
+//
+// These are required for fatfs to work.  It redirects the HAL SDIO callbacks to BSP...
+//
+
+/**
+  * @brief SD Abort callbacks
+  * @param hsd: SD handle
+  */
+void HAL_SD_AbortCallback(SD_HandleTypeDef *hsd)
+{
+  BSP_SD_AbortCallback();
+}
+
+/**
+  * @brief Tx Transfer completed callbacks
+  * @param hsd: SD handle
+  */
+void HAL_SD_TxCpltCallback(SD_HandleTypeDef *hsd)
+{
+  BSP_SD_WriteCpltCallback();
+}
+
+/**
+  * @brief Rx Transfer completed callbacks
+  * @param hsd: SD handle
+  */
+void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsd)
+{
+  BSP_SD_ReadCpltCallback();
+}
+
 /**
  * @brief  Initializes the SD card device.
  * @retval SD status.
@@ -383,4 +414,13 @@ uint8_t BSP_SD_GetCardState(void)
 {
   return((HAL_SD_GetCardState(&uSdHandle) == HAL_SD_CARD_TRANSFER ) ? SD_TRANSFER_OK : SD_TRANSFER_BUSY);
 }
+
+/**
+  * @brief BSP SD Abort callback. Can be overloaded by application.
+  */
+__weak void BSP_SD_AbortCallback(void)
+{
+
+}
+
 

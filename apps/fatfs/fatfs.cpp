@@ -20,7 +20,7 @@ osThreadId defaultTaskHandle;
 void StartDefaultTask(void const * argument);
 
 int main(void) {
-    MatchBox* mb = new MatchBox(MatchBox::C72MHz);
+    MatchBox* mb = new MatchBox(MatchBox::C168MHz);
 
     osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 1, 2048);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);

@@ -5,9 +5,11 @@
  *      Author: jmiller
  */
 
+#include <stddef.h>
+#include <cassert>
 #include <cstdio>
-#include <cstring> // memcmmp
 #include <cstdlib> // rand()
+#include <cstring> // memcmmp
 #include <cassert>
 #include "matchbox.h"
 #include "stm32f415_matchbox_sd.h" // low-level BSP testing
@@ -42,7 +44,7 @@ void detectCb(uint32_t pin, void* arg) {
 bool readBlock(void* data, uint32_t block) {
     uint8_t status;
     debug("%s:\n", __func__);
-    assert(0 == (((size_t)data) & 0x03)); // must be 32-bit aligned
+//    assert(0 == (((size_t)data) & 0x03)); // must be 32-bit aligned
     while ((status = BSP_SD_ReadBlocks_DMA((uint32_t*) data, block, 1)) == HAL_BUSY) {
         debug("\tbusy\n");
     }
@@ -115,28 +117,29 @@ void StartDefaultTask(void const * argument) {
 
     if (!BSP_SD_IsDetected()) {
         printf("No SD card detected\n");
-        osDelay(500);
+        while (!BSP_SD_IsDetected())
+            ;
     }
 
-    while (BSP_SD_Init() != MSD_OK) {
-        printf("Failed to initialize SD card...\n");
-        osDelay(500);
+    if (BSP_SD_Init() != MSD_OK) {
+        printf("Waiting to initialize SD card");
+        while (BSP_SD_Init() != MSD_OK) {
+            printf(".");
+            osDelay(500);
+        }
     }
 
-    while(BSP_SD_GetCardInfo(&info) != MSD_OK) {
+    if(BSP_SD_GetCardInfo(&info) != MSD_OK) {
         printf("Waiting for card info...\n");
-        osDelay(500);
+        while (BSP_SD_GetCardInfo(&info) != MSD_OK) {
+            printf(".");
+            osDelay(500);
+        }
     }
-    printf("IsDetected: %d\n", BSP_SD_IsDetected());
     printf("Type: %x\n", info.CardType);
-
     printf("Block size: %d\n", info.BlockSize);
-    printf("Capacity: %d (blocks)\n", info.BlockNbr);
-
-    // HAL_SD_GetCardCID(SD_HandleTypeDef *hsd, HAL_SD_CardCIDTypeDef *pCID)
-//    printf("ManufacturerID: %x\n", info.SD_cid.ManufacturerID);
-//    printf("Mfg date: %04x\n", info.SD_cid.ManufactDate);
-//    printf("SN: %08x\n\n", info.SD_cid.ProdSN);
+    printf("Capacity: %dMB\n", info.BlockNbr / (1024*1024 / info.BlockSize)); // Nb * mb/block = mb
+    printf("Card type: %d\n", info.CardType);
 
     printf("Starting BSP SDIO tests\n");
     int block = 0;

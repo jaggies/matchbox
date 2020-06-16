@@ -39,7 +39,7 @@ static Pin* led;
 
 void StartDefaultTask(void const * argument);
 
-static const int timeout = 1000; // 1s
+static const int timeout = -1; // forever
 
 int main(void) {
     MatchBox* mb = new MatchBox();
@@ -144,6 +144,13 @@ bool readBlock(void* data, uint32_t block) {
         debug("\tbusy\n");
     }
 
+    // Wait for it to complete
+    if (status == HAL_OK) {
+        while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
+            osThreadYield();
+        }
+    }
+
     if (status != HAL_OK) {
         error("%\tfailed, status = %d\n", status);
         return false;
@@ -160,6 +167,12 @@ bool writeBlock(void* data, uint32_t block) {
         debug("\tbusy\n");
     }
 
+    // Wait for it to complete
+    if (status == HAL_OK) {
+        while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
+            osThreadYield();
+        }
+    }
     if (status != HAL_OK) {
         error("\tfailed, status = %d\n",status);
         return false;
@@ -207,12 +220,12 @@ void StartDefaultTask(void const * argument) {
     srand(HAL_GetTick());
 
     printf("Starting non-DMA\n");
-    printf("RCC_HCLK = %d\n", HAL_RCC_GetHCLKFreq());
+    debug("RCC_HCLK = %d\n", HAL_RCC_GetHCLKFreq());
 
     int block = 0;
     while (1) {
         for (int i = 0; i < sizeof(buff); i++) {
-            buff[i] = block; //rand() & 0xff;
+            buff[i] = rand() & 0xff;
         }
 
         while (HAL_SD_GetState(&uSdHandle) != HAL_SD_CARD_READY) {
@@ -234,9 +247,8 @@ void StartDefaultTask(void const * argument) {
         }
 
         if (!(block % 64)) {
-            printf("\n");
+            printf("\n"); // bug in printf requires a separate call for this
             printf("Block %08x: ", block);
-            osDelay(1000); // don't scroll too fast
         }
 
         printf("%c", fail);

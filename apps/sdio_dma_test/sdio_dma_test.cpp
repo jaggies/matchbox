@@ -237,11 +237,10 @@ bool readBlock(void* data, uint32_t block) {
 bool writeBlock(void* data, uint32_t block) {
     HAL_StatusTypeDef status;
     debug("%s %d ... ", __func__, block);
-
-//    while (HAL_SD_GetCardState(&uSdHandle) == HAL_SD_CARD_TRANSFER) {
-//        osThreadYield();
-//    }
-
+    while (HAL_SD_GetCardState(&uSdHandle) != HAL_SD_CARD_TRANSFER) {
+        osThreadYield();
+    }
+    // TODO: Check actual status before continuing
     while ((status = HAL_SD_WriteBlocks_DMA(&uSdHandle, (uint8_t*) data, block, 1))== HAL_BUSY) {
         debug("\tbusy");
     }
@@ -342,9 +341,9 @@ void StartDefaultTask(void const * argument) {
     while (1) {
         memset(buff, block, sizeof(buff)); //rand() & 0xff;
 
-        while (HAL_SD_GetState(&uSdHandle) != HAL_SD_CARD_READY) {
-            debug("%s: card not ready\n", __func__);
-        }
+//        while (HAL_SD_GetState(&uSdHandle) != HAL_SD_CARD_READY) {
+//            debug("%s: card not ready\n", __func__);
+//        }
 
         char fail = '.'; // no failure
         if (writeBlock(&buff[0], block)) {
@@ -366,7 +365,7 @@ void StartDefaultTask(void const * argument) {
 
         printf("%c", fail);
 
-        osDelay(100); // don't go too fast
+//        osDelay(50); // don't go too fast
 
         //dumpBlock(&buff[0], count);
         block++;

@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <cstring> // memcmmp
 #include <cstdlib> // rand()
+#include <cassert>
 #include "matchbox.h"
 #include "stm32f415_matchbox_sd.h" // low-level BSP testing
 #include "pin.h"
@@ -38,45 +39,71 @@ void detectCb(uint32_t pin, void* arg) {
     printf("SD DETECT!\n");
 }
 
-void ioTest(const int count, bool useDma) {
-    static uint8_t buff[512];
-    static uint8_t tmp[sizeof(buff)]; // temporary read buffer for verification
-    printf("Test %s DMA", useDma ? "with" : "without");
-    for (int block = 0; block < count; block++) {
-        memset(buff, block, sizeof(buff));
-        char fail = '.';
-        if (useDma) {
-            if (BSP_SD_WriteBlocks_DMA((uint32_t*)&buff[0], block, 1) == HAL_OK) {
-                if (BSP_SD_ReadBlocks_DMA((uint32_t*)&tmp[0], block, 1) == HAL_OK) {
-                    if (0 != memcmp(tmp, buff, sizeof(buff))) {
-                        fail = 'c';
-                    }
-                } else {
-                    fail = 'r';
-                }
-            } else {
-                fail = 'w';
-            }
-        } else {
-            if (BSP_SD_WriteBlocks((uint32_t*)&buff[0], block, 1, timeout) == HAL_OK) {
-                if (BSP_SD_ReadBlocks_DMA((uint32_t*)&tmp[0], block, timeout) == HAL_OK) {
-                    if (0 != memcmp(tmp, buff, sizeof(buff))) {
-                        fail = 'c';
-                    }
-                } else {
-                    fail = 'r';
-                }
-            } else {
-                fail = 'w';
-            }
-        }
-        if (0 == (block % 64)) {
-            printf("\nBlock %08x: ", block);
-        }
-        printf("%c", fail);
+bool readBlock(void* data, uint32_t block) {
+    uint8_t status;
+    debug("%s:\n", __func__);
+    assert(0 == (((size_t)data) & 0x03)); // must be 32-bit aligned
+    while ((status = BSP_SD_ReadBlocks_DMA((uint32_t*) data, block, 1)) == HAL_BUSY) {
+        debug("\tbusy\n");
     }
-    printf("\n");
+
+    // Wait for it to complete
+    if (status == MSD_OK) {
+        while (BSP_SD_GetCardState() != SD_TRANSFER_OK) {
+            osThreadYield();
+        }
+    }
+
+    if (status != MSD_OK) {
+        error("%\tfailed, status = %d\n", status);
+        return false;
+    }
+
+    debug("\tcomplete\n");
+    return true;
 }
+
+bool writeBlock(void* data, uint32_t block) {
+    uint8_t status;
+    debug("%s:\n", __func__);
+    while ((status = BSP_SD_WriteBlocks_DMA((uint32_t*) data, block, 1))== HAL_BUSY) {
+        debug("\tbusy\n");
+    }
+
+    // Wait for it to complete
+    if (status == MSD_OK) {
+        while (BSP_SD_GetCardState() != SD_TRANSFER_OK) {
+            osThreadYield();
+        }
+    }
+    if (status != MSD_OK) {
+        error("\tfailed, status = %d\n",status);
+        return false;
+    }
+
+    debug("\tcomplete\n");
+
+    return true;
+}
+
+void dumpBlock(uint8_t* data, int block) {
+    for (int i = 0; i < 512; i++) {
+        if ((i % 16) == 0) {
+            debug("%08x: ", block * 512 + i);
+        }
+        debug("%02x", data[i]);
+        if ((i % 16) == 15) {
+            debug(" ");
+            for (int j = 15; j > 0; j--) {
+                int ch = data[i - j];
+                ch = ch < 32 || ch > 127 ? '.' : ch;
+                printf("%c", ch);
+            }
+            debug((i % 16) == 15 ? "\n" : " ");
+        }
+    }
+}
+
 
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
@@ -112,14 +139,41 @@ void StartDefaultTask(void const * argument) {
 //    printf("SN: %08x\n\n", info.SD_cid.ProdSN);
 
     printf("Starting BSP SDIO tests\n");
-    int count = 0;
-    int n = 1;
-    while (n--) {
-        led.write(++count & 1);
-        ioTest(64*8, true);
-        ioTest(64*8, false);
+    int block = 0;
+    char buff[512];
+    printf("Buff = %p\n", &buff[0]);
+    while (1) {
+        for (int i = 0; i < sizeof(buff); i++) {
+            buff[i] = rand() & 0xff;
+        }
+
+        // TODO: Is there a better way to get this info?
+        while (BSP_SD_GetCardState() == SD_TRANSFER_BUSY) {
+            debug("%s: card not ready\n", __func__);
+        }
+
+        char fail = '.'; // no failure
+        if (writeBlock(&buff[0], block)) {
+            char tmp[sizeof(buff)]; // temporary read buffer, for verification
+            if (readBlock(&tmp[0], block)) {
+                if (0 != memcmp(tmp, buff, sizeof(buff))) {
+                    fail = 'c'; // failed to compare
+                }
+            } else {
+                fail = 'r'; // failed to read
+            }
+        } else {
+            fail = 'w'; // failed to write
+        }
+
+        if (!(block % 64)) {
+            printf("\n"); // bug in printf requires a separate call for this
+            printf("Block %08x: ", block);
+        }
+
+        printf("%c", fail);
+
+        //dumpBlock(&buff[0], count);
+        led.write(block++ & 1);
     }
-    printf("done\n");
-    while(1)
-        ;
 }

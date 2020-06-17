@@ -145,12 +145,26 @@ void StartDefaultTask(void const * argument) {
     toggleLed(led); // off by default
 
     printf("FatFS Test...\n");
+    HAL_SD_CardInfoTypeDef info;
 
     if (!BSP_SD_IsDetected()) {
         printf("Waiting for SD card...\n");
         while (!BSP_SD_IsDetected())
             ;
     }
+
+    BSP_SD_Init();
+    if(BSP_SD_GetCardInfo(&info) != MSD_OK) {
+        printf("Waiting for card info...\n");
+        while (BSP_SD_GetCardInfo(&info) != MSD_OK) {
+            printf(".");
+            osDelay(500);
+        }
+    }
+    printf("Type: %x\n", info.CardType);
+    printf("Block size: %d\n", info.BlockSize);
+    printf("Capacity: %dMB\n", info.BlockNbr / (1024*1024 / info.BlockSize)); // Nb * mb/block = mb
+    printf("Card type: %d\n", info.CardType);
 
     if (0 == FATFS_LinkDriver(&SD_Driver, &path[0])) {
         if (FR_OK == (status = f_mount(&FatFs, "", 0))) {

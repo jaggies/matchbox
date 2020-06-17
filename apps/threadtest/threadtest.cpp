@@ -6,8 +6,13 @@
  */
 
 #include "matchbox.h"
+#include "cmsis_os.h"
 
 volatile int count = 1;
+
+static osMessageQId osQueue;
+
+#define MSG_BLINK 123
 
 void blink(void const* argument) {
     GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
@@ -17,16 +22,26 @@ void blink(void const* argument) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
     while (1) {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, (count & 1) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-        osDelay(50); // this could be a lot more efficient. Look into using kernel messages
+        /* Wait until something arrives in the queue. */
+        osEvent event = osMessageGet(osQueue, osWaitForever);
+
+        if (event.status == osEventMessage) {
+            if (event.value.v == MSG_BLINK) {
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
+                osDelay(50);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET);
+            }
+        }
     }
-    osThreadTerminate(osThreadGetId()); // should never get here. Clean up this task if we do
+
+    // should never get here. Clean up this task if we do.
+    osThreadTerminate(osThreadGetId());
 }
 
 void doCount(void const* argument) {
     while (1) {
         osDelay(250);
-        count++;
+        osMessagePut (osQueue, (uint32_t)MSG_BLINK, 0);
     }
     osThreadTerminate(osThreadGetId()); // should never get here. Clean up this task if we do
 }
@@ -45,6 +60,9 @@ int main(void) {
 
     osThreadDef(countThread, doCount, osPriorityNormal, 1, 2048);
     osThreadCreate(osThread(countThread), NULL);
+
+    osMessageQDef(osqueue, 1 /* queue length */, uint16_t);
+    osQueue = osMessageCreate (osMessageQ(osqueue), NULL);
 
     /* Start scheduler */
     osKernelStart();

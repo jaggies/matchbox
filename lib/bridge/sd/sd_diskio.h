@@ -21,8 +21,7 @@
 #define __SD_DISKIO_H
 
 /* Includes ------------------------------------------------------------------*/
-//#include "stm32xxxxx_{eval}{discovery}_sd.h"
-#include "stm32f415_matchbox_sd.h"
+#include "matchbox_sd.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

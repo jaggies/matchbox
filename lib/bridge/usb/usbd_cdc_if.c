@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    usbd_cdc_if_template.c
+  * @file    usbd_cdc_if.c
   * @author  MCD Application Team
   * @brief   Generic media access Layer.
   ******************************************************************************

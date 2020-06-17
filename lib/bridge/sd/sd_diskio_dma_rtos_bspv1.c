@@ -1,6 +1,6 @@
 /**
 ******************************************************************************
-* @file    sd_diskio_dma_rtos_template.c
+* @file    sd_diskio_dma_rtos.c
 * @author  MCD Application Team
 * @brief   SD Disk I/O DMA with RTOS driver template. This file needs to be
 copied at user project alongside the respective header file.

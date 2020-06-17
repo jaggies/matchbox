@@ -18,9 +18,6 @@ SubDirHdrs $(TOP) lib hal CMSIS Include ;
 
 Library libmatchbox :
 	handlers.cpp
-	stm32f415_matchbox_sd.c
+	matchbox_sd.c
 	;
-
-SubInclude TOP lib bridge sd ;
-#SubInclude TOP lib bridge usb ;
 

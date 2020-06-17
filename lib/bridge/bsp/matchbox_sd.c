@@ -8,8 +8,7 @@
 #include "cmsis_os.h" // osThreadYield()
 #include "util.h"
 #include "handlers.h"
-#include "stm32f415_matchbox_sd.h"
-//#include "util.h"
+#include "matchbox_sd.h"
 
 #define SD_DETECT_PIN                    GPIO_PIN_8
 #define SD_DETECT_GPIO_PORT              GPIOB

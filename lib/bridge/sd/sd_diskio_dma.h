@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    sd_diskio_dma_template.h
+  * @file    sd_diskio_dma.h
   * @author  MCD Application Team
   * @brief   Header for sd_diskio_dma_template.c module.This file needs to be
              customized then copied into the application project
@@ -21,8 +21,7 @@
 #define __SD_DISKIO_H
 
 /* Includes ------------------------------------------------------------------*/
-//#include "stm32xxxxx_{eval}{discovery}_sd.h"
-#include "stm32f415_matchbox_sd.h"
+#include "matchbox_sd.h"
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

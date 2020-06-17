@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32f413h_discovery_sd.h
+  * @file    matchbox_sd.h
   * @author  MCD Application Team
   * @brief   This file contains the common defines and functions prototypes for
   *          the stm32413h_discovery_sd.c driver.
@@ -35,30 +35,30 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F413H_DISCOVERY_SD_H
-#define __STM32F413H_DISCOVERY_SD_H
+#ifndef __MATCHBOX_SD_H
+#define __MATCHBOX_SD_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-//#include "stm32f413h_discovery.h"
+//#include "matchbox.h"
 #include "stm32f4xx_hal.h"
 
 /** @addtogroup BSP
   * @{
   */
 
-/** @addtogroup STM32F413H_DISCOVERY
+/** @addtogroup matchbox
   * @{
   */
 
-/** @addtogroup STM32F413H_DISCOVERY_SD
+/** @addtogroup MATCHBOX_SD
   * @{
   */
 
-/** @addtogroup STM32F413H_DISCOVERY_SD_Private_Variables
+/** @addtogroup MATCHBOX_SD_Private_Variables
   * @{
   */
 
@@ -70,7 +70,7 @@
   * @}
   */
 
-/** @defgroup STM32F413H_DISCOVERY_SD_Exported_Constants STM32F413H DISCOVERY SD Exported Constants
+/** @defgroup MATCHBOX_SD_Exported_Constants STM32F413H DISCOVERY SD Exported Constants
   * @{
   */
 
@@ -107,7 +107,7 @@
   * @}
   */
 
-/** @defgroup STM32F413H_DISCOVERY_SD_Exported_Functions STM32F413H DISCOVERY SD Exported Functions
+/** @defgroup MATCHBOX_SD_Exported_Functions STM32F413H DISCOVERY SD Exported Functions
   * @{
   */
 uint8_t BSP_SD_Init(void);
@@ -151,6 +151,6 @@ void    BSP_SD_ReadCpltCallback(void);
 }
 #endif
 
-#endif /* __STM32F413H_DISCOVERY_SD_H */
+#endif /* __MATCHBOX_SD_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

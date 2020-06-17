@@ -12,7 +12,7 @@
 #include <cstring> // memcmmp
 #include <cassert>
 #include "matchbox.h"
-#include "stm32f415_matchbox_sd.h" // low-level BSP testing
+#include "matchbox_sd.h" // low-level BSP testing
 #include "pin.h"
 #include "util.h"
 

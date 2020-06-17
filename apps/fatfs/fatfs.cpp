@@ -9,7 +9,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include "matchbox.h"
-#include "stm32f415_matchbox_sd.h" // low-level BSP testing
+#include "matchbox_sd.h" // low-level BSP testing
 #include "ff.h"
 #include "ff_gen_drv.h"
 #include "sd_diskio.h"

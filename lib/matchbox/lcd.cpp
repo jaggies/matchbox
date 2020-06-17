@@ -16,6 +16,7 @@
 #include "gpio.h"
 #include "lcd.h"
 #include "util.h"
+#include "cmsis_os.h" // osThreadYield()
 
 #define BLE_PRESENT
 
@@ -260,3 +261,12 @@ void Lcd::putString(const char *str, int x, int y, const uint8_t* fg, const uint
 		x += putChar(ch, x, y, fg, bg);
 	}
 }
+
+void Lcd::swapBuffers() {
+    _doSwap = true; /* handled in refresh */
+    while (_doSwap) {
+        // wait for ack from interrupt handler
+        osThreadYield();
+    }
+}
+

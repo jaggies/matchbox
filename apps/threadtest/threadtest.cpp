@@ -18,7 +18,7 @@ void blink(void const* argument) {
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
     while (1) {
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, (count & 1) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-        osThreadYield();
+        osDelay(50); // this could be a lot more efficient. Look into using kernel messages
     }
     osThreadTerminate(osThreadGetId()); // should never get here. Clean up this task if we do
 }
@@ -27,9 +27,12 @@ void doCount(void const* argument) {
     while (1) {
         osDelay(250);
         count++;
-        osThreadYield();
     }
     osThreadTerminate(osThreadGetId()); // should never get here. Clean up this task if we do
+}
+
+extern "C" void vApplicationIdleHook(void) {
+    __WFE(); // sleep while waiting
 }
 
 int main(void) {

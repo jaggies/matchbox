@@ -22,6 +22,7 @@ void SysTick_Handler(void);
 void TIM1_UP_TIM10_IRQHandler(void);
 void OTG_FS_IRQHandler(void);
 void SDIO_IRQHandler(void);
+void vApplicationIdleHook (void);
 
 #ifdef __cplusplus
 }

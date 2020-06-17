@@ -70,12 +70,7 @@ class Lcd {
 		    putString(str, x, y, _fg, _bg);
 		}
 		void putString(const char *str, int x, int y, const uint8_t* fg, const uint8_t* bg);
-		void swapBuffers() {
-            _doSwap = true; /* handled in refresh */
-            while (_doSwap) {
-                // wait for ack from interrupt handler
-            }
-		}
+		void swapBuffers();
 
 		int getHeight() const { return _yres; }
 		int getWidth() const { return _xres; }

@@ -218,7 +218,7 @@ bool Lcd::setFont(const char* name) {
     return false;
 }
 
-int Lcd::putChar(uint8_t c, int x, int y, const uint8_t* fg, const uint8_t* bg) {
+int Lcd::putChar(uint8_t c, const uint8_t* fg, const uint8_t* bg) {
 
     if (!_currentFont) return 0;
 
@@ -241,29 +241,34 @@ int Lcd::putChar(uint8_t c, int x, int y, const uint8_t* fg, const uint8_t* bg) 
         return 0; // character not found
     }
     const CharData* charData = &_currentFont->charData[mid];
+    const int charWidthBits = charData->width * _depth;
 	for (int j = 0; j < charData->height; j++) {
 		for (int i = 0; i < charData->width; i++) {
+		    // TODO: This could be a lot faster by eliminating full address calculation
+		    // or using bit banding
 		    const int bitAddr = (charData->y + j) * _currentFont->width + (charData->x + i);
 		    const int byteAddr = bitAddr / 8;
 		    const int bitMask = 1 << (bitAddr % 8);
 			const uint8_t* color = (_currentFont->bitmap[byteAddr] & bitMask) ? bg : fg;
 			if (color) {
 			    setColor(color[0], color[1], color[2]);
-			    setPixel(i + x, j + y);
+			    setPixel();
 			}
+			incX();
 		}
+		_rasterX -= charData->width; // in pixels
+		_rasterOffset -= charWidthBits; // reset to start of character
+		incY();
 	}
+	// When we leave this routine, raster should point to the top left of next character
+	_rasterOffset -= charData->height * _scanIncrement;
+	_rasterOffset += charWidthBits;
 	return charData->width;
 }
 
-void Lcd::putString(const char *str, int x, int y, const uint8_t* fg, const uint8_t *bg) {
+void Lcd::putString(const char *str, const uint8_t* fg, const uint8_t *bg) {
 	while (char ch = *str++) {
-	    if (isprint(ch)) {
-	        x += putChar(ch, x, y, fg, bg);
-	    } else if (ch == '\n') {
-	        y += getFontHeight(); // TODO: Move this to putChar()
-	        x = 0;
-	    }
+	    putChar(ch, fg, bg) * _depth;
 	}
 }
 

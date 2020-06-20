@@ -62,14 +62,26 @@ class Lcd {
         void decY();
 
 		bool setFont(const char* name);
+
+		// Draws given character at the current raster position
+		int putChar(uint8_t c, const uint8_t* fg, const uint8_t* bg);
+
+		// Draws string starting at the current raster position
+		void putString(const char *str, const uint8_t* fg, const uint8_t* bg);
+
+		// Backward-compatible putChar() draws character at current raster position.
 		inline int putChar(uint8_t c, int x, int y) {
-		    return putChar(c, x, y, _fg, _bg);
+		    moveTo(x, y);
+		    return putChar(c, _fg, _bg);
 		}
-		int putChar(uint8_t c, int x, int y, const uint8_t* fg, const uint8_t* bg);
+		inline void putString(const char *str, int x, int y, const uint8_t* fg, const uint8_t* bg) {
+		    moveTo(x, y);
+		    putString(str, fg, bg);
+		}
 		inline void putString(const char *str, int x, int y) {
-		    putString(str, x, y, _fg, _bg);
+		    moveTo(x,y);
+		    putString(str, _fg, _bg);
 		}
-		void putString(const char *str, int x, int y, const uint8_t* fg, const uint8_t* bg);
 		void swapBuffers();
 
 		int getHeight() const { return _yres; }
@@ -120,7 +132,7 @@ class Lcd {
         volatile bool _enabled;
 
         uint32_t _scanIncrement; // in pixels
-        uint32_t* _rasterOffset; // in pixels
+        uint32_t* _rasterOffset; // in bits
         int16_t  _rasterX;
         int16_t  _rasterY;
 };

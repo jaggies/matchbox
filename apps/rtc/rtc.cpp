@@ -10,7 +10,7 @@
 #include "lcd.h"
 #include "pin.h"
 
-#define TAG 0x32F2
+#define TAG 0xabad
 // Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
 #define RTC_ASYNCH_PREDIV       7U
 #define RTC_SYNCH_PREDIV        4095
@@ -118,11 +118,10 @@ void StartDefaultTask(void const * argument) {
     Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST).setClockDiv(Spi::DIV32));
     Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
 
+    lcd.setFont("robot_bold_14");
     lcd.begin();
     lcd.clear(1,1,1);
     lcd.putString("RTC initializing\n", 0, 0);
-
-    osDelay(1000); // allow USB to start up so we get debugging logs.
 
     configRtc();
 

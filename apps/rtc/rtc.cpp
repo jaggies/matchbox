@@ -123,6 +123,8 @@ void StartDefaultTask(void const * argument) {
     lcd.clear(1,1,1);
     lcd.putString("RTC initializing\n", 0, 0);
 
+    osDelay(1000); // FIXME: wait for USB otherwise this hangs
+
     configRtc();
 
     while (1) {

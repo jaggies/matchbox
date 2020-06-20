@@ -7,6 +7,7 @@
 
 #include <cstdio>
 #include "matchbox.h"
+#include "lcd.h"
 #include "pin.h"
 
 #define TAG 0x32F2
@@ -95,20 +96,6 @@ static void configRtc() {
     }
 }
 
-static void printTime()
-{
-  RTC_DateTypeDef sdatestructureget;
-  RTC_TimeTypeDef stimestructureget;
-
-  HAL_RTC_GetTime(&RtcHandle, &stimestructureget, RTC_FORMAT_BIN);
-  HAL_RTC_GetDate(&RtcHandle, &sdatestructureget, RTC_FORMAT_BIN);
-
-  printf("%02d:%02d:%02d %02d-%02d-%02d\n", stimestructureget.Hours, stimestructureget.Minutes,
-          stimestructureget.Seconds, sdatestructureget.Month, sdatestructureget.Date,
-          2000 + sdatestructureget.Year);
-}
-
-
 int main(void) {
     MatchBox* mb = new MatchBox();
 
@@ -125,17 +112,35 @@ int main(void) {
 }
 
 void StartDefaultTask(void const * argument) {
-    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     int count = 0;
+    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     Button b1(SW1_PIN, buttonHandler, &count);
+    Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST).setClockDiv(Spi::DIV32));
+    Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
+
+    lcd.begin();
+    lcd.clear(1,1,1);
+    lcd.putString("RTC initializing\n", 0, 0);
 
     osDelay(1000); // allow USB to start up so we get debugging logs.
 
     configRtc();
 
     while (1) {
+        RTC_DateTypeDef sdatestructureget;
+        RTC_TimeTypeDef stimestructureget;
+        char buff[256];
+
+        HAL_RTC_GetTime(&RtcHandle, &stimestructureget, RTC_FORMAT_BIN);
+        HAL_RTC_GetDate(&RtcHandle, &sdatestructureget, RTC_FORMAT_BIN);
+
+        sprintf(buff, "Time: %02d:%02d:%02d\nDate: %02d-%02d-%02d\n", stimestructureget.Hours,
+                stimestructureget.Minutes, stimestructureget.Seconds, sdatestructureget.Month,
+                sdatestructureget.Date, 2000 + sdatestructureget.Year);
+        lcd.clear(1,1,1);
+        lcd.putString(buff, 0, 0);
+        lcd.swapBuffers();
         led.write(count++ & 1);
         osDelay(1000);
-        printTime();
     }
 }

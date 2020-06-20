@@ -222,6 +222,12 @@ int Lcd::putChar(uint8_t c, const uint8_t* fg, const uint8_t* bg) {
 
     if (!_currentFont) return 0;
 
+    if (!isprint(c)) {
+        if (c == '\n') {
+            moveTo(0, _rasterY + getFontHeight());
+        }
+        return 0;
+    }
     // Find character to print.
     int first = 0, last = _currentFont->charCount;
     int mid;
@@ -263,6 +269,7 @@ int Lcd::putChar(uint8_t c, const uint8_t* fg, const uint8_t* bg) {
 	// When we leave this routine, raster should point to the top left of next character
 	_rasterOffset -= charData->height * _scanIncrement;
 	_rasterOffset += charWidthBits;
+	_rasterY -= charData->height;
 	return charData->width;
 }
 

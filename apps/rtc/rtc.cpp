@@ -11,8 +11,8 @@
 
 #define TAG 0x32F2
 // Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
-#define RTC_ASYNCH_PREDIV       0U
-#define RTC_SYNCH_PREDIV        31U
+#define RTC_ASYNCH_PREDIV       7U
+#define RTC_SYNCH_PREDIV        4095
 
 osThreadId defaultTaskHandle;
 

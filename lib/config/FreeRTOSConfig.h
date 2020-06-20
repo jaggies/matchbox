@@ -91,6 +91,7 @@
 
 #define configUSE_PREEMPTION              1
 #define configUSE_IDLE_HOOK               1
+#define configUSE_TICKLESS_IDLE           1
 #define configUSE_TICK_HOOK               0
 #define configCPU_CLOCK_HZ                (SystemCoreClock)
 #define configTICK_RATE_HZ                ((TickType_t)1000)
@@ -109,6 +110,12 @@
 #define configUSE_APPLICATION_TASK_TAG    0
 #define configUSE_COUNTING_SEMAPHORES     1
 #define configGENERATE_RUN_TIME_STATS     0
+
+extern void PreSleepHook(uint32_t* ulExpectedIdleTime);
+extern void PostSleepHook(uint32_t* ulExpectedIdleTime);
+
+#define configPRE_SLEEP_PROCESSING        PreSleepHook
+#define configPOST_SLEEP_PROCESSING       PostSleepHook
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES           0

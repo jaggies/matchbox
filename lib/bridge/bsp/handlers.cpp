@@ -51,5 +51,12 @@ void OTG_FS_IRQHandler(void) {
     HAL_PCD_IRQHandler(&hpcd_USB_OTG_FS);
 }
 
-__WEAK void vApplicationIdleHook (void) {
+// Allow applications to override these default implementations
+__weak void vApplicationIdleHook (void) {
+}
+
+__weak void PreSleepHook(uint32_t* ulExpectedIdleTime) {
+}
+
+__weak void PostSleepHook(uint32_t *ulExpectedIdleTime) {
 }

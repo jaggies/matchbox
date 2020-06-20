@@ -9,7 +9,7 @@
 #define HANDLERS_H_
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 void NMI_Handler(void);
@@ -22,7 +22,9 @@ void SysTick_Handler(void);
 void TIM1_UP_TIM10_IRQHandler(void);
 void OTG_FS_IRQHandler(void);
 void SDIO_IRQHandler(void);
-void vApplicationIdleHook (void);
+void vApplicationIdleHook(void);
+void PreSleepHook(uint32_t* ulExpectedIdleTime);
+void PostSleepHook(uint32_t *ulExpectedIdleTime);
 
 #ifdef __cplusplus
 }

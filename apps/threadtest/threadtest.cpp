@@ -35,7 +35,7 @@ void blink(void const* argument) {
         if (event.status == osEventMessage) {
             if (event.value.v == MSG_BLINK) {
                 HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
-                osDelay(50);
+                osDelay(5);
                 HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET);
             }
         }

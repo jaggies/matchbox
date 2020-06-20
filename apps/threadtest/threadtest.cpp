@@ -119,7 +119,7 @@ extern "C" void vApplicationIdleHook(void) {
 }
 
 int main(void) {
-    MatchBox* mb = new MatchBox();
+    MatchBox* mb = new MatchBox(MatchBox::C16MHz);
 
     // Configure everything as input to save power
     ReconfigureGPIO();

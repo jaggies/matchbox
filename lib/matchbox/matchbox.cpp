@@ -127,15 +127,13 @@ void MatchBox::systemClockConfig(ClockSpeed speed) {
 
     RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
     RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
-
     _clkSpeed = speed;
 
     __HAL_RCC_PWR_CLK_ENABLE();
 
-    __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+    RCC_OscInitStruct.LSEState = RCC_LSE_ON;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
     RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
     RCC_OscInitStruct.PLL.PLLM = config[_clkSpeed].pllm;
@@ -154,36 +152,100 @@ void MatchBox::systemClockConfig(ClockSpeed speed) {
     const uint32_t freq = HAL_RCC_GetHCLKFreq();
     HAL_SYSTICK_Config(freq / 1000);
 
-    // Save a little power if clock is below 144MHz
-    if (freq <= 144000000) {
-        __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
-    }
-
     HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+
+    if (freq <= 144000000) {
+        // Save a little power if clock is below 144MHz
+        __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
+    } else {
+        // This should be the default
+        __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+    }
 
     /* SysTick_IRQn interrupt configuration TODO: why is this here? */
     HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
 }
 
 void MatchBox::rtcInit(void) {
-    __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
     // Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
-    #define RTC_ASYNCH_PREDIV       0U
-    #define RTC_SYNCH_PREDIV        31U
+#define RTC_ASYNCH_PREDIV       0U
+#define RTC_SYNCH_PREDIV        31U
 
-    hrtc.Instance = RTC;
-    hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
-    hrtc.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
-    hrtc.Init.SynchPrediv = RTC_SYNCH_PREDIV;
-    hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
-    hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-    hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
+    RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
 
-    HAL_PWR_EnableBkUpAccess();
-    __HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
-    __HAL_RCC_PWR_CLK_ENABLE();
-//    __HAL_RCC_RTC_CONFIG(RCCEx_Periph_Clock_Selection);
-    __HAL_RCC_RTC_ENABLE();
-    HAL_RTC_Init(&hrtc);
+#if 1 // RTC LSE
+    /* Configue LSE as RTC clock soucre */
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+    RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+    PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+#else // RTC LSI
+    /* Configue LSI as RTC clock soucre */
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+    RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+    PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+#endif
+
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) == HAL_OK) {
+        PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+        if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) == HAL_OK) {
+            /* Enable RTC Clock */
+            __HAL_RCC_RTC_ENABLE();
+            /* The time base should be 1ms
+             Time base = ((RTC_ASYNCH_PREDIV + 1) * (RTC_SYNCH_PREDIV + 1)) / RTC_CLOCK
+             HSE as RTC clock
+             Time base = ((99 + 1) * (9 + 1)) / 1Mhz
+             = 1ms
+             LSE as RTC clock
+             Time base = ((31 + 1) * (0 + 1)) / 32.768Khz
+             = ~1ms
+             LSI as RTC clock
+             Time base = ((31 + 1) * (0 + 1)) / 32Khz
+             = 1ms
+             */
+            hrtc.Instance = RTC;
+            hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+            hrtc.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
+            hrtc.Init.SynchPrediv = RTC_SYNCH_PREDIV;
+            hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+            hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+            hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+
+            HAL_RTC_Init(&hrtc);
+
+            /* Disable the write protection for RTC registers */
+            __HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
+
+            /* Disable the Wake-up Timer */
+            __HAL_RTC_WAKEUPTIMER_DISABLE(&hrtc);
+
+            /* In case of interrupt mode is used, the interrupt source must disabled */
+            __HAL_RTC_WAKEUPTIMER_DISABLE_IT(&hrtc, RTC_IT_WUT);
+
+            /* Wait till RTC WUTWF flag is set  */
+            uint32_t counter;
+
+            while (__HAL_RTC_WAKEUPTIMER_GET_FLAG(&hrtc, RTC_FLAG_WUTWF) == RESET) {
+                if (counter++ == (SystemCoreClock / 48U)) {
+                    return; // HAL_ERROR;
+                }
+            }
+
+            /* Clear PWR wake up Flag */
+            __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+
+            /* Clear RTC Wake Up timer Flag */
+            __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
+        }
+    }
+    __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
+//    HAL_PWR_EnableBkUpAccess();
+//    __HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
+//    __HAL_RCC_PWR_CLK_ENABLE();
+////    __HAL_RCC_RTC_CONFIG(RCCEx_Periph_Clock_Selection);
+//    __HAL_RCC_RTC_ENABLE();
+//    HAL_RTC_Init(&hrtc);
 }
 

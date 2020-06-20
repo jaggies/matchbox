@@ -99,4 +99,4 @@ static const CharData roboto_bold_10_data[] = {
  { 125 /* } */, 12, 52, 4, 13 },
  { 126 /* ~ */, 16, 52, 6, 13 },
 };
-extern const Font roboto_bold_10 = {	"roboto_bold_10", im_width, im_height, 96, &roboto_bold_10_data[0], (const uint8_t*) &im_bits[0] };
+extern const Font roboto_bold_10 = { "roboto_bold_10", im_width, im_height, 9, 13, 96, &roboto_bold_10_data[0], (const uint8_t*) &im_bits[0] };

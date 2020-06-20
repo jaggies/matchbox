@@ -258,7 +258,12 @@ int Lcd::putChar(uint8_t c, int x, int y, const uint8_t* fg, const uint8_t* bg) 
 
 void Lcd::putString(const char *str, int x, int y, const uint8_t* fg, const uint8_t *bg) {
 	while (char ch = *str++) {
-		x += putChar(ch, x, y, fg, bg);
+	    if (isprint(ch)) {
+	        x += putChar(ch, x, y, fg, bg);
+	    } else if (ch == '\n') {
+	        y += getFontHeight(); // TODO: Move this to putChar()
+	        x = 0;
+	    }
 	}
 }
 

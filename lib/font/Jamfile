@@ -1,4 +1,5 @@
 SubDir TOP lib font ;
+SubDirHdrs $(TOP) lib matchbox ;
 SubDirHdrs $(TOP) lib render ;
 
 Library libfont :

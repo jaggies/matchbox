@@ -75,8 +75,12 @@ class Lcd {
 		int getHeight() const { return _yres; }
 		int getWidth() const { return _xres; }
 
-		int getFontWidth() const { return _currentFont ? _currentFont->width : 0; }
-        int getFontHeight() const { return _currentFont ? _currentFont->height : 0; }
+		// Returns maximum width of all characters
+		int getFontWidth() const { return _currentFont ? _currentFont->charWidth : 0; }
+
+		// Returns maximum height of all characters
+        int getFontHeight() const { return _currentFont ? _currentFont->charHeight : 0; }
+
 		void refresh();
 
 	private:

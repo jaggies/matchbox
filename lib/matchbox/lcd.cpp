@@ -19,7 +19,7 @@
 #include "cmsis_os.h" // osThreadYield()
 
 #define BLE_PRESENT
-#define FORCE_UPDATE_LINES // force line update in case drawing overwrites them
+//#define FORCE_UPDATE_LINES // force line update in case drawing overwrites them
 
 Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
         _clear(1), _frame(0), _currentFont(getFont("roboto_bold_10")),
@@ -249,29 +249,27 @@ int Lcd::putChar(uint8_t c, const uint8_t* fg, const uint8_t* bg) {
     }
     const CharData* charData = &_currentFont->charData[mid];
     const int charWidthBits = charData->width * _depth;
-	for (int j = 0; j < charData->height; j++) {
-		for (int i = 0; i < charData->width; i++) {
-		    // TODO: This could be a lot faster by eliminating full address calculation
-		    // or using bit banding
-		    const int bitAddr = (charData->y + j) * _currentFont->width + (charData->x + i);
-		    const int byteAddr = bitAddr / 8;
-		    const int bitMask = 1 << (bitAddr % 8);
-			const uint8_t* color = (_currentFont->bitmap[byteAddr] & bitMask) ? bg : fg;
-			if (color) {
-			    setColor(color[0], color[1], color[2]);
-			    setPixel();
-			}
-			incX();
-		}
-		_rasterX -= charData->width; // in pixels
-		_rasterOffset -= charWidthBits; // reset to start of character
-		incY();
-	}
-	// When we leave this routine, raster should point to the top left of next character
-	_rasterOffset -= charData->height * _scanIncrement;
-	_rasterOffset += charWidthBits;
-	_rasterY -= charData->height;
-	return charData->width;
+    setColor(fg[0], fg[1], fg[2]);
+    for (int j = 0; j < charData->height; j++) {
+        int bitAddr = (charData->y + j) * _currentFont->width + charData->x;
+        for (int i = 0; i < charData->width; i++) {
+            const int byteAddr = bitAddr / 8;
+            const int bitMask = 1 << (bitAddr % 8);
+            if (!(_currentFont->bitmap[byteAddr] & bitMask)) {
+                setPixel();
+            }
+            incX();
+            bitAddr++;
+        }
+        _rasterX -= charData->width; // in pixels
+        _rasterOffset -= charWidthBits; // reset to start of character
+        incY();
+    }
+    // When we leave this routine, raster should point to the top left of next character
+    _rasterOffset -= charData->height * _scanIncrement;
+    _rasterOffset += charWidthBits;
+    _rasterY -= charData->height;
+    return charData->width;
 }
 
 void Lcd::putString(const char *str, const uint8_t* fg, const uint8_t *bg) {

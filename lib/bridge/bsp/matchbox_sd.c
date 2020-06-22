@@ -35,19 +35,6 @@ static HAL_StatusTypeDef sdDmaInit(void);
 
 extern RTC_HandleTypeDef hrtc;
 
-int32_t get_fattime (void) {
-    RTC_TimeTypeDef time_s;
-    RTC_DateTypeDef date_s;
-    HAL_RTC_GetTime(&hrtc, &time_s, RTC_FORMAT_BIN);
-    HAL_RTC_GetDate(&hrtc, &date_s, RTC_FORMAT_BIN);
-    return (int32_t)(date_s.Date - 80) << 25
-         | (int32_t)(date_s.Month + 1) << 21
-         | (int32_t)(date_s.Date + 1) << 16
-         | (int32_t)(time_s.Hours) << 11
-         | (int32_t)(time_s.Minutes) << 5
-         | (int32_t)(time_s.Seconds/2);
-}
-
 // IRQ handlers.  Declared weak so sdio_dma_test and other apps can override
 __weak void SDIO_IRQHandler(void) {
     HAL_SD_IRQHandler(&uSdHandle);

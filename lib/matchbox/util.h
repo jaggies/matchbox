@@ -9,6 +9,7 @@
 #define UTIL_H_
 
 #include <stdio.h>
+#include "stm32f4xx_hal_rtc.h"
 
 #define Number(a) (sizeof(a) / sizeof(a[0]))
 
@@ -29,5 +30,7 @@
 inline void debug(const char* fmt, ...) { }
 inline void error(const char* fmt, ...) { }
 #endif
+
+int32_t toFatTime(const RTC_TimeTypeDef *time_s, const RTC_DateTypeDef* date_s);
 
 #endif /* UTIL_H_ */

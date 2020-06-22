@@ -16,7 +16,7 @@ SubDirHdrs $(TOP) lib hal Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 
 LINKLIBS on bletest = -Wl,--whole-archive -lhal -lusb -lnordic -lfreertos -lc -lmatchbox -larduino -Wl,--no-whole-archive ;
 
-Depends bletest : libmatchbox.a libhal.a libnordic.a libarduino.a ;
+Depends bletest : libmatchbox.a libhal.a libnordic.a libarduino.a libfreertos.a ;
 
 Main bletest :
 	bletest.cpp

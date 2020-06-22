@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import os, sys, getopt
 from os.path import basename
 from PIL import Image
@@ -65,16 +65,24 @@ def generateFont(cmd, imageWidth, imageHeight, fontPath, fontSize):
 		cppsource.write("\t\"%s\", im_width, im_height, %d, &%s[0], (const uint8_t*) &%s[0] };\n" % (fontName, lastChar - firstChar, arrayName, bitmapName))
 	image.save("%s.xbm"%(fontName))
 
+def usage():
+	print("Usage: ", basename(sys.argv[0]), "-f <ttf font path> -s <fontSize>> -w <bitmapWidth> -h <bitmapHeight>", basename(sys.argv[0]))
+
 def main():
 	imageWidth = 128
 	imageHeight = 128
 	fontPath = ""
 	fontSize = 14
+	if (len(sys.argv) < 2):
+		usage()
+		exit(2)
 	try:
-		opts, args = getopt.getopt(sys.argv[1:],"w:h:f:s:",["imageWidth", "imageHeight", "font=", "size="])
-	except getopt.GetoptError:
-		print "Usage:\n\t%s -f <ttf font path> -s <fontSize>> -w <bitmapWidth> -h <bitmapHeight>" % basename(sys.argv[0])
+		opts, args = getopt.getopt(sys.argv[1:], "w:h:f:s:", ["imageWidth", "imageHeight", "font=", "size="])
+	except getopt.GetoptError as err:
+		print(basename(sys.argv[0]) + ':', err)
+		usage()
 		sys.exit(2)
+
 	for opt, arg in opts:
 		if opt in ("-f", "--font"):
 			fontPath = arg
@@ -85,7 +93,7 @@ def main():
 		elif opt in ("-h", "--imageHeight"):
 			imageHeight = int(arg)
 		else:
-			print "invalid argument '%s'" % (opt)
+			print("invalid argument '%s'" % (opt))
 	generateFont(sys.argv, imageWidth, imageHeight, fontPath, fontSize)
 
 if __name__ == "__main__":

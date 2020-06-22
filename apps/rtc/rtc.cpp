@@ -134,7 +134,7 @@ static void configRtc() {
 }
 
 int main(void) {
-    MatchBox* mb = new MatchBox();
+    MatchBox* mb = new MatchBox(MatchBox::C16MHz);
 
     osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);

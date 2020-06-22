@@ -166,10 +166,10 @@ void MatchBox::systemClockConfig(ClockSpeed speed) {
 }
 
 void MatchBox::rtcInit(void) {
-    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
+    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
     RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
 
-#if 0 // Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
+#if 1 // Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
     #define RTC_ASYNCH_PREDIV       0U
     #define RTC_SYNCH_PREDIV        31U
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;

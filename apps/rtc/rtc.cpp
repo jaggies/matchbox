@@ -10,10 +10,11 @@
 #include "lcd.h"
 #include "pin.h"
 
-#define TAG 0xabad
-// Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
-#define RTC_ASYNCH_PREDIV       7U
-#define RTC_SYNCH_PREDIV        4095
+#define RTC_TAG 0xabad // If this changes, it means we lost power, so reset calendar
+
+// LSE as RTC clock, time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms
+#define RTC_ASYNCH_PREDIV       0U
+#define RTC_SYNCH_PREDIV        31U
 
 osThreadId defaultTaskHandle;
 
@@ -59,24 +60,25 @@ static void RTC_CalendarConfig(void) {
         printf("Error setting time\n");
     }
 
-    HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, TAG);
+    HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, RTC_TAG);
 }
 
 static void configRtc() {
-    __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
-
+    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
     RCC_OscInitTypeDef RCC_OscInitLSE = { 0 };
+    HAL_StatusTypeDef status;
 
     RCC_OscInitLSE.OscillatorType = RCC_OSCILLATORTYPE_LSE;
     RCC_OscInitLSE.LSEState = RCC_LSE_ON;
 
-    HAL_StatusTypeDef status;
-
     if((status = HAL_RCC_OscConfig(&RCC_OscInitLSE)) != HAL_OK){
-         printf("Failed to init OSC: status=%d\n", status);
+        printf("Failed to init OSC: status=%d\n", status);
     } else {
         printf("Successfully initialized LSE!\n");
     }
+
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+    PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
 
     // For verification.. this should happen before the above call returns
     while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
@@ -84,22 +86,51 @@ static void configRtc() {
         osDelay(1000);
     }
 
-    RtcHandle.Instance = RTC;
-    RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
-    RtcHandle.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
-    RtcHandle.Init.SynchPrediv = RTC_SYNCH_PREDIV;
-    RtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
-    RtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-    RtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+    // ------
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) == HAL_OK) {
+        __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
 
-    __HAL_RTC_WRITEPROTECTION_DISABLE(&RtcHandle);
-    __HAL_RTC_RESET_HANDLE_STATE(&RtcHandle);
+        RtcHandle.Instance = RTC;
+        RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+        RtcHandle.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
+        RtcHandle.Init.SynchPrediv = RTC_SYNCH_PREDIV;
+        RtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
+        RtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+        RtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
 
-    if ( (status = HAL_RTC_Init(&RtcHandle)) != HAL_OK) {
-        printf("Error initializing RTC: %d\n", status);
+        if ( (status = HAL_RTC_Init(&RtcHandle)) != HAL_OK) {
+            printf("Error initializing RTC: %d\n", status);
+            return;
+        }
+
+        /* Disable the write protection for RTC registers */
+        __HAL_RTC_WRITEPROTECTION_DISABLE(&RtcHandle);
+
+        /* What does this do? */
+        // __HAL_RTC_RESET_HANDLE_STATE(&RtcHandle);
+
+        /* Disable the Wake-up Timer */
+        __HAL_RTC_WAKEUPTIMER_DISABLE(&RtcHandle);
+
+        /* In case of interrupt mode is used, the interrupt source must disabled */
+        __HAL_RTC_WAKEUPTIMER_DISABLE_IT(&RtcHandle, RTC_IT_WUT);
+
+        /* TODO ? Wait till RTC WUTWF flag is set  */
+//        uint32_t counter = 0;
+//        while (__HAL_RTC_WAKEUPTIMER_GET_FLAG(&RtcHandle, RTC_FLAG_WUTWF) == RESET) {
+//            if (counter++ == (SystemCoreClock / 48U)) {
+//                return; // HAL_ERROR;
+//            }
+//        }
+
+        /* Clear PWR wake up Flag */
+        __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+
+        /* Clear RTC Wake Up timer Flag */
+        __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&RtcHandle, RTC_FLAG_WUTF);
     }
 
-    if (HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR0) != TAG) {
+    if (HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR0) != RTC_TAG) {
         printf("Calendar memory wiped, resetting\n");
         RTC_CalendarConfig();
     }

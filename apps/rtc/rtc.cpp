@@ -154,7 +154,7 @@ void StartDefaultTask(void const * argument) {
     Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST).setClockDiv(Spi::DIV32));
     Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
 
-    lcd.setFont("robot_bold_14");
+    lcd.setFont("roboto_bold_32");
     lcd.begin();
     lcd.clear(1,1,1);
     lcd.putString("RTC initializing\n", 0, 0);
@@ -175,7 +175,7 @@ void StartDefaultTask(void const * argument) {
         HAL_RTC_GetTime(&RtcHandle, &stimestructureget, RTC_FORMAT_BIN);
         HAL_RTC_GetDate(&RtcHandle, &sdatestructureget, RTC_FORMAT_BIN);
 
-        sprintf(buff, "Time: %02d:%02d:%02d\nDate: %02d-%02d-%02d\n", stimestructureget.Hours,
+        sprintf(buff, "%02d:%02d:%02d\n%02d-%02d-%02d\n", stimestructureget.Hours,
                 stimestructureget.Minutes, stimestructureget.Seconds, sdatestructureget.Month,
                 sdatestructureget.Date, 2000 + sdatestructureget.Year);
         lcd.clear(1,1,1);

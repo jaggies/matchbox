@@ -10,8 +10,9 @@
 #include "font.h"
 #include "roboto_bold_10.h"
 #include "roboto_bold_14.h"
+#include "roboto_bold_32.h"
 
-const Font* fonts[] = { &roboto_bold_10, &roboto_bold_14 };
+const Font* fonts[] = { &roboto_bold_10, &roboto_bold_14, &roboto_bold_32 };
 
 const Font* getFont(const char* name)
 {

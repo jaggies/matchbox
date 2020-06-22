@@ -6,4 +6,5 @@ Library libfont :
 	fonts.cpp
 	roboto_bold_10.cpp
 	roboto_bold_14.cpp
+	roboto_bold_32.cpp
 	;

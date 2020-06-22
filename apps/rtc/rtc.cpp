@@ -12,10 +12,6 @@
 
 #define RTC_TAG 0xabad // If this changes, it means we lost power, so reset calendar
 
-// LSE as RTC clock, time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms
-#define RTC_ASYNCH_PREDIV       7U
-#define RTC_SYNCH_PREDIV        0x0fffU
-
 osThreadId defaultTaskHandle;
 
 static RTC_HandleTypeDef RtcHandle;

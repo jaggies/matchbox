@@ -19,4 +19,7 @@
 #define POWER_PIN PA14
 #endif
 
+#define RTC_ASYNCH_PREDIV       0x7fU // 128
+#define RTC_SYNCH_PREDIV        0x00ffU // * 256 = 32768
+
 #endif /* BOARD_H_ */

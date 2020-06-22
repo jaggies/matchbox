@@ -170,8 +170,6 @@ void MatchBox::rtcInit(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
 
 #if 1 // Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
-    #define RTC_ASYNCH_PREDIV       7U
-    #define RTC_SYNCH_PREDIV        0x1000U
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
     RCC_OscInitStruct.LSEState = RCC_LSE_ON;

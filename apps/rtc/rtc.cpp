@@ -9,6 +9,7 @@
 #include "matchbox.h"
 #include "lcd.h"
 #include "pin.h"
+#include "util.h"
 
 #define RTC_TAG 0xabad // If this changes, it means we lost power, so reset calendar
 
@@ -23,10 +24,10 @@ void buttonHandler(uint32_t pin, void* data) {
     switch (pin) {
         case SW1_PIN:
             count++;
-            printf("Hello, count = %d\n", count);
+            debug("Hello, count = %d\n", count);
             break;
         default:
-            printf("Pin not handled: %d\n", pin);
+            debug("Pin not handled: %d\n", pin);
     }
 }
 
@@ -41,7 +42,7 @@ static void RTC_CalendarConfig(void) {
     sdatestructure.WeekDay = RTC_WEEKDAY_FRIDAY;
 
     if (HAL_RTC_SetDate(&RtcHandle, &sdatestructure, RTC_FORMAT_BCD) != HAL_OK) {
-        printf("Error setting date\n");
+        error("Error setting date\n");
     }
 
     /* Set Time: 02:00:00 */
@@ -53,7 +54,7 @@ static void RTC_CalendarConfig(void) {
     stimestructure.StoreOperation = RTC_STOREOPERATION_RESET;
 
     if (HAL_RTC_SetTime(&RtcHandle, &stimestructure, RTC_FORMAT_BCD) != HAL_OK) {
-        printf("Error setting time\n");
+        error("Error setting time\n");
     }
 
     HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, RTC_TAG);
@@ -68,9 +69,9 @@ static void configRtc() {
     RCC_OscInitLSE.LSEState = RCC_LSE_ON;
 
     if((status = HAL_RCC_OscConfig(&RCC_OscInitLSE)) != HAL_OK){
-        printf("Failed to init OSC: status=%d\n", status);
+        error("Failed to init OSC: status=%d\n", status);
     } else {
-        printf("Successfully initialized LSE!\n");
+        debug("Successfully initialized LSE!\n");
     }
 
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
@@ -78,8 +79,8 @@ static void configRtc() {
 
     // For verification.. this should happen before the above call returns
     while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
-        printf("Waiting for LSE to stabilize\n");
-        osDelay(1000);
+        debug("Waiting for LSE to stabilize\n");
+        osDelay(100);
     }
 
     // ------
@@ -95,7 +96,7 @@ static void configRtc() {
         RtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
 
         if ( (status = HAL_RTC_Init(&RtcHandle)) != HAL_OK) {
-            printf("Error initializing RTC: %d\n", status);
+            error("Error initializing RTC: %d\n", status);
             return;
         }
 
@@ -127,7 +128,7 @@ static void configRtc() {
     }
 
     if (HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR0) != RTC_TAG) {
-        printf("Calendar memory wiped, resetting\n");
+        debug("Calendar memory wiped, resetting\n");
         RTC_CalendarConfig();
     }
 }
@@ -154,18 +155,19 @@ void StartDefaultTask(void const * argument) {
     Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST).setClockDiv(Spi::DIV32));
     Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
 
-    lcd.setFont("roboto_bold_32");
     lcd.begin();
     lcd.clear(1,1,1);
     lcd.putString("RTC initializing\n", 0, 0);
 
     // TODO: Check if GPIO pins need to be enabled (PC14 & PC15)
+#ifdef DEBUG
     osDelay(1000); // FIXME: wait for USB otherwise this hangs
+#endif
 
     configRtc();
 
-    printf("RCC->BDCR = %08x\n", RCC->BDCR);
-    printf("LSE Source: %08x\n", __HAL_RCC_GET_RTC_SOURCE());
+    debug("RCC->BDCR = %08x\n", RCC->BDCR);
+    debug("LSE Source: %08x\n", __HAL_RCC_GET_RTC_SOURCE());
 
     while (1) {
         RTC_DateTypeDef sdatestructureget;
@@ -175,11 +177,17 @@ void StartDefaultTask(void const * argument) {
         HAL_RTC_GetTime(&RtcHandle, &stimestructureget, RTC_FORMAT_BIN);
         HAL_RTC_GetDate(&RtcHandle, &sdatestructureget, RTC_FORMAT_BIN);
 
-        sprintf(buff, "%02d:%02d:%02d\n%02d-%02d-%02d\n", stimestructureget.Hours,
-                stimestructureget.Minutes, stimestructureget.Seconds, sdatestructureget.Month,
-                sdatestructureget.Date, 2000 + sdatestructureget.Year);
         lcd.clear(1,1,1);
+        sprintf(buff, "%02d:%02d:%02d\n", stimestructureget.Hours,
+                stimestructureget.Minutes, stimestructureget.Seconds);
+        lcd.setFont("roboto_bold_32");
         lcd.putString(buff, 0, 0);
+
+        lcd.setFont("roboto_bold_14");
+        sprintf(buff, "%02d-%02d-%02d", sdatestructureget.Month, sdatestructureget.Date,
+                2000 + sdatestructureget.Year);
+        lcd.putString(buff);
+
         lcd.swapBuffers();
         led.write(count++ & 1);
     }

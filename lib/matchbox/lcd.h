@@ -82,6 +82,9 @@ class Lcd {
 		    moveTo(x,y);
 		    putString(str, _fg, _bg);
 		}
+		inline void putString(const char* str) {
+		    putString(str, _fg, _bg);
+		}
 		void swapBuffers();
 
 		int getHeight() const { return _yres; }

@@ -65,13 +65,23 @@ static void RTC_CalendarConfig(void) {
 static void configRtc() {
     __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
 
-    RCC_OscInitTypeDef RCC_OscInitLSE;
+    RCC_OscInitTypeDef RCC_OscInitLSE = { 0 };
 
-    RCC_OscInitLSE.OscillatorType = RCC_OSCILLATORTYPE_LSI;
-    RCC_OscInitLSE.LSEState = RCC_LSI_ON;
+    RCC_OscInitLSE.OscillatorType = RCC_OSCILLATORTYPE_LSE;
+    RCC_OscInitLSE.LSEState = RCC_LSE_ON;
 
-    if(HAL_RCC_OscConfig(&RCC_OscInitLSE) != HAL_OK){
-         printf("Failed to init OSC\n");
+    HAL_StatusTypeDef status;
+
+    if((status = HAL_RCC_OscConfig(&RCC_OscInitLSE)) != HAL_OK){
+         printf("Failed to init OSC: status=%d\n", status);
+    } else {
+        printf("Successfully initialized LSE!\n");
+    }
+
+    // For verification.. this should happen before the above call returns
+    while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
+        printf("Waiting for LSE to stabilize\n");
+        osDelay(1000);
     }
 
     RtcHandle.Instance = RTC;
@@ -85,7 +95,6 @@ static void configRtc() {
     __HAL_RTC_WRITEPROTECTION_DISABLE(&RtcHandle);
     __HAL_RTC_RESET_HANDLE_STATE(&RtcHandle);
 
-    HAL_StatusTypeDef status;
     if ( (status = HAL_RTC_Init(&RtcHandle)) != HAL_OK) {
         printf("Error initializing RTC: %d\n", status);
     }
@@ -123,6 +132,7 @@ void StartDefaultTask(void const * argument) {
     lcd.clear(1,1,1);
     lcd.putString("RTC initializing\n", 0, 0);
 
+    // TODO: Check if GPIO pins need to be enabled (PC14 & PC15)
     osDelay(1000); // FIXME: wait for USB otherwise this hangs
 
     configRtc();

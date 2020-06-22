@@ -133,7 +133,6 @@ void MatchBox::systemClockConfig(ClockSpeed speed) {
 
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-    RCC_OscInitStruct.LSEState = RCC_LSE_ON;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
     RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
     RCC_OscInitStruct.PLL.PLLM = config[_clkSpeed].pllm;
@@ -237,8 +236,8 @@ void MatchBox::rtcInit(void) {
             /* Clear RTC Wake Up timer Flag */
             __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
         }
+        __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
     }
-    __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
 //    HAL_PWR_EnableBkUpAccess();
 //    __HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
 //    __HAL_RCC_PWR_CLK_ENABLE();

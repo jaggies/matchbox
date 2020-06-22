@@ -13,8 +13,8 @@
 #define RTC_TAG 0xabad // If this changes, it means we lost power, so reset calendar
 
 // LSE as RTC clock, time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms
-#define RTC_ASYNCH_PREDIV       0U
-#define RTC_SYNCH_PREDIV        31U
+#define RTC_ASYNCH_PREDIV       7U
+#define RTC_SYNCH_PREDIV        0x0fffU
 
 osThreadId defaultTaskHandle;
 
@@ -168,6 +168,9 @@ void StartDefaultTask(void const * argument) {
 
     configRtc();
 
+    printf("RCC->BDCR = %08x\n", RCC->BDCR);
+    printf("LSE Source: %08x\n", __HAL_RCC_GET_RTC_SOURCE());
+
     while (1) {
         RTC_DateTypeDef sdatestructureget;
         RTC_TimeTypeDef stimestructureget;
@@ -183,6 +186,5 @@ void StartDefaultTask(void const * argument) {
         lcd.putString(buff, 0, 0);
         lcd.swapBuffers();
         led.write(count++ & 1);
-        osDelay(1000);
     }
 }

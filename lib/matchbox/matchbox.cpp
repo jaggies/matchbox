@@ -170,8 +170,8 @@ void MatchBox::rtcInit(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
 
 #if 1 // Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
-    #define RTC_ASYNCH_PREDIV       0U
-    #define RTC_SYNCH_PREDIV        31U
+    #define RTC_ASYNCH_PREDIV       7U
+    #define RTC_SYNCH_PREDIV        0x1000U
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
     RCC_OscInitStruct.LSEState = RCC_LSE_ON;
@@ -222,7 +222,7 @@ void MatchBox::rtcInit(void) {
             __HAL_RTC_WAKEUPTIMER_DISABLE_IT(&hrtc, RTC_IT_WUT);
 
             /* Wait till RTC WUTWF flag is set  */
-            uint32_t counter;
+            uint32_t counter = 0;
 
             while (__HAL_RTC_WAKEUPTIMER_GET_FLAG(&hrtc, RTC_FLAG_WUTWF) == RESET) {
                 if (counter++ == (SystemCoreClock / 48U)) {

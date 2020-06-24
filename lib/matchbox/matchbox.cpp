@@ -218,12 +218,14 @@ void MatchBox::rtcInit(void) {
         __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
         // Check the reset flag before re-initializing clock. Otherwise,
         // we loose a fraction of a second for each press of the reset
-        // button...
+        // button...  TODO: handle other reset conditions?
         if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST)) {
             if ( (status = HAL_RTC_Init(&_rtcHandle)) != HAL_OK) {
                 error("Error initializing RTC: %d\n", status);
                 return;
             }
+            // Clear the reset flags otherwise they'll stay on.
+            __HAL_RCC_CLEAR_RESET_FLAGS();
         }
     }
 

@@ -17,7 +17,7 @@ SubDirHdrs $(TOP) lib hal CMSIS Include ;
 
 
 Library libmatchbox :
-	handlers.cpp
+	matchbox_it.cpp # interrupt handlers
 	matchbox_sd.c
 	;
 

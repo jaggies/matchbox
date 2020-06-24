@@ -6,7 +6,7 @@
  */
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx.h"
-#include "handlers.h"
+#include "matchbox_it.h"
 #include "cmsis_os.h"
 
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;

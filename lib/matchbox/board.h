@@ -19,6 +19,7 @@
 #define POWER_PIN PA14
 #endif
 
+// Constants for RTC sycn/async prescalars. Works for LSE at 32768Hz
 #define RTC_ASYNCH_PREDIV       0x7fU // 128
 #define RTC_SYNCH_PREDIV        0x00ffU // * 256 = 32768
 

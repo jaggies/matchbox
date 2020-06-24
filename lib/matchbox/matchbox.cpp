@@ -22,7 +22,6 @@
 
 extern "C" {
     TIM_HandleTypeDef htim1;
-    RTC_HandleTypeDef hrtc;
     uint32_t get_fattime(void);
 }
 

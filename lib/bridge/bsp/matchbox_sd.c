@@ -33,8 +33,6 @@ static SD_HandleTypeDef uSdHandle;
 static HAL_StatusTypeDef sdPinInit(void);
 static HAL_StatusTypeDef sdDmaInit(void);
 
-extern RTC_HandleTypeDef hrtc;
-
 // IRQ handlers.  Declared weak so sdio_dma_test and other apps can override
 __weak void SDIO_IRQHandler(void) {
     HAL_SD_IRQHandler(&uSdHandle);

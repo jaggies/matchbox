@@ -224,7 +224,10 @@ void MatchBox::rtcInit(void) {
 
     if (HAL_RTCEx_BKUPRead(&_rtcHandle, RTC_BKP_DR0) != RTC_TAG) {
         debug("Calendar memory wiped, resetting\n");
+
+        HAL_PWR_EnableBkUpAccess();
         rtcConfig();
+        HAL_PWR_DisableBkUpAccess();
     }
 }
 

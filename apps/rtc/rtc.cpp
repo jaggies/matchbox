@@ -54,7 +54,7 @@ void StartDefaultTask(void const * argument) {
     lcd.clear(1,1,1);
     lcd.putString("RTC initializing\n", 0, 0);
 
-    // Enable RTC clock
+    // Enable RTC
     mb->rtcInit();
 
     // For verification.. this should happen before the above call returns
@@ -63,13 +63,8 @@ void StartDefaultTask(void const * argument) {
         osDelay(1000);
     }
 
-    // TODO: Check if GPIO pins need to be enabled (PC14 & PC15)
-#ifdef DEBUG
-    osDelay(1000); // FIXME: wait for USB otherwise this hangs
-#endif
-
-    debug("RCC->BDCR = %08x\n", RCC->BDCR);
-    debug("LSE Source: %08x\n", __HAL_RCC_GET_RTC_SOURCE());
+//    debug("RCC->BDCR = %08x\n", RCC->BDCR);
+//    debug("LSE Source: %08x\n", __HAL_RCC_GET_RTC_SOURCE());
 
     while (1) {
         RTC_DateTypeDef sdatestructureget;

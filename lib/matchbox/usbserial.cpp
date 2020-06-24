@@ -165,10 +165,11 @@ int8_t UsbSerial::transmit(char* buf, size_t len) {
 
 size_t UsbSerial::receive(char* buf, size_t nchar) {
     size_t nread = 0;
-    while (nchar--) {
+    while (nchar) {
         if (!_readFifo.isEmpty()) {
             nread++;
             _readFifo.remove((char*) buf++);
+            nchar--;
         } else {
             osThreadYield();
         }

@@ -29,6 +29,8 @@ extern int errno;
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
+#define IO_TIMEOUT 5000 // 5s
+
 caddr_t _sbrk(int incr)
 {
 	static char *heap_end;
@@ -104,12 +106,13 @@ int _read(int file, char *ptr, int len)
 
 int _write(int file, char *data, int len)
 {
-    int bytes_written;
     int result = USBD_OK;
+    uint32_t start = HAL_GetTick();
     switch (file) {
         case STDOUT_FILENO:
         case STDERR_FILENO:
-            while (USBD_BUSY == usb_transmit(data, len)) {
+            while ((HAL_GetTick() - start) < IO_TIMEOUT
+                    && USBD_BUSY == usb_transmit(data, len)) {
                 osThreadYield();
             }
         break;
@@ -117,7 +120,7 @@ int _write(int file, char *data, int len)
             errno = EBADF;
             result = -1;
     }
-    return result == USBD_OK ? bytes_written : 0;
+    return result == USBD_OK ? len : 0;
 }
 
 int _close(int file)

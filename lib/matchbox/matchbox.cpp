@@ -174,7 +174,7 @@ void MatchBox::rtcConfig(void) {
 
     /* Set Date: Saturday June 23th 2020 */
     sdatestructure.Year = 0x20;
-    sdatestructure.Month = RTC_MONTH_DECEMBER;
+    sdatestructure.Month = RTC_MONTH_JUNE;
     sdatestructure.Date = 0x23;
     sdatestructure.WeekDay = RTC_WEEKDAY_SATURDAY;
 

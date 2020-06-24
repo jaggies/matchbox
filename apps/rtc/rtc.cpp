@@ -30,9 +30,6 @@ void buttonHandler(uint32_t pin, void* data) {
 int main(void) {
     MatchBox* mb = new MatchBox(MatchBox::C16MHz);
 
-    // Enable RTC clock
-    mb->rtcInit();
-
     osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), mb);
 
@@ -57,11 +54,14 @@ void StartDefaultTask(void const * argument) {
     lcd.clear(1,1,1);
     lcd.putString("RTC initializing\n", 0, 0);
 
+    // Enable RTC clock
+    mb->rtcInit();
+
     // For verification.. this should happen before the above call returns
-//    while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
-//        debug("Waiting for LSE to stabilize\n");
-//        osDelay(100);
-//    }
+    while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
+        debug("Waiting for LSE to stabilize\n");
+        osDelay(1000);
+    }
 
     // TODO: Check if GPIO pins need to be enabled (PC14 & PC15)
 #ifdef DEBUG

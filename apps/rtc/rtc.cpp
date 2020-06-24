@@ -20,7 +20,11 @@ void buttonHandler(uint32_t pin, void* data) {
     switch (pin) {
         case SW1_PIN:
             count++;
-            debug("Hello, count = %d\n", count);
+            printf("Hello Pin1, count = %d\n", count);
+            break;
+        case SW2_PIN:
+            count++;
+            printf("Hello Pin2, count = %d\n", count);
             break;
         default:
             debug("Pin not handled: %d\n", pin);
@@ -44,9 +48,11 @@ int main(void) {
 
 void StartDefaultTask(void const * argument) {
     MatchBox* mb = (MatchBox*) argument;
-    int count = 0;
+    int b1count = 0;
+    int b2count = 0;
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
-    Button b1(SW1_PIN, buttonHandler, &count);
+    Button b1(SW1_PIN, buttonHandler, &b1count);
+//    Button b2(SW2_PIN, buttonHandler, &b2count); // causes a hang.. to investigate...
     Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST).setClockDiv(Spi::DIV32));
     Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
 
@@ -65,7 +71,9 @@ void StartDefaultTask(void const * argument) {
 
 //    debug("RCC->BDCR = %08x\n", RCC->BDCR);
 //    debug("LSE Source: %08x\n", __HAL_RCC_GET_RTC_SOURCE());
+//    debug("Reset state: %s\n",__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) ? "true" : "false");
 
+    int count = 0;
     while (1) {
         RTC_DateTypeDef sdatestructureget;
         RTC_TimeTypeDef stimestructureget;
@@ -80,9 +88,9 @@ void StartDefaultTask(void const * argument) {
         lcd.setFont("roboto_bold_32");
         lcd.putString(buff, 0, 0);
 
-        lcd.setFont("roboto_bold_14");
-        sprintf(buff, "%02d-%02d-%02d", sdatestructureget.Month, sdatestructureget.Date,
-                2000 + sdatestructureget.Year);
+        lcd.setFont("roboto_bold_32");
+        sprintf(buff, "%02d.%02d.%02d", sdatestructureget.Month, sdatestructureget.Date,
+                sdatestructureget.Year);
         lcd.putString(buff);
 
         lcd.swapBuffers();

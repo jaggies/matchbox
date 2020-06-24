@@ -19,7 +19,6 @@
 #include "cmsis_os.h" // osThreadYield()
 
 #define BLE_PRESENT
-//#define FORCE_UPDATE_LINES // force line update in case drawing overwrites them
 
 Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
         _clear(1), _frame(0), _currentFont(getFont("roboto_bold_10")),
@@ -126,13 +125,15 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
         }
     }
 
-    // Restore the cmd/row data. If this gets clobbered, the LCD won't update.
-    const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
-    for (int i = 0; i < _yres; i++) {
-        _writeBuffer->line[i].cmd = cmd;
-        _writeBuffer->line[i].row = i + 1;
+    if (!_config.doubleBuffer) {
+        // Restore the cmd/row data before drawing. If this gets clobbered, the LCD won't update properly.
+        const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+        for (int i = 0; i < _yres; i++) {
+            _writeBuffer->line[i].cmd = cmd;
+            _writeBuffer->line[i].row = i + 1;
+        }
+        _writeBuffer->sync1 = _writeBuffer->sync2 = 0; // in case these get clobbered
     }
-    _writeBuffer->sync1 = _writeBuffer->sync2 = 0; // in case these get clobbered
 }
 
 void Lcd::lineTo(int16_t x1, int16_t y1) {
@@ -279,17 +280,17 @@ void Lcd::putString(const char *str, const uint8_t* fg, const uint8_t *bg) {
 }
 
 void Lcd::swapBuffers() {
-    _doSwap = true; /* handled in refresh */
+    _doSwap = _config.doubleBuffer; /* reset in refresh */
 
-#ifdef FORCE_UPDATE_LINES
-    // Restore the cmd/row data. If this gets clobbered, the LCD won't update.
-    const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
-    for (int i = 0; i < _yres; i++) {
-       _writeBuffer->line[i].cmd = cmd;
-       _writeBuffer->line[i].row = i + 1;
+    if (_config.doubleBuffer) {
+        // Restore the cmd/row data after drawing. If this gets clobbered, the LCD won't update.
+        const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+        for (int i = 0; i < _yres; i++) {
+           _writeBuffer->line[i].cmd = cmd;
+           _writeBuffer->line[i].row = i + 1;
+        }
+        _writeBuffer->sync1 = _writeBuffer->sync2 = 0; // in case these get clobbered
     }
-    _writeBuffer->sync1 = _writeBuffer->sync2 = 0; // in case these get clobbered
-#endif
 
     while (_doSwap) {
         // wait for ack from interrupt handler

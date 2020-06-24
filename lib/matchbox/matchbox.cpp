@@ -205,20 +205,25 @@ void MatchBox::rtcInit(void) {
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
     PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
 
+    _rtcHandle.Instance = RTC;
+    _rtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+    _rtcHandle.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
+    _rtcHandle.Init.SynchPrediv = RTC_SYNCH_PREDIV;
+    _rtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
+    _rtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+    _rtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+    __HAL_RTC_RESET_HANDLE_STATE(&_rtcHandle);
+
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) == HAL_OK) {
         __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
-
-        _rtcHandle.Instance = RTC;
-        _rtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
-        _rtcHandle.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
-        _rtcHandle.Init.SynchPrediv = RTC_SYNCH_PREDIV;
-        _rtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
-        _rtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-        _rtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-
-        if ( (status = HAL_RTC_Init(&_rtcHandle)) != HAL_OK) {
-            error("Error initializing RTC: %d\n", status);
-            return;
+        // Check the reset flag before re-initializing clock. Otherwise,
+        // we loose a fraction of a second for each press of the reset
+        // button...
+        if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST)) {
+            if ( (status = HAL_RTC_Init(&_rtcHandle)) != HAL_OK) {
+                error("Error initializing RTC: %d\n", status);
+                return;
+            }
         }
     }
 

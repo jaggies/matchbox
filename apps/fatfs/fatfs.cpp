@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include "matchbox.h"
 #include "matchbox_sd.h" // low-level BSP testing
+#include "lcd.h"
 #include "ff.h"
 #include "ff_gen_drv.h"
 #include "sd_diskio.h"
@@ -21,9 +22,10 @@ void StartDefaultTask(void const * argument);
 
 int main(void) {
     MatchBox* mb = new MatchBox(MatchBox::C168MHz);
+    mb->rtcInit();
 
     osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 1, 2048);
-    defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+    defaultTaskHandle = osThreadCreate(osThread(defaultTask), mb);
 
     /* Start scheduler */
     osKernelStart();
@@ -137,15 +139,13 @@ void toggleLed(Pin& led) {
 }
 
 void StartDefaultTask(void const * argument) {
+    MatchBox* mb = (MatchBox*) argument;
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     FATFS FatFs = {0};   /* Work area (file system object) for logical drive */
     FRESULT status;
     char path[4];
 
     toggleLed(led); // off by default
-
-    printf("FatFS Test...\n");
-    HAL_SD_CardInfoTypeDef info;
 
     if (!BSP_SD_IsDetected()) {
         printf("Waiting for SD card...\n");
@@ -154,6 +154,8 @@ void StartDefaultTask(void const * argument) {
     }
 
     BSP_SD_Init();
+
+    HAL_SD_CardInfoTypeDef info;
     if(BSP_SD_GetCardInfo(&info) != MSD_OK) {
         printf("Waiting for card info...\n");
         while (BSP_SD_GetCardInfo(&info) != MSD_OK) {
@@ -161,10 +163,21 @@ void StartDefaultTask(void const * argument) {
             osDelay(500);
         }
     }
+
     printf("Type: %x\n", info.CardType);
     printf("Block size: %d\n", info.BlockSize);
     printf("Capacity: %dMB\n", info.BlockNbr / (1024*1024 / info.BlockSize)); // Nb * mb/block = mb
     printf("Card type: %d\n", info.CardType);
+
+    RTC_TimeTypeDef time_s;
+    HAL_RTC_GetTime(mb->getRtc(), &time_s, RTC_FORMAT_BIN);
+    printf("Time: %02d:%02d:%02d\n", time_s.Hours, time_s.Minutes,
+            time_s.Seconds);
+
+    RTC_DateTypeDef date_s;
+    HAL_RTC_GetDate(mb->getRtc(), &date_s, RTC_FORMAT_BIN);
+    printf("Date: %02d.%02d.%02d\n", date_s.Month, date_s.Date,
+            date_s.Year);
 
     if (0 == FATFS_LinkDriver(&SD_Driver, &path[0])) {
         if (FR_OK == (status = f_mount(&FatFs, "", 0))) {
@@ -191,6 +204,7 @@ void StartDefaultTask(void const * argument) {
     toggleLed(led);
 
     printf("Starting test...\n");
+
     while (1) {
         uint32_t count = 0;
         srand(0); // reset seed so files contain same data

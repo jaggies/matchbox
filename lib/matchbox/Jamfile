@@ -27,4 +27,5 @@ Library libmatchbox :
 	#usbserial_desc.c
 	usbserial_ll.c
 	usbserial.cpp
+	util.cpp
 	;

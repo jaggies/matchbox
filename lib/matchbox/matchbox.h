@@ -29,10 +29,12 @@ class MatchBox {
         RTC_HandleTypeDef* getRtc() { return &_rtcHandle; }
 
         static void blinkOfDeath(Pin& led, BlinkCode code);
+        static MatchBox* getInstance(void) { return _instance; }
         static uint32_t getTimer();
     private:
         void gpioInit(void);
         void rtcConfig(void);
+        static MatchBox* _instance;
         ClockSpeed _clkSpeed;
         RTC_HandleTypeDef _rtcHandle;
 };

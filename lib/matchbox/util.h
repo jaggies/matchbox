@@ -31,6 +31,14 @@ inline void debug(const char* fmt, ...) { }
 inline void error(const char* fmt, ...) { }
 #endif
 
-int32_t toFatTime(const RTC_TimeTypeDef *time_s, const RTC_DateTypeDef* date_s);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int32_t toFatTime(const RTC_TimeTypeDef* time_s, const RTC_DateTypeDef* date_s);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* UTIL_H_ */

@@ -23,6 +23,7 @@
 extern "C" {
     TIM_HandleTypeDef htim1;
     RTC_HandleTypeDef hrtc;
+    uint32_t get_fattime(void);
 }
 
 typedef void (*fPtr)(void);
@@ -59,6 +60,8 @@ extern "C" void assert_failed(uint8_t* file, uint32_t line)
 }
 #endif
 
+MatchBox* MatchBox::_instance = nullptr;
+
 static void maybeJumpToBootloader() {
     const fPtr bootLoader = (fPtr) *(uint32_t*) 0x1fff0004;
 
@@ -85,7 +88,20 @@ static void maybeJumpToBootloader() {
     }
 }
 
+uint32_t get_fattime(void) {
+    MatchBox* mb = MatchBox::getInstance();
+    if (!mb->getRtc()->Instance) {
+        mb->rtcInit();
+    }
+    RTC_TimeTypeDef time_s;
+    RTC_DateTypeDef date_s;
+    HAL_RTC_GetTime(mb->getRtc(), &time_s, RTC_FORMAT_BIN);
+    HAL_RTC_GetDate(mb->getRtc(), &date_s, RTC_FORMAT_BIN);
+    return toFatTime(&time_s, &date_s);
+}
+
 MatchBox::MatchBox(ClockSpeed clkSpeed) : _clkSpeed(clkSpeed) {
+    _instance = this;
     HAL_Init();
     gpioInit();
     maybeJumpToBootloader();

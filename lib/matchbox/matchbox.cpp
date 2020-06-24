@@ -202,7 +202,7 @@ void MatchBox::rtcConfig(void) {
     stimestructure.Hours = 0x12;
     stimestructure.Minutes = 0x00;
     stimestructure.Seconds = 0x00;
-    stimestructure.TimeFormat = RTC_HOURFORMAT12_AM;
+    stimestructure.TimeFormat = RTC_HOURFORMAT_24;
     stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
     stimestructure.StoreOperation = RTC_STOREOPERATION_RESET;
 

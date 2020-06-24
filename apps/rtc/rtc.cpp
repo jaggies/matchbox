@@ -11,11 +11,7 @@
 #include "pin.h"
 #include "util.h"
 
-#define RTC_TAG 0xabad // If this changes, it means we lost power, so reset calendar
-
 osThreadId defaultTaskHandle;
-
-static RTC_HandleTypeDef RtcHandle;
 
 void StartDefaultTask(void const * argument);
 
@@ -31,113 +27,14 @@ void buttonHandler(uint32_t pin, void* data) {
     }
 }
 
-static void RTC_CalendarConfig(void) {
-    RTC_DateTypeDef sdatestructure;
-    RTC_TimeTypeDef stimestructure;
-
-    /* Set Date: Friday March 13th 2015 */
-    sdatestructure.Year = 0x15;
-    sdatestructure.Month = RTC_MONTH_MARCH;
-    sdatestructure.Date = 0x13;
-    sdatestructure.WeekDay = RTC_WEEKDAY_FRIDAY;
-
-    if (HAL_RTC_SetDate(&RtcHandle, &sdatestructure, RTC_FORMAT_BCD) != HAL_OK) {
-        error("Error setting date\n");
-    }
-
-    /* Set Time: 02:00:00 */
-    stimestructure.Hours = 0x02;
-    stimestructure.Minutes = 0x00;
-    stimestructure.Seconds = 0x00;
-    stimestructure.TimeFormat = RTC_HOURFORMAT12_AM;
-    stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-    stimestructure.StoreOperation = RTC_STOREOPERATION_RESET;
-
-    if (HAL_RTC_SetTime(&RtcHandle, &stimestructure, RTC_FORMAT_BCD) != HAL_OK) {
-        error("Error setting time\n");
-    }
-
-    HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, RTC_TAG);
-}
-
-static void configRtc() {
-    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
-    RCC_OscInitTypeDef RCC_OscInitLSE = { 0 };
-    HAL_StatusTypeDef status;
-
-//    RCC_OscInitLSE.OscillatorType = RCC_OSCILLATORTYPE_LSE;
-//    RCC_OscInitLSE.LSEState = RCC_LSE_ON;
-//
-//    if((status = HAL_RCC_OscConfig(&RCC_OscInitLSE)) != HAL_OK){
-//        error("Failed to init OSC: status=%d\n", status);
-//    } else {
-//        debug("Successfully initialized LSE!\n");
-//    }
-
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-    PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) == HAL_OK) {
-        __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
-
-        RtcHandle.Instance = RTC;
-        RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
-        RtcHandle.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
-        RtcHandle.Init.SynchPrediv = RTC_SYNCH_PREDIV;
-        RtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
-        RtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-        RtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-
-        if ( (status = HAL_RTC_Init(&RtcHandle)) != HAL_OK) {
-            error("Error initializing RTC: %d\n", status);
-            return;
-        }
-
-        // For verification.. this should happen before the above call returns
-        while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
-            debug("Waiting for LSE to stabilize\n");
-            osDelay(100);
-        }
-
-//
-//        /* Disable the write protection for RTC registers */
-//        __HAL_RTC_WRITEPROTECTION_DISABLE(&RtcHandle);
-//
-//        /* What does this do? */
-//         __HAL_RTC_RESET_HANDLE_STATE(&RtcHandle);
-//
-//        /* Disable the Wake-up Timer */
-//        __HAL_RTC_WAKEUPTIMER_DISABLE(&RtcHandle);
-//
-//        /* In case of interrupt mode is used, the interrupt source must disabled */
-//        __HAL_RTC_WAKEUPTIMER_DISABLE_IT(&RtcHandle, RTC_IT_WUT);
-//
-//        /* TODO ? Wait till RTC WUTWF flag is set  */
-////        uint32_t counter = 0;
-////        while (__HAL_RTC_WAKEUPTIMER_GET_FLAG(&RtcHandle, RTC_FLAG_WUTWF) == RESET) {
-////            if (counter++ == (SystemCoreClock / 48U)) {
-////                return; // HAL_ERROR;
-////            }
-////        }
-//
-//        /* Clear PWR wake up Flag */
-//        __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
-//
-//        /* Clear RTC Wake Up timer Flag */
-//        __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&RtcHandle, RTC_FLAG_WUTF);
-    }
-
-    if (HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR0) != RTC_TAG) {
-        debug("Calendar memory wiped, resetting\n");
-        RTC_CalendarConfig();
-    }
-}
-
 int main(void) {
     MatchBox* mb = new MatchBox(MatchBox::C16MHz);
 
+    // Enable RTC clock
+    mb->rtcInit();
+
     osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 2048);
-    defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+    defaultTaskHandle = osThreadCreate(osThread(defaultTask), mb);
 
     /* Start scheduler */
     osKernelStart();
@@ -149,6 +46,7 @@ int main(void) {
 }
 
 void StartDefaultTask(void const * argument) {
+    MatchBox* mb = (MatchBox*) argument;
     int count = 0;
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     Button b1(SW1_PIN, buttonHandler, &count);
@@ -159,12 +57,16 @@ void StartDefaultTask(void const * argument) {
     lcd.clear(1,1,1);
     lcd.putString("RTC initializing\n", 0, 0);
 
+    // For verification.. this should happen before the above call returns
+//    while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
+//        debug("Waiting for LSE to stabilize\n");
+//        osDelay(100);
+//    }
+
     // TODO: Check if GPIO pins need to be enabled (PC14 & PC15)
 #ifdef DEBUG
     osDelay(1000); // FIXME: wait for USB otherwise this hangs
 #endif
-
-    configRtc();
 
     debug("RCC->BDCR = %08x\n", RCC->BDCR);
     debug("LSE Source: %08x\n", __HAL_RCC_GET_RTC_SOURCE());
@@ -174,8 +76,8 @@ void StartDefaultTask(void const * argument) {
         RTC_TimeTypeDef stimestructureget;
         char buff[256];
 
-        HAL_RTC_GetTime(&RtcHandle, &stimestructureget, RTC_FORMAT_BIN);
-        HAL_RTC_GetDate(&RtcHandle, &sdatestructureget, RTC_FORMAT_BIN);
+        HAL_RTC_GetTime(mb->getRtc(), &stimestructureget, RTC_FORMAT_BIN);
+        HAL_RTC_GetDate(mb->getRtc(), &sdatestructureget, RTC_FORMAT_BIN);
 
         lcd.clear(1,1,1);
         sprintf(buff, "%02d:%02d:%02d\n", stimestructureget.Hours,

@@ -24,12 +24,17 @@ class MatchBox {
         ~MatchBox();
         void systemClockConfig(ClockSpeed speed);
 
+        // TODO: Clean this up.. add stdlib versions to get time/date
+        void rtcInit(void);
+        RTC_HandleTypeDef* getRtc() { return &_rtcHandle; }
+
         static void blinkOfDeath(Pin& led, BlinkCode code);
         static uint32_t getTimer();
     private:
         void gpioInit(void);
-        void rtcInit(void);
+        void rtcConfig(void);
         ClockSpeed _clkSpeed;
+        RTC_HandleTypeDef _rtcHandle;
 };
 
 #endif /* MATCHBOX_H_ */

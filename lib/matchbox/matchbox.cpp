@@ -15,7 +15,10 @@
 #include "usbserial.h"
 #include "matchbox.h"
 #include "gpio.h"
+#include "util.h"
 #include "pin.h"
+
+#define RTC_TAG 0xabdd // If this changes, it means we lost power, so reset calendar
 
 extern "C" {
     TIM_HandleTypeDef htim1;
@@ -165,82 +168,63 @@ void MatchBox::systemClockConfig(ClockSpeed speed) {
     HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
 }
 
+void MatchBox::rtcConfig(void) {
+    RTC_DateTypeDef sdatestructure = { 0 };
+    RTC_TimeTypeDef stimestructure = { 0 };
+
+    /* Set Date: Saturday June 23th 2020 */
+    sdatestructure.Year = 0x20;
+    sdatestructure.Month = RTC_MONTH_DECEMBER;
+    sdatestructure.Date = 0x23;
+    sdatestructure.WeekDay = RTC_WEEKDAY_SATURDAY;
+
+    if (HAL_RTC_SetDate(&_rtcHandle, &sdatestructure, RTC_FORMAT_BCD) != HAL_OK) {
+        error("Error setting date\n");
+    }
+
+    /* Set VCR Time: 12:00:00 */
+    stimestructure.Hours = 0x12;
+    stimestructure.Minutes = 0x00;
+    stimestructure.Seconds = 0x00;
+    stimestructure.TimeFormat = RTC_HOURFORMAT12_AM;
+    stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+    stimestructure.StoreOperation = RTC_STOREOPERATION_RESET;
+
+    if (HAL_RTC_SetTime(&_rtcHandle, &stimestructure, RTC_FORMAT_BCD) != HAL_OK) {
+        error("Error setting time\n");
+    }
+
+    HAL_RTCEx_BKUPWrite(&_rtcHandle, RTC_BKP_DR0, RTC_TAG);
+}
+
 void MatchBox::rtcInit(void) {
-//    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
-//    RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
-//
-//#if 1 // Use LSE (Time base = ((31 + 1) * (0 + 1)) / 32.768Khz = ~1ms)
-//    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
-//    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-//    RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-//    PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-//#else // Use LSI (Time base = ((4096 + 1) * (7 + 1)) / 32MHz = ~1ms)
-//    #define RTC_ASYNCH_PREDIV       7U
-//    #define RTC_SYNCH_PREDIV        4095U
-//    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;
-//    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-//    RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-//    PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
-//#endif
-//
-//    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) == HAL_OK) {
-//        PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-//        if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) == HAL_OK) {
-//            /* Enable RTC Clock */
-//            __HAL_RCC_RTC_ENABLE();
-//            /* The time base should be 1ms
-//             Time base = ((RTC_ASYNCH_PREDIV + 1) * (RTC_SYNCH_PREDIV + 1)) / RTC_CLOCK
-//             HSE as RTC clock
-//             Time base = ((99 + 1) * (9 + 1)) / 1Mhz
-//             = 1ms
-//             LSE as RTC clock
-//             Time base = ((31 + 1) * (0 + 1)) / 32.768Khz
-//             = ~1ms
-//             LSI as RTC clock
-//             Time base = ((31 + 1) * (0 + 1)) / 32Khz
-//             = 1ms
-//             */
-//            hrtc.Instance = RTC;
-//            hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
-//            hrtc.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
-//            hrtc.Init.SynchPrediv = RTC_SYNCH_PREDIV;
-//            hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
-//            hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-//            hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-//
-//            HAL_RTC_Init(&hrtc);
-//
-//            /* Disable the write protection for RTC registers */
-//            __HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
-//
-//            /* Disable the Wake-up Timer */
-//            __HAL_RTC_WAKEUPTIMER_DISABLE(&hrtc);
-//
-//            /* In case of interrupt mode is used, the interrupt source must disabled */
-//            __HAL_RTC_WAKEUPTIMER_DISABLE_IT(&hrtc, RTC_IT_WUT);
-//
-//            /* Wait till RTC WUTWF flag is set  */
-//            uint32_t counter = 0;
-//
-//            while (__HAL_RTC_WAKEUPTIMER_GET_FLAG(&hrtc, RTC_FLAG_WUTWF) == RESET) {
-//                if (counter++ == (SystemCoreClock / 48U)) {
-//                    return; // HAL_ERROR;
-//                }
-//            }
-//
-//            /* Clear PWR wake up Flag */
-//            __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
-//
-//            /* Clear RTC Wake Up timer Flag */
-//            __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
-//        }
-//        __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
-//    }
-//    HAL_PWR_EnableBkUpAccess();
-//    __HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
-//    __HAL_RCC_PWR_CLK_ENABLE();
-////    __HAL_RCC_RTC_CONFIG(RCCEx_Periph_Clock_Selection);
-//    __HAL_RCC_RTC_ENABLE();
-//    HAL_RTC_Init(&hrtc);
+    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
+    HAL_StatusTypeDef status;
+    _rtcHandle = { 0 };
+
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+    PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) == HAL_OK) {
+        __HAL_RCC_RTC_ENABLE(); /* Enable RTC Clock */
+
+        _rtcHandle.Instance = RTC;
+        _rtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+        _rtcHandle.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
+        _rtcHandle.Init.SynchPrediv = RTC_SYNCH_PREDIV;
+        _rtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
+        _rtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+        _rtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+
+        if ( (status = HAL_RTC_Init(&_rtcHandle)) != HAL_OK) {
+            error("Error initializing RTC: %d\n", status);
+            return;
+        }
+    }
+
+    if (HAL_RTCEx_BKUPRead(&_rtcHandle, RTC_BKP_DR0) != RTC_TAG) {
+        debug("Calendar memory wiped, resetting\n");
+        rtcConfig();
+    }
 }
 

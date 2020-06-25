@@ -57,6 +57,9 @@ void StartDefaultTask(void const * argument) {
     Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
 
     lcd.begin();
+
+    // Draw to the front buffer in case one of the following steps hangs..
+    lcd.setDrawBuffer(Lcd::DRAW_FRONT);
     lcd.clear(1,1,1);
     lcd.putString("RTC initializing\n", 0, 0);
 
@@ -65,7 +68,7 @@ void StartDefaultTask(void const * argument) {
 
     // For verification.. this should happen before the above call returns
     while (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
-        debug("Waiting for LSE to stabilize\n");
+        lcd.putString("Waiting for LSE...\n");
         osDelay(1000);
     }
 
@@ -74,6 +77,7 @@ void StartDefaultTask(void const * argument) {
 //    debug("Reset state: %s\n",__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) ? "true" : "false");
 
     int count = 0;
+    lcd.setDrawBuffer(Lcd::DRAW_BACK);
     while (1) {
         RTC_DateTypeDef sdatestructureget;
         RTC_TimeTypeDef stimestructureget;

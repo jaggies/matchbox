@@ -96,6 +96,14 @@ class Lcd {
 		// Returns maximum height of all characters
         int getFontHeight() const { return _currentFont ? _currentFont->charHeight : 0; }
 
+        enum DrawBuffer { DRAW_BACK = 0, DRAW_FRONT };
+        void setDrawBuffer(DrawBuffer d) {
+            _drawSelection = d;
+            _drawBuffer = _drawSelection == DRAW_FRONT ? _frontBuffer : _backBuffer;
+            // This is required to update _rasterOffset to point to the correct location
+            // in the current buffer.
+            moveTo(_rasterX, _rasterY);
+        }
 		void refresh();
 
 	private:
@@ -125,14 +133,17 @@ class Lcd {
 		const uint16_t _xres, _yres, _depth, _line_size;
 		uint8_t _clear;
 		const Font* _currentFont;
-		Frame* _writeBuffer;
-		Frame* _refreshBuffer;
+		Frame* _backBuffer;
+		Frame* _frontBuffer;
+		Frame* _drawBuffer;
 		uint8_t _fg[3];
 		uint8_t _bg[3];
 		uint8_t _red, _grn, _blu;
 		volatile bool _doSwap; // trigger swapBuffer on next frame refresh
         volatile bool _disableRefresh;
         volatile bool _enabled;
+
+        DrawBuffer _drawSelection;
 
         uint32_t _scanIncrement; // in pixels
         uint32_t* _rasterOffset; // in bits
@@ -174,7 +185,7 @@ inline void Lcd::decY() {
 
 inline void Lcd::moveTo(int16_t x, int16_t y) {
     // Compute bit address of pixel beyond line cmd and row from Line structure
-    _rasterOffset = (uint32_t*) BITBAND_SRAM((int)&_writeBuffer->line[y].data[0], x * _depth);
+    _rasterOffset = (uint32_t*) BITBAND_SRAM((int)&_drawBuffer->line[y].data[0], x * _depth);
     _rasterX = x;
     _rasterY = y;
 }

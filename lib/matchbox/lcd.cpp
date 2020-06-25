@@ -23,21 +23,23 @@
 Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
         _clear(1), _frame(0), _currentFont(getFont("roboto_bold_10")),
         _xres(LCD_XRES), _yres(LCD_YRES), _depth(LCD_DEPTH), _line_size(LCD_XRES*LCD_DEPTH/8),
-        _refreshBuffer(new Frame()), _doSwap(true), _disableRefresh(false), _enabled(false),
-        _red(0), _grn(0), _blu(0), _scanIncrement(sizeof(Line) * 8), _rasterX(0), _rasterY(0), _rasterOffset(0)
+        _frontBuffer(new Frame()), _doSwap(true), _disableRefresh(false), _enabled(false),
+        _red(0), _grn(0), _blu(0), _drawSelection(DRAW_BACK), _scanIncrement(sizeof(Line) * 8),
+        _rasterX(0), _rasterY(0), _rasterOffset(0)
 {
     bool doubleBuffer = config.doubleBuffer;
-    _writeBuffer = doubleBuffer ? new Frame() : _refreshBuffer;
+    _backBuffer = doubleBuffer ? new Frame() : _frontBuffer;
+    _drawBuffer = _backBuffer;
     moveTo(0,0); // force _rasterOffset calculation
     memset(_fg, 0, sizeof(_fg));
     memset(_bg, 0xff, sizeof(_bg));
 }
 
 Lcd::~Lcd() {
-    if (_writeBuffer != _refreshBuffer) {
-        delete _writeBuffer; // double buffered
+    if (_backBuffer != _frontBuffer) {
+        delete _backBuffer; // double buffered
     }
-    delete _refreshBuffer;
+    delete _frontBuffer;
 }
 
 void Lcd::begin() {
@@ -52,7 +54,7 @@ void Lcd::begin() {
     for (int i = 0; i < Number(pins); i++) {
         pinInitOutput(pins[i], defaults[i]);
     }
-    bzero(_refreshBuffer, sizeof(*_refreshBuffer));
+    bzero(_frontBuffer, sizeof(*_frontBuffer));
     setEnabled(true);
 }
 
@@ -82,20 +84,21 @@ void Lcd::refreshFrame() {
         return; // don't start another refresh cycle
     }
     if (_doSwap) {
-        std::swap(_refreshBuffer, _writeBuffer);
+        std::swap(_frontBuffer, _backBuffer);
         moveTo(_rasterX, _rasterY); // force address calculation
+        _drawBuffer = _drawSelection == DRAW_FRONT ? _frontBuffer : _backBuffer;
         _doSwap = false;
     }
 #ifndef BLE_PRESENT
     writePin(_config.extc, (_frame) & 0x01); // Toggle common driver once per frame
 #else
     // TODO: ensure _clear is always in the correct state
-    _refreshBuffer->line[0].cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+    _frontBuffer->line[0].cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
 #endif
 
     writePin(_config.scs, 0); // cs disabled
     writePin(_config.scs, 1); // cs enabled
-    Spi::Status status = _spi.transmit((uint8_t*)_refreshBuffer, sizeof(*_refreshBuffer),
+    Spi::Status status = _spi.transmit((uint8_t*)_frontBuffer, sizeof(*_frontBuffer),
             refreshFrameCallback, this);
     if (Spi::OK != status) {
         error("Failed to refresh with status=%d\n", status);
@@ -107,7 +110,7 @@ void Lcd::refreshFrame() {
 void
 Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     // Fill up local pixel byte array
-    uint32_t* clear = (uint32_t*)&_writeBuffer->line[0].data[0];
+    uint32_t* clear = (uint32_t*)&_drawBuffer->line[0].data[0];
     uint32_t* pixel = (uint32_t*)BITBAND_SRAM((int) clear, 0);
     r = r ? 1 : 0; g = g ? 1 : 0; b = b ? 1 : 0;
     for (int i = 0; i < _depth * 8 * 4; i+=_depth) {
@@ -117,7 +120,7 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     }
     // Use int array to blast pixels
     for (int j = 0; j < _yres; j++) {
-        uint32_t* pixels = (uint32_t*) &_writeBuffer->line[j].data[0];
+        uint32_t* pixels = (uint32_t*) &_drawBuffer->line[j].data[0];
         for (int i = 0; i < _line_size/_depth/sizeof(clear[0]); i++) {
             *pixels++ = clear[0];
             *pixels++ = clear[1];
@@ -129,10 +132,10 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
         // Restore the cmd/row data before drawing. If this gets clobbered, the LCD won't update properly.
         const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
         for (int i = 0; i < _yres; i++) {
-            _writeBuffer->line[i].cmd = cmd;
-            _writeBuffer->line[i].row = i + 1;
+            _drawBuffer->line[i].cmd = cmd;
+            _drawBuffer->line[i].row = i + 1;
         }
-        _writeBuffer->sync1 = _writeBuffer->sync2 = 0; // in case these get clobbered
+        _drawBuffer->sync1 = _drawBuffer->sync2 = 0; // in case these get clobbered
     }
 }
 
@@ -286,10 +289,10 @@ void Lcd::swapBuffers() {
         // Restore the cmd/row data after drawing. If this gets clobbered, the LCD won't update.
         const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
         for (int i = 0; i < _yres; i++) {
-           _writeBuffer->line[i].cmd = cmd;
-           _writeBuffer->line[i].row = i + 1;
+           _drawBuffer->line[i].cmd = cmd;
+           _drawBuffer->line[i].row = i + 1;
         }
-        _writeBuffer->sync1 = _writeBuffer->sync2 = 0; // in case these get clobbered
+        _drawBuffer->sync1 = _drawBuffer->sync2 = 0; // in case these get clobbered
     }
 
     while (_doSwap) {

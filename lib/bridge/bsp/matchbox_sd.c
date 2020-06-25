@@ -141,7 +141,7 @@ HAL_StatusTypeDef BSP_SD_ITConfig(void) {
     GPIO_InitTypeDef GPIO_Init_Structure;
 
     /* Configure Interrupt mode for SD detection pin */
-    GPIO_Init_Structure.Mode = GPIO_MODE_IT_RISING_FALLING;
+    GPIO_Init_Structure.Mode = GPIO_MODE_IT_FALLING;
     GPIO_Init_Structure.Pull = GPIO_PULLUP;
     GPIO_Init_Structure.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_Init_Structure.Pin = SD_DETECT_PIN;

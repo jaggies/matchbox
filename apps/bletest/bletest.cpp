@@ -13,6 +13,7 @@
 #include "spi.h"
 #include "adc.h"
 #include "fifo.h"
+#include "util.h"
 #include "services.h" // configuration file for nrf8001
 
 osThreadId defaultTaskHandle;
@@ -38,7 +39,7 @@ struct Status {
 struct Channel {
     Channel() : packetLow(0) { bzero(data, sizeof(data)); }
     uint16_t packetLow; // lower 16 bits of current packet
-    char data[18];
+    int8_t data[18];
 };
 
 float rate = 0.0f;
@@ -95,57 +96,36 @@ static struct aci_state_t aci_state;
 void StartDefaultTask(void const * argument) {
     Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
     nrf8001Setup();
-    Adc adc(Adc::AD1, 1);
-    Fifo<uint8_t, int8_t, 32> adcFifo;
-    adc.start(adcCallback, (void*) &adcFifo);
-    int count = 0;
     Status status;
-    Channel chan0;
-    Channel chan1;
-    Channel chan2;
-    Channel chan3;
-
-    int dataCount = 0; // number of items in data channel
-    int ramp = 0;
+    Channel chan;
+    enum Pipe {CHAN0, CHAN1, CHAN2, CHAN3, STATUS, LAST };
+    float alpha = 0.0f;
+    float dAlpha = 2.0f * M_PI / 1023;
+    int packetCount = 0;
+    int lastStatus = -1;
+    Pipe pipe = STATUS;
     while (1) {
         aci_loop();
         if (aci_state.bonded) {
-            int currentPacket = count >> 16;
-            if (status.packetHigh != currentPacket) {
-                // sending status when it changes is higher priority than data
-                uint16_t tmp = status.packetHigh; // save it in case xmit fails
-                status.packetHigh = currentPacket;
-                if (sendData(PIPE_SENSORSERVICE_STATUS_TX, status)) {
-                    status.packetHigh = currentPacket;
-                } else {
-                    status.packetHigh = tmp;
-                }
+            if ((packetCount >> 16) != lastStatus) {
+                lastStatus = packetCount >> 16;
+                status.channels = 4;
+                status.packetHigh = lastStatus;
+                status.sampleRate = 250;
+                pipe = STATUS;
             } else {
-                uint8_t data;
-                while (dataCount < sizeof(chan0.data) && adcFifo.remove(&data)) {
-                    chan0.data[dataCount] = data;
-//                    chan1.data[dataCount] = ramp;
-//                    chan2.data[dataCount] = 127+127*sin(2.0f * M_PI * uint(ramp) / 255);
-//                    chan3.data[dataCount] = 127+127*sin(3.0f * M_PI * uint(ramp) / 255);
-                    ramp++;
-                    dataCount++;
+                for (int i = 0; i < sizeof(chan.data); i++) {
+                    chan.data[i] = 127*sin(alpha);
+                    alpha += dAlpha;
                 }
-                if (dataCount == sizeof(chan0.data)) {
-                    // full packet, send it
-                    chan0.packetLow = count & 0xffff;
-                    if (sendData(PIPE_SENSORSERVICE_CHANNEL0_TX, chan0)) {
-//                        printf("rate: %f\n", 1.0f / rate);
-                        led.write(count & 1);
-                        dataCount = 0;
-                        count++;
-                    }
-                    // chan1.packetLow = chan2.packetLow = chan3.packetLow = count & 0xffff;
-                    // sendData(PIPE_SENSORSERVICE_CHANNEL2_TX, chan2);
-                    // sendData(PIPE_SENSORSERVICE_CHANNEL2_TX, chan2);
-                    // sendData(PIPE_SENSORSERVICE_CHANNEL3_TX, chan3);
+                if (sendData(PIPE_SENSORSERVICE_CHANNEL0_TX, chan)) {
+                    led.write(packetCount++ & 1);
+                } else {
+                    debug("Failed to send chan0\n");
                 }
             }
-        }
+            osDelay(100);
+        } // bonded
     }
 }
 
@@ -326,10 +306,10 @@ void aci_loop() {
 template<class K> bool sendData(int pipe, const K& data) {
     bool status = false;
     if (aci_state.data_credit_available > 0 && lib_aci_is_pipe_available(&aci_state, pipe)) {
-        if (lib_aci_send_data(pipe, (uint8_t*) &data, sizeof(data))) {
-            aci_state.data_credit_available--;
-            return true;
+        while (!lib_aci_send_data(pipe, (uint8_t*) &data, sizeof(data))) {
+            aci_loop();
         }
+        return true;
     }
     return status;
 }

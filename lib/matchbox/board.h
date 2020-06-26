@@ -8,19 +8,9 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
-#define SW1_PIN PC13 // redefined to PC1 later
-#define SW2_PIN PA13
-
-#ifdef VERSION_01
-#define LED_PIN SW1_PIN // Oops. Wired to PC13
-#define POWER_PIN PD2
-#else
-#define LED_PIN PB2
-#define POWER_PIN PA14
-#endif
-
-// Constants for RTC sycn/async prescalars. Works for LSE at 32768Hz
-#define RTC_ASYNCH_PREDIV       0x7fU // 128
-#define RTC_SYNCH_PREDIV        0x00ffU // * 256 = 32768
+#include "mb415.h" // stm32f415 definitions for matchbox
+#include "ble_v01.h"
+#include "cpu_v11.h"
+#include "dpy_v10.h"
 
 #endif /* BOARD_H_ */

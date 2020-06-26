@@ -5,13 +5,14 @@
  *      Author: jmiller
  */
 #include <math.h>
-#include <lib_aci.h>
-#include <aci_setup.h>
-#include <matchbox.h>
-#include <pin.h>
-#include <spi.h>
-#include <adc.h>
-#include <fifo.h>
+#include "ble_v01.h"
+#include "lib_aci.h"
+#include "aci_setup.h"
+#include "matchbox.h"
+#include "pin.h"
+#include "spi.h"
+#include "adc.h"
+#include "fifo.h"
 #include "services.h" // configuration file for nrf8001
 
 osThreadId defaultTaskHandle;
@@ -171,11 +172,11 @@ void nrf8001Setup() {
     aci_state.aci_setup_info.setup_msgs = setup_msgs;
     aci_state.aci_setup_info.num_setup_msgs = NB_SETUP_MESSAGES;
     aci_state.aci_pins.board_name = BOARD_DEFAULT; //See boards.h for details
-    aci_state.aci_pins.reqn_pin = PA15; // SS pin for nRF8001
-    aci_state.aci_pins.rdyn_pin = PA9; // Interrupt pin from nRF8001
-    aci_state.aci_pins.mosi_pin = PB5; // SPI data -> nRF8001
-    aci_state.aci_pins.miso_pin = PB4; // SPI data <- nRF8001
-    aci_state.aci_pins.sck_pin = PB3; // SPI clk
+    aci_state.aci_pins.reqn_pin = NRF8K_REQN; // SS pin for nRF8001
+    aci_state.aci_pins.rdyn_pin = NRF8K_RDYN; // Interrupt pin from nRF8001
+    aci_state.aci_pins.mosi_pin = NRF8K_MOSI; // SPI data -> nRF8001
+    aci_state.aci_pins.miso_pin = NRF8K_MISO; // SPI data <- nRF8001
+    aci_state.aci_pins.sck_pin = NRF8K_SCK; // SPI clk
     aci_state.aci_pins.spi_clock_divider = 0; // TODO: Should be ~2MHz
     aci_state.aci_pins.reset_pin = UNUSED_PIN;
     aci_state.aci_pins.active_pin = UNUSED_PIN;

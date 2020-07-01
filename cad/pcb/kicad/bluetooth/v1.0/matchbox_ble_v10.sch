@@ -1,0 +1,1111 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Wire Wire Line
+	8300 5700 8300 5800
+Wire Wire Line
+	8300 5800 7900 5800
+Text Label 7900 5800 0    70   ~ 0
+VCC_3V3
+Connection ~ 8300 5800
+Wire Wire Line
+	8300 3800 7900 3800
+Wire Wire Line
+	8300 3700 8300 3800
+Text Label 7900 3800 0    70   ~ 0
+VCC_3V3
+Connection ~ 8300 3800
+Wire Wire Line
+	6400 5700 6400 5800
+Wire Wire Line
+	6400 5800 6000 5800
+Text Label 6000 5800 0    70   ~ 0
+VCC_3V3
+Connection ~ 6400 5800
+Wire Wire Line
+	6400 3800 6000 3800
+Wire Wire Line
+	6400 3700 6400 3800
+Text Label 6000 3800 0    70   ~ 0
+VCC_3V3
+Connection ~ 6400 3800
+Wire Wire Line
+	4700 4200 4400 4200
+Wire Wire Line
+	5000 4200 4700 4200
+Wire Wire Line
+	5000 4200 5300 4200
+Text Label 4400 4200 0    70   ~ 0
+VCC_3V3
+Connection ~ 4700 4200
+Connection ~ 5000 4200
+Wire Wire Line
+	3700 4300 3800 4300
+Wire Wire Line
+	3700 4000 3800 4000
+Wire Wire Line
+	3800 4000 3800 4100
+Wire Wire Line
+	3800 4100 3700 4100
+Wire Wire Line
+	3800 4100 3800 4300
+Wire Wire Line
+	3800 4300 3800 4400
+Wire Wire Line
+	3800 4400 3700 4400
+Wire Wire Line
+	3800 4400 3800 4500
+Wire Wire Line
+	3800 4500 3700 4500
+Connection ~ 3800 4100
+Connection ~ 3800 4300
+Connection ~ 3800 4400
+Text Label 3750 4000 0    70   ~ 0
+VCC_3V3
+Wire Wire Line
+	2500 5300 2200 5300
+Text Label 2200 5300 0    70   ~ 0
+VCC_3V3
+Wire Wire Line
+	9200 4900 9500 4900
+Text Label 9300 4900 0    70   ~ 0
+PB14
+Wire Wire Line
+	7300 4900 7600 4900
+Text Label 7400 4900 0    70   ~ 0
+PB14
+Wire Wire Line
+	9600 4300 9200 4300
+Wire Wire Line
+	9200 4300 9200 4400
+Text Label 9300 4300 0    70   ~ 0
+GND
+Connection ~ 9200 4300
+Wire Wire Line
+	9600 2300 9200 2300
+Wire Wire Line
+	9200 2400 9200 2300
+Text Label 9300 2300 0    70   ~ 0
+GND
+Connection ~ 9200 2300
+Wire Wire Line
+	7700 4300 7300 4300
+Wire Wire Line
+	7300 4300 7300 4400
+Text Label 7400 4300 0    70   ~ 0
+GND
+Connection ~ 7300 4300
+Wire Wire Line
+	7700 2300 7300 2300
+Wire Wire Line
+	7300 2400 7300 2300
+Text Label 7400 2300 0    70   ~ 0
+GND
+Connection ~ 7300 2300
+Wire Wire Line
+	4400 4600 4700 4600
+Wire Wire Line
+	4700 4600 5000 4600
+Wire Wire Line
+	5000 4600 5000 4500
+Wire Wire Line
+	4700 4500 4700 4600
+Wire Wire Line
+	4400 4500 4400 4600
+Wire Wire Line
+	4100 4500 4100 4600
+Wire Wire Line
+	4100 4600 4400 4600
+Wire Wire Line
+	5000 4600 5300 4600
+Wire Wire Line
+	5300 4600 5300 4500
+Text Label 4700 4600 0    70   ~ 0
+GND
+Connection ~ 4700 4600
+Connection ~ 4400 4600
+Connection ~ 5000 4600
+Wire Wire Line
+	2500 3200 2200 3200
+Wire Wire Line
+	2200 3200 2200 3300
+Wire Wire Line
+	2200 3300 2200 3400
+Wire Wire Line
+	2200 3400 2200 3500
+Wire Wire Line
+	2200 3500 2200 3600
+Wire Wire Line
+	2200 3600 2200 3700
+Wire Wire Line
+	2200 3700 2200 3800
+Wire Wire Line
+	2200 3800 2500 3800
+Wire Wire Line
+	2500 3300 2200 3300
+Wire Wire Line
+	2200 3400 2500 3400
+Wire Wire Line
+	2500 3500 2200 3500
+Wire Wire Line
+	2200 3600 2500 3600
+Wire Wire Line
+	2500 3700 2200 3700
+Text Label 2200 3200 0    70   ~ 0
+GND
+Connection ~ 2200 3300
+Connection ~ 2200 3400
+Connection ~ 2200 3500
+Connection ~ 2200 3600
+Connection ~ 2200 3700
+Text Label 5300 3800 0    70   ~ 0
+GND
+Wire Wire Line
+	4200 2900 4300 2900
+Text Label 4200 2900 0    70   ~ 0
+GND
+Wire Wire Line
+	5000 2900 4700 2900
+Wire Wire Line
+	4900 2600 5000 2600
+Wire Wire Line
+	4900 3200 5000 3200
+Wire Wire Line
+	5000 3200 5000 2900
+Wire Wire Line
+	5000 2900 5000 2600
+Connection ~ 5000 2900
+Text Label 5000 3050 0    70   ~ 0
+GND
+Wire Wire Line
+	2000 4500 1900 4500
+Wire Wire Line
+	1900 4500 1900 4300
+Wire Wire Line
+	1900 4300 1900 4100
+Wire Wire Line
+	1900 4100 2000 4100
+Wire Wire Line
+	2000 4300 1900 4300
+Connection ~ 1900 4300
+Text Label 1900 4100 0    70   ~ 0
+GND
+Wire Wire Line
+	5500 5000 5400 5000
+Text Label 5500 5000 0    70   ~ 0
+GND
+Wire Wire Line
+	2500 5500 2200 5500
+Text Label 2200 5500 0    70   ~ 0
+GND
+Wire Wire Line
+	3700 5300 3700 5400
+Wire Wire Line
+	3700 5400 3700 5500
+Wire Wire Line
+	3700 5500 3700 5600
+Wire Wire Line
+	3700 5600 3700 5700
+Text Label 3700 5700 0    70   ~ 0
+GND
+Connection ~ 3700 5400
+Connection ~ 3700 5500
+Connection ~ 3700 5600
+Wire Wire Line
+	9200 4800 9500 4800
+Text Label 9300 4800 0    70   ~ 0
+PB15
+Wire Wire Line
+	7300 4800 7600 4800
+Text Label 7400 4800 0    70   ~ 0
+PB15
+Wire Wire Line
+	8000 5500 8300 5500
+Text Label 8000 5500 0    70   ~ 0
+PA5
+Wire Wire Line
+	6100 5500 6400 5500
+Text Label 6100 5500 0    70   ~ 0
+PA5
+Wire Wire Line
+	8000 5400 8300 5400
+Text Label 8000 5400 0    70   ~ 0
+PA6
+Wire Wire Line
+	6100 5400 6400 5400
+Text Label 6100 5400 0    70   ~ 0
+PA6
+Wire Wire Line
+	8000 5600 8300 5600
+Text Label 8000 5600 0    70   ~ 0
+PA4
+Wire Wire Line
+	6100 5600 6400 5600
+Text Label 6100 5600 0    70   ~ 0
+PA4
+Wire Wire Line
+	8000 5300 8300 5300
+Text Label 8000 5300 0    70   ~ 0
+PA7
+Wire Wire Line
+	6100 5300 6400 5300
+Text Label 6100 5300 0    70   ~ 0
+PA7
+Wire Wire Line
+	8000 4700 8300 4700
+Text Label 8000 4700 0    70   ~ 0
+PB10
+Wire Wire Line
+	6100 4700 6400 4700
+Text Label 6100 4700 0    70   ~ 0
+PB10
+Wire Wire Line
+	8000 4600 8300 4600
+Text Label 8000 4600 0    70   ~ 0
+PB11
+Wire Wire Line
+	6100 4600 6400 4600
+Text Label 6100 4600 0    70   ~ 0
+PB11
+Wire Wire Line
+	9200 5000 9500 5000
+Text Label 9300 5000 0    70   ~ 0
+PB13
+Wire Wire Line
+	7300 5000 7600 5000
+Text Label 7400 5000 0    70   ~ 0
+PB13
+Wire Wire Line
+	8000 3500 8300 3500
+Text Label 8000 3500 0    70   ~ 0
+PC10
+Wire Wire Line
+	6100 3500 6400 3500
+Text Label 6100 3500 0    70   ~ 0
+PC10
+Wire Wire Line
+	2500 5000 2200 5000
+Text Label 2200 5000 0    70   ~ 0
+PC10
+Wire Wire Line
+	8000 3300 8300 3300
+Text Label 8000 3300 0    70   ~ 0
+PC12
+Wire Wire Line
+	6100 3300 6400 3300
+Text Label 6100 3300 0    70   ~ 0
+PC12
+Wire Wire Line
+	2500 5400 2200 5400
+Text Label 2200 5400 0    70   ~ 0
+PC12
+Wire Wire Line
+	8000 3400 8300 3400
+Text Label 8000 3400 0    70   ~ 0
+PC11
+Wire Wire Line
+	6100 3400 6400 3400
+Text Label 6100 3400 0    70   ~ 0
+PC11
+Wire Wire Line
+	2500 5100 2200 5100
+Text Label 2200 5100 0    70   ~ 0
+PC11
+Wire Wire Line
+	9200 5100 9500 5100
+Text Label 9300 5100 0    70   ~ 0
+PB12
+Wire Wire Line
+	7300 5100 7600 5100
+Text Label 7400 5100 0    70   ~ 0
+PB12
+Wire Wire Line
+	9200 4700 9500 4700
+Text Label 9300 4700 0    70   ~ 0
+PC9
+Wire Wire Line
+	7300 4700 7600 4700
+Text Label 7400 4700 0    70   ~ 0
+PC9
+Wire Wire Line
+	2500 5700 2200 5700
+Text Label 2200 5700 0    70   ~ 0
+PC9
+Wire Wire Line
+	8000 3600 8300 3600
+Text Label 8000 3600 0    70   ~ 0
+PA15
+Wire Wire Line
+	6100 3600 6400 3600
+Text Label 6100 3600 0    70   ~ 0
+PA15
+Wire Wire Line
+	2500 2600 2200 2600
+Text Label 2200 2600 0    70   ~ 0
+PA15
+Wire Wire Line
+	9200 3200 9500 3200
+Text Label 9300 3200 0    70   ~ 0
+PC4
+Wire Wire Line
+	7300 3200 7600 3200
+Text Label 7400 3200 0    70   ~ 0
+PC4
+Wire Wire Line
+	8000 2700 8300 2700
+Text Label 8000 2700 0    70   ~ 0
+PB6
+Wire Wire Line
+	6100 2700 6400 2700
+Text Label 6100 2700 0    70   ~ 0
+PB6
+Wire Wire Line
+	5300 5400 5000 5400
+Text Label 5100 5400 0    70   ~ 0
+PB6
+Wire Wire Line
+	8000 2600 8300 2600
+Text Label 8000 2600 0    70   ~ 0
+PB7
+Wire Wire Line
+	6100 2600 6400 2600
+Text Label 6100 2600 0    70   ~ 0
+PB7
+Wire Wire Line
+	5300 5600 5000 5600
+Text Label 5100 5600 0    70   ~ 0
+PB7
+Wire Wire Line
+	9200 3300 9500 3300
+Text Label 9300 3300 0    70   ~ 0
+PC5
+Wire Wire Line
+	7300 3300 7600 3300
+Text Label 7400 3300 0    70   ~ 0
+PC5
+Wire Wire Line
+	8000 5000 8300 5000
+Text Label 8000 5000 0    70   ~ 0
+PB0
+Wire Wire Line
+	6100 5000 6400 5000
+Text Label 6100 5000 0    70   ~ 0
+PB0
+Wire Wire Line
+	8000 4900 8300 4900
+Text Label 8000 4900 0    70   ~ 0
+PB1
+Wire Wire Line
+	6100 4900 6400 4900
+Text Label 6100 4900 0    70   ~ 0
+PB1
+Wire Wire Line
+	8000 4800 8300 4800
+Text Label 8000 4800 0    70   ~ 0
+PB2
+Wire Wire Line
+	6100 4800 6400 4800
+Text Label 6100 4800 0    70   ~ 0
+PB2
+Wire Wire Line
+	8000 3200 8300 3200
+Text Label 8000 3200 0    70   ~ 0
+PD2
+Wire Wire Line
+	6100 3200 6400 3200
+Text Label 6100 3200 0    70   ~ 0
+PD2
+Wire Wire Line
+	2500 5200 2200 5200
+Text Label 2200 5200 0    70   ~ 0
+PD2
+Wire Wire Line
+	8000 3100 8300 3100
+Text Label 8000 3100 0    70   ~ 0
+PB3
+Wire Wire Line
+	6100 3100 6400 3100
+Text Label 6100 3100 0    70   ~ 0
+PB3
+Wire Wire Line
+	2500 2900 2200 2900
+Text Label 2200 2900 0    70   ~ 0
+PB3
+Wire Wire Line
+	8000 3000 8300 3000
+Text Label 8000 3000 0    70   ~ 0
+PB4
+Wire Wire Line
+	6100 3000 6400 3000
+Text Label 6100 3000 0    70   ~ 0
+PB4
+Wire Wire Line
+	2500 2800 2200 2800
+Text Label 2200 2800 0    70   ~ 0
+PB4
+Wire Wire Line
+	8000 2900 8300 2900
+Text Label 8000 2900 0    70   ~ 0
+PB5
+Wire Wire Line
+	6100 2900 6400 2900
+Text Label 6100 2900 0    70   ~ 0
+PB5
+Wire Wire Line
+	2500 2700 2200 2700
+Text Label 2200 2700 0    70   ~ 0
+PB5
+Wire Wire Line
+	8000 2800 8300 2800
+Text Label 8000 2800 0    70   ~ 0
+PA14
+Wire Wire Line
+	6100 2800 6400 2800
+Text Label 6100 2800 0    70   ~ 0
+PA14
+Wire Wire Line
+	8000 2500 8300 2500
+Text Label 8000 2500 0    70   ~ 0
+PB8
+Wire Wire Line
+	6100 2500 6400 2500
+Text Label 6100 2500 0    70   ~ 0
+PB8
+Wire Wire Line
+	5300 5800 5000 5800
+Text Label 5100 5800 0    70   ~ 0
+PB8
+Wire Wire Line
+	8000 2400 8300 2400
+Text Label 8000 2400 0    70   ~ 0
+PB9
+Wire Wire Line
+	6100 2400 6400 2400
+Text Label 6100 2400 0    70   ~ 0
+PB9
+Wire Wire Line
+	9200 5200 9500 5200
+Text Label 9300 5200 0    70   ~ 0
+PA3
+Wire Wire Line
+	7300 5200 7600 5200
+Text Label 7400 5200 0    70   ~ 0
+PA3
+Wire Wire Line
+	9200 5300 9500 5300
+Text Label 9300 5300 0    70   ~ 0
+PA2
+Wire Wire Line
+	7300 5300 7600 5300
+Text Label 7400 5300 0    70   ~ 0
+PA2
+Wire Wire Line
+	9200 5400 9500 5400
+Text Label 9300 5400 0    70   ~ 0
+PA1
+Wire Wire Line
+	7300 5400 7600 5400
+Text Label 7400 5400 0    70   ~ 0
+PA1
+Wire Wire Line
+	9200 5500 9500 5500
+Text Label 9300 5500 0    70   ~ 0
+PA0
+Wire Wire Line
+	7300 5500 7600 5500
+Text Label 7400 5500 0    70   ~ 0
+PA0
+Wire Wire Line
+	8000 4300 8300 4300
+Text Label 8000 4300 0    70   ~ 0
+RESET#
+Wire Wire Line
+	8000 2300 8300 2300
+Text Label 8000 2300 0    70   ~ 0
+RESET#
+Wire Wire Line
+	6100 4300 6400 4300
+Text Label 6100 4300 0    70   ~ 0
+RESET#
+Wire Wire Line
+	6100 2300 6400 2300
+Text Label 6100 2300 0    70   ~ 0
+RESET#
+Wire Wire Line
+	2500 2300 2200 2300
+Text Label 2200 2300 0    70   ~ 0
+RESET#
+Wire Wire Line
+	9200 2500 9500 2500
+Text Label 9300 2500 0    70   ~ 0
+PC13
+Wire Wire Line
+	7300 2500 7600 2500
+Text Label 7400 2500 0    70   ~ 0
+PC13
+Wire Wire Line
+	9200 2700 9500 2700
+Text Label 9300 2700 0    70   ~ 0
+PC8
+Wire Wire Line
+	7300 2700 7600 2700
+Text Label 7400 2700 0    70   ~ 0
+PC8
+Wire Wire Line
+	2500 5600 2200 5600
+Text Label 2200 5600 0    70   ~ 0
+PC8
+Wire Wire Line
+	9200 2800 9500 2800
+Text Label 9300 2800 0    70   ~ 0
+PC0
+Wire Wire Line
+	7300 2800 7600 2800
+Text Label 7400 2800 0    70   ~ 0
+PC0
+Wire Wire Line
+	9200 2900 9500 2900
+Text Label 9300 2900 0    70   ~ 0
+PC1
+Wire Wire Line
+	7300 2900 7600 2900
+Text Label 7400 2900 0    70   ~ 0
+PC1
+Wire Wire Line
+	9200 3000 9500 3000
+Text Label 9300 3000 0    70   ~ 0
+PC2
+Wire Wire Line
+	7300 3000 7600 3000
+Text Label 7400 3000 0    70   ~ 0
+PC2
+Wire Wire Line
+	9200 3100 9500 3100
+Text Label 9300 3100 0    70   ~ 0
+PC3
+Wire Wire Line
+	7300 3100 7600 3100
+Text Label 7400 3100 0    70   ~ 0
+PC3
+Wire Wire Line
+	9200 3400 9500 3400
+Text Label 9300 3400 0    70   ~ 0
+PC6
+Wire Wire Line
+	7300 3400 7600 3400
+Text Label 7400 3400 0    70   ~ 0
+PC6
+Wire Wire Line
+	9200 3500 9500 3500
+Text Label 9300 3500 0    70   ~ 0
+PC7
+Wire Wire Line
+	7300 3500 7600 3500
+Text Label 7400 3500 0    70   ~ 0
+PC7
+Wire Wire Line
+	9500 5600 9200 5600
+Text Label 9300 5600 0    70   ~ 0
+PWR_ON
+Wire Wire Line
+	9500 3600 9200 3600
+Text Label 9300 3600 0    70   ~ 0
+PWR_ON
+Wire Wire Line
+	7600 5600 7300 5600
+Text Label 7400 5600 0    70   ~ 0
+PWR_ON
+Wire Wire Line
+	7600 3600 7300 3600
+Text Label 7400 3600 0    70   ~ 0
+PWR_ON
+Wire Wire Line
+	9200 4500 9500 4500
+Text Label 9300 4500 0    70   ~ 0
+PA13
+Wire Wire Line
+	7300 4500 7600 4500
+Text Label 7400 4500 0    70   ~ 0
+PA13
+Wire Wire Line
+	9200 2600 9500 2600
+Text Label 9300 2600 0    70   ~ 0
+PA9
+Wire Wire Line
+	7300 2600 7600 2600
+Text Label 7400 2600 0    70   ~ 0
+PA9
+Wire Wire Line
+	5300 5200 5000 5200
+Text Label 5100 5200 0    70   ~ 0
+PA9
+Wire Wire Line
+	9200 4600 9500 4600
+Text Label 9300 4600 0    70   ~ 0
+PA8
+Wire Wire Line
+	7300 4600 7600 4600
+Text Label 7400 4600 0    70   ~ 0
+PA8
+Wire Wire Line
+	8000 4400 8300 4400
+Text Label 8000 4400 0    70   ~ 0
+RSV0
+Wire Wire Line
+	6100 4400 6400 4400
+Text Label 6100 4400 0    70   ~ 0
+RSV0
+Wire Wire Line
+	8000 4500 8300 4500
+Text Label 8000 4500 0    70   ~ 0
+RSV1
+Wire Wire Line
+	6100 4500 6400 4500
+Text Label 6100 4500 0    70   ~ 0
+RSV1
+Wire Wire Line
+	9600 5800 9200 5800
+Wire Wire Line
+	9200 5800 9200 5700
+Text Label 9300 5800 0    70   ~ 0
+VCC
+Connection ~ 9200 5800
+Wire Wire Line
+	9600 3800 9200 3800
+Wire Wire Line
+	9200 3800 9200 3700
+Text Label 9300 3800 0    70   ~ 0
+VCC
+Connection ~ 9200 3800
+Wire Wire Line
+	7700 5800 7300 5800
+Wire Wire Line
+	7300 5800 7300 5700
+Text Label 7400 5800 0    70   ~ 0
+VCC
+Connection ~ 7300 5800
+Wire Wire Line
+	7700 3800 7300 3800
+Wire Wire Line
+	7300 3800 7300 3700
+Text Label 7400 3800 0    70   ~ 0
+VCC
+Connection ~ 7300 3800
+Wire Wire Line
+	2400 4500 2500 4500
+Wire Wire Line
+	2300 4300 2500 4300
+Wire Wire Line
+	2300 4100 2500 4100
+Wire Wire Line
+	3700 3500 3700 3600
+Wire Wire Line
+	3700 3600 4200 3600
+Text Label 3700 3600 0    70   ~ 0
+VDD_PA
+Wire Wire Line
+	4100 4200 4000 4200
+Text Label 4000 4200 0    70   ~ 0
+VDD_PA
+Wire Wire Line
+	3700 3200 4500 3200
+Wire Wire Line
+	4500 3200 4600 3200
+Connection ~ 4500 3200
+Wire Wire Line
+	4600 2600 4500 2600
+Wire Wire Line
+	4500 2600 4100 2600
+Wire Wire Line
+	3700 3100 4100 3100
+Wire Wire Line
+	4100 3100 4100 2600
+Connection ~ 4500 2600
+Wire Wire Line
+	4600 5200 4300 5200
+Text Label 4300 5200 0    70   ~ 0
+RDY#
+Wire Wire Line
+	2500 2400 2200 2400
+Text Label 2200 2400 0    70   ~ 0
+RDY#
+Wire Wire Line
+	5200 3500 5400 3500
+Wire Wire Line
+	2500 2500 2200 2500
+Text Label 2200 2500 0    70   ~ 0
+ACTIVE
+Wire Wire Line
+	4600 5000 4300 5000
+Text Label 4300 5000 0    70   ~ 0
+ACTIVE
+Wire Wire Line
+	5100 5000 5000 5000
+Wire Wire Line
+	4000 2500 3700 2500
+Text Label 3800 2500 0    70   ~ 0
+RXD
+Wire Wire Line
+	4600 5400 4300 5400
+Text Label 4300 5400 0    70   ~ 0
+RXD
+Wire Wire Line
+	4000 2600 3700 2600
+Text Label 3800 2600 0    70   ~ 0
+TXD
+Wire Wire Line
+	4600 5600 4300 5600
+Text Label 4300 5600 0    70   ~ 0
+TXD
+Wire Wire Line
+	6100 5100 6400 5100
+Text Label 6100 5100 0    70   ~ 0
+RSV2
+Wire Wire Line
+	8000 5100 8300 5100
+Text Label 8000 5100 0    70   ~ 0
+RSV2
+Wire Wire Line
+	6100 5200 6400 5200
+Text Label 6100 5200 0    70   ~ 0
+RSV3
+Wire Wire Line
+	8000 5200 8300 5200
+Text Label 8000 5200 0    70   ~ 0
+RSV3
+Wire Wire Line
+	4000 5000 3700 5000
+Text Label 3800 5000 0    70   ~ 0
+DET
+Wire Wire Line
+	4600 5800 4300 5800
+Text Label 4300 5800 0    70   ~ 0
+DET
+$Comp
+L matchbox_ble_v10-eagle-import:AS-ITM-00015 P2
+U 1 1 EBAB1841
+P 8700 5000
+F 0 "P2" H 8500 5850 59  0000 L BNN
+F 1 "DF12-32-DP" H 8500 4000 59  0000 L BNN
+F 2 "matchbox_ble_v10:DF12-32-DP" H 8700 5000 50  0001 C CNN
+F 3 "" H 8700 5000 50  0001 C CNN
+F 4 "unknown" H 8700 5000 59  0001 L BNN "OC_NEWARK"
+	1    8700 5000
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:AS-ITM-00015 P1
+U 1 1 1C8E3EA4
+P 8700 3000
+F 0 "P1" H 8500 3850 59  0000 L BNN
+F 1 "DF12-32-DP" H 8500 2000 59  0000 L BNN
+F 2 "matchbox_ble_v10:DF12-32-DP" H 8700 3000 50  0001 C CNN
+F 3 "" H 8700 3000 50  0001 C CNN
+F 4 "unknown" H 8700 3000 59  0001 L BNN "OC_NEWARK"
+	1    8700 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:AS-ITM-00012 J1
+U 1 1 51057E1D
+P 6800 3000
+F 0 "J1" H 6600 3850 59  0000 L BNN
+F 1 "DF12-32-DS" H 6600 2000 59  0000 L BNN
+F 2 "matchbox_ble_v10:DF12-32-DS" H 6800 3000 50  0001 C CNN
+F 3 "" H 6800 3000 50  0001 C CNN
+F 4 "unknown" H 6800 3000 59  0001 L BNN "OC_NEWARK"
+	1    6800 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:AS-ITM-00012 J2
+U 1 1 8F36886B
+P 6800 5000
+F 0 "J2" H 6600 5850 59  0000 L BNN
+F 1 "DF12-32-DS" H 6600 4000 59  0000 L BNN
+F 2 "matchbox_ble_v10:DF12-32-DS" H 6800 5000 50  0001 C CNN
+F 3 "" H 6800 5000 50  0001 C CNN
+F 4 "unknown" H 6800 5000 59  0001 L BNN "OC_NEWARK"
+	1    6800 5000
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:NRF8001 U1
+U 1 1 72A0F1C8
+P 3100 3400
+F 0 "U1" H 2700 4700 59  0000 L TNN
+F 1 "NRF8001" H 3500 2100 59  0000 R BNN
+F 2 "matchbox_ble_v10:ATMEL_QFN32" H 3100 3400 50  0001 C CNN
+F 3 "" H 3100 3400 50  0001 C CNN
+F 4 "unknown" H 3100 3400 59  0001 R TNN "OC_NEWARK"
+	1    3100 3400
+	-1   0    0    1   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:CAP0402-CAP C2
+U 1 1 7B88CC49
+P 2100 4100
+F 0 "C2" V 2085 3940 59  0000 L BNN
+F 1 "33nF" V 2085 4210 59  0000 L BNN
+F 2 "matchbox_ble_v10:0402-CAP" H 2100 4100 50  0001 C CNN
+F 3 "" H 2100 4100 50  0001 C CNN
+F 4 "unknown" V 2100 4100 59  0001 L BNN "OC_NEWARK"
+	1    2100 4100
+	0    1    1    0   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:CAP0402-CAP C3
+U 1 1 15F46D77
+P 2100 4300
+F 0 "C3" V 2075 4140 59  0000 L BNN
+F 1 "100nF" V 2075 4410 59  0000 L BNN
+F 2 "matchbox_ble_v10:0402-CAP" H 2100 4300 50  0001 C CNN
+F 3 "" H 2100 4300 50  0001 C CNN
+F 4 "VISHAY/SPRAGUE" V 2100 4300 59  0001 L BNN "MF"
+F 5 "1C20Z5U104M050B" V 2100 4300 59  0001 L BNN "MPN"
+F 6 "17F2165" V 2100 4300 59  0001 L BNN "OC_NEWARK"
+	1    2100 4300
+	0    1    1    0   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:RESISTOR0402-RES R1
+U 1 1 DECC2FE9
+P 2200 4500
+F 0 "R1" H 2300 4409 59  0000 L BNN
+F 1 "22K" H 1920 4410 59  0000 L BNN
+F 2 "matchbox_ble_v10:0402-RES" H 2200 4500 50  0001 C CNN
+F 3 "" H 2200 4500 50  0001 C CNN
+F 4 "unknown" H 2200 4500 59  0001 R TNN "OC_NEWARK"
+	1    2200 4500
+	-1   0    0    1   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:AS-ITM-00114 U5
+U 1 1 D4392BAA
+P 4700 3700
+F 0 "U5" H 4400 4100 59  0000 L TNN
+F 1 "2450BM14A0002" H 5000 3410 59  0000 R BNN
+F 2 "matchbox_ble_v10:2450BM14A0002" H 4700 3700 50  0001 C CNN
+F 3 "" H 4700 3700 50  0001 C CNN
+F 4 "unknown" H 4700 3700 59  0001 R BNN "OC_NEWARK"
+	1    4700 3700
+	-1   0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:CAP0402-CAP C5
+U 1 1 91899CF4
+P 4100 4400
+F 0 "C5" H 3960 4325 59  0000 L BNN
+F 1 "2.2nF" H 3960 4225 59  0000 L BNN
+F 2 "matchbox_ble_v10:0402-CAP" H 4100 4400 50  0001 C CNN
+F 3 "" H 4100 4400 50  0001 C CNN
+F 4 "unknown" H 4100 4400 59  0001 L BNN "OC_NEWARK"
+	1    4100 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:AS-ITM-00228 Y1
+U 1 1 15A06156
+P 4500 2900
+F 0 "Y1" V 4700 3100 42  0000 L TNN
+F 1 "8Y-16.000MAAV-T" V 4640 2770 42  0000 R BNN
+F 2 "matchbox_ble_v10:ABM11" H 4500 2900 50  0001 C CNN
+F 3 "" H 4500 2900 50  0001 C CNN
+F 4 "unknown" V 4500 2900 42  0001 R TNN "OC_NEWARK"
+F 5 "AS-ITM-00228" H 4900 2600 42  0001 R BNN "PARTNO"
+F 6 "8Y-16.000MAAV-T" H 4900 2600 42  0001 R BNN "VALUE"
+	1    4500 2900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:CAP0402-CAP C6
+U 1 1 34EC3F5C
+P 4800 3200
+F 0 "C6" V 4815 3440 59  0000 R TNN
+F 1 "8.2pF" V 4815 3200 59  0000 R TNN
+F 2 "matchbox_ble_v10:0402-CAP" H 4800 3200 50  0001 C CNN
+F 3 "" H 4800 3200 50  0001 C CNN
+F 4 "unknown" V 4800 3200 59  0001 R TNN "OC_NEWARK"
+	1    4800 3200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:CAP0402-CAP C7
+U 1 1 7368298B
+P 4800 2600
+F 0 "C7" V 4815 2840 59  0000 R TNN
+F 1 "8.2pF" V 4815 2600 59  0000 R TNN
+F 2 "matchbox_ble_v10:0402-CAP" H 4800 2600 50  0001 C CNN
+F 3 "" H 4800 2600 50  0001 C CNN
+F 4 "unknown" V 4800 2600 59  0001 R TNN "OC_NEWARK"
+	1    4800 2600
+	0    -1   -1   0   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:AS-ITM-00132 ANT1
+U 1 1 DCEB306E
+P 5700 3400
+F 0 "ANT1" H 5500 3700 59  0000 L TNN
+F 1 "ANT1" H 5900 3200 59  0000 R BNN
+F 2 "matchbox_ble_v10:2450AT18A100" H 5700 3400 50  0001 C CNN
+F 3 "" H 5700 3400 50  0001 C CNN
+F 4 "unknown" H 5700 3400 59  0001 L BNN "OC_NEWARK"
+F 5 "AS-ITM-00132" H 5900 3200 59  0001 R BNN "PARTNO"
+	1    5700 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:CAP0402-CAP C1
+U 1 1 3E9ECBAC
+P 5000 4400
+F 0 "C1" H 5040 4325 59  0000 L BNN
+F 1 "100nF" H 5040 4235 59  0000 L BNN
+F 2 "matchbox_ble_v10:0402-CAP" H 5000 4400 50  0001 C CNN
+F 3 "" H 5000 4400 50  0001 C CNN
+F 4 "VISHAY/SPRAGUE" H 5000 4400 59  0001 L BNN "MF"
+F 5 "1C20Z5U104M050B" H 5000 4400 59  0001 L BNN "MPN"
+F 6 "17F2165" H 5000 4400 59  0001 L BNN "OC_NEWARK"
+	1    5000 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:CAP0402-CAP C9
+U 1 1 DD4B35E4
+P 4700 4400
+F 0 "C9" H 4760 4325 59  0000 L BNN
+F 1 "1nF" H 4750 4235 59  0000 L BNN
+F 2 "matchbox_ble_v10:0402-CAP" H 4700 4400 50  0001 C CNN
+F 3 "" H 4700 4400 50  0001 C CNN
+F 4 "unknown" H 4700 4400 59  0001 L BNN "OC_NEWARK"
+	1    4700 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:CAP0402-CAP C10
+U 1 1 A08A9EE1
+P 4400 4400
+F 0 "C10" H 4430 4325 59  0000 L BNN
+F 1 "100nF" H 4430 4225 59  0000 L BNN
+F 2 "matchbox_ble_v10:0402-CAP" H 4400 4400 50  0001 C CNN
+F 3 "" H 4400 4400 50  0001 C CNN
+F 4 "VISHAY/SPRAGUE" H 4400 4400 59  0001 L BNN "MF"
+F 5 "1C20Z5U104M050B" H 4400 4400 59  0001 L BNN "MPN"
+F 6 "17F2165" H 4400 4400 59  0001 L BNN "OC_NEWARK"
+	1    4400 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:MOLEX_MICROSD_PP U$1
+U 1 1 BABD3B23
+P 3100 5300
+F 0 "U$1" H 2700 5800 42  0000 L BNN
+F 1 "MOLEX_MICROSD_PP" H 2700 5700 42  0000 L BNN
+F 2 "matchbox_ble_v10:MOLEX_MICROSD_PP" H 3100 5300 50  0001 C CNN
+F 3 "" H 3100 5300 50  0001 C CNN
+F 4 "unknown" H 3100 5300 42  0001 L BNN "OC_NEWARK"
+	1    3100 5300
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:LED0603 D1
+U 1 1 E7BBC6EE
+P 5200 5000
+F 0 "D1" V 5340 4820 59  0000 L BNN
+F 1 "BLUE" V 5425 4820 59  0000 L BNN
+F 2 "matchbox_ble_v10:LED-0603" H 5200 5000 50  0001 C CNN
+F 3 "" H 5200 5000 50  0001 C CNN
+F 4 "unknown" V 5200 5000 59  0001 R TNN "OC_NEWARK"
+	1    5200 5000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:RESISTOR0805-RES R2
+U 1 1 8A7CCFCE
+P 4800 5000
+F 0 "R2" H 4900 4909 59  0000 L BNN
+F 1 "1K" H 4520 4910 59  0000 L BNN
+F 2 "matchbox_ble_v10:0805" H 4800 5000 50  0001 C CNN
+F 3 "" H 4800 5000 50  0001 C CNN
+F 4 "unknown" H 4800 5000 59  0001 R TNN "OC_NEWARK"
+	1    4800 5000
+	-1   0    0    1   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:CAP0805 C4
+U 1 1 B3C0B5DB
+P 5300 4400
+F 0 "C4" H 5340 4325 59  0000 L BNN
+F 1 "1uF" H 5340 4235 59  0000 L BNN
+F 2 "matchbox_ble_v10:0805" H 5300 4400 50  0001 C CNN
+F 3 "" H 5300 4400 50  0001 C CNN
+F 4 "unknown" H 5300 4400 59  0001 L BNN "OC_NEWARK"
+	1    5300 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:RESISTOR0805-RES R3
+U 1 1 5EBC73A1
+P 4800 5200
+F 0 "R3" H 4900 5109 59  0000 L BNN
+F 1 "0K" H 4520 5110 59  0000 L BNN
+F 2 "matchbox_ble_v10:0805" H 4800 5200 50  0001 C CNN
+F 3 "" H 4800 5200 50  0001 C CNN
+F 4 "unknown" H 4800 5200 59  0001 R TNN "OC_NEWARK"
+	1    4800 5200
+	-1   0    0    1   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:RESISTOR0805-RES R4
+U 1 1 E0627078
+P 4800 5400
+F 0 "R4" H 4900 5309 59  0000 L BNN
+F 1 "0K" H 4520 5310 59  0000 L BNN
+F 2 "matchbox_ble_v10:0805" H 4800 5400 50  0001 C CNN
+F 3 "" H 4800 5400 50  0001 C CNN
+F 4 "unknown" H 4800 5400 59  0001 R TNN "OC_NEWARK"
+	1    4800 5400
+	-1   0    0    1   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:RESISTOR0805-RES R5
+U 1 1 7FDA99E0
+P 4800 5600
+F 0 "R5" H 4900 5509 59  0000 L BNN
+F 1 "0K" H 4520 5510 59  0000 L BNN
+F 2 "matchbox_ble_v10:0805" H 4800 5600 50  0001 C CNN
+F 3 "" H 4800 5600 50  0001 C CNN
+F 4 "unknown" H 4800 5600 59  0001 R TNN "OC_NEWARK"
+	1    4800 5600
+	-1   0    0    1   
+$EndComp
+$Comp
+L matchbox_ble_v10-eagle-import:RESISTOR0805-RES R6
+U 1 1 EE599BBD
+P 4800 5800
+F 0 "R6" H 4900 5709 59  0000 L BNN
+F 1 "0K" H 4520 5710 59  0000 L BNN
+F 2 "matchbox_ble_v10:0805" H 4800 5800 50  0001 C CNN
+F 3 "" H 4800 5800 50  0001 C CNN
+F 4 "unknown" H 4800 5800 59  0001 R TNN "OC_NEWARK"
+	1    4800 5800
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5200 3800 5500 3800
+Wire Wire Line
+	3700 3800 4200 3800
+Wire Wire Line
+	3700 3700 4200 3700
+$EndSCHEMATC

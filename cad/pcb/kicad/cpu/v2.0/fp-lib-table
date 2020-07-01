@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name matchbox_cpu_v20)(type KiCad)(uri "$(KIPRJMOD)/matchbox_cpu_v20.pretty")(options "")(descr ""))
+)

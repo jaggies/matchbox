@@ -878,17 +878,6 @@ F 3 "" H 8350 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C2
-U 1 1 B94C3227
-P 8650 1000
-F 0 "C2" H 8710 1115 59  0000 L BNN
-F 1 "0.1uF" H 8710 915 59  0000 L BNN
-F 2 "matchbox_cpu_v20:0805" H 8650 1000 50  0001 C CNN
-F 3 "" H 8650 1000 50  0001 C CNN
-	1    8650 1000
-	1    0    0    -1  
-$EndComp
-$Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C3
 U 1 1 91680661
 P 8950 1000
@@ -2027,4 +2016,15 @@ Text Label 9000 700  0    50   ~ 0
 VCC_3V3
 Text Label 10150 700  0    50   ~ 0
 VCC_3V3
+$Comp
+L matchbox_cpu_v20-eagle-import:CAP0805 C2
+U 1 1 B94C3227
+P 8650 1000
+F 0 "C2" H 8710 1115 59  0000 L BNN
+F 1 "0.1uF" H 8710 915 59  0000 L BNN
+F 2 "matchbox_cpu_v20:0805" H 8650 1000 50  0001 C CNN
+F 3 "" H 8650 1000 50  0001 C CNN
+	1    8650 1000
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

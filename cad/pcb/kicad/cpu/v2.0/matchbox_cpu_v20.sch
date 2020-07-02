@@ -28,12 +28,6 @@ Text Label 2400 8550 0    70   ~ 0
 VCC_3V3
 Connection ~ 2800 8550
 Wire Wire Line
-	8350 800  8350 700 
-Wire Wire Line
-	8350 700  8650 700 
-Wire Wire Line
-	8650 700  8950 700 
-Wire Wire Line
 	8650 800  8650 700 
 Wire Wire Line
 	8950 800  8950 700 
@@ -46,7 +40,7 @@ Wire Wire Line
 Wire Wire Line
 	9250 800  9250 700 
 Wire Wire Line
-	8950 700  9250 700 
+	8950 700  9000 700 
 Wire Wire Line
 	10150 800  10150 700 
 Wire Wire Line
@@ -61,16 +55,10 @@ Wire Wire Line
 	10750 700  11050 700 
 Wire Wire Line
 	11050 700  11050 800 
-Wire Wire Line
-	8350 700  8050 700 
-Wire Wire Line
-	8050 700  8050 800 
-Connection ~ 8650 700 
 Connection ~ 8950 700 
 Connection ~ 9250 700 
 Connection ~ 10450 700 
 Connection ~ 10750 700 
-Connection ~ 8350 700 
 Wire Wire Line
 	10600 3700 10800 3700
 Text Label 10800 3700 0    70   ~ 0
@@ -170,13 +158,7 @@ Wire Wire Line
 Wire Wire Line
 	8950 1200 8950 1100
 Wire Wire Line
-	8650 1200 8950 1200
-Wire Wire Line
-	8650 1200 8650 1100
-Wire Wire Line
-	8350 1100 8350 1200
-Wire Wire Line
-	8350 1200 8650 1200
+	8650 1100 8650 1200
 Wire Wire Line
 	9250 1200 9250 1100
 Wire Wire Line
@@ -203,18 +185,12 @@ Wire Wire Line
 	11350 1200 11650 1200
 Wire Wire Line
 	11650 1200 11650 1100
-Wire Wire Line
-	8350 1200 8050 1200
-Wire Wire Line
-	8050 1200 8050 1100
-Connection ~ 8650 1200
 Connection ~ 8950 1200
 Connection ~ 9250 1200
 Connection ~ 10450 1200
 Connection ~ 10750 1200
 Connection ~ 11050 1200
 Connection ~ 11350 1200
-Connection ~ 8350 1200
 Wire Wire Line
 	7500 2950 7600 2950
 Wire Wire Line
@@ -869,12 +845,12 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C1
 U 1 1 BA02A0BA
-P 8350 1000
-F 0 "C1" H 8410 1115 59  0000 L BNN
-F 1 "1uF" H 8410 915 59  0000 L BNN
-F 2 "matchbox_cpu_v20:0805" H 8350 1000 50  0001 C CNN
-F 3 "" H 8350 1000 50  0001 C CNN
-	1    8350 1000
+P 8650 1000
+F 0 "C1" H 8710 1115 59  0000 L BNN
+F 1 "1uF" H 8710 915 59  0000 L BNN
+F 2 "matchbox_cpu_v20:0805" H 8650 1000 50  0001 C CNN
+F 3 "" H 8650 1000 50  0001 C CNN
+	1    8650 1000
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1416,17 +1392,6 @@ F 3 "" H 9050 2550 50  0001 C CNN
 	1    9050 2550
 	1    0    0    -1  
 $EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C23
-U 1 1 E9B1A4A0
-P 8050 1000
-F 0 "C23" H 8110 1115 59  0000 L BNN
-F 1 "1uF" H 8110 915 59  0000 L BNN
-F 2 "matchbox_cpu_v20:0805" H 8050 1000 50  0001 C CNN
-F 3 "" H 8050 1000 50  0001 C CNN
-	1    8050 1000
-	1    0    0    -1  
-$EndComp
 Text Notes 7030 3160 0    59   ~ 0
 Ichg = 1000V / R9
 Text GLabel 10300 1650 0    10   BiDi ~ 0
@@ -1858,7 +1823,7 @@ U 1 1 5F6CC73D
 P 10550 4550
 F 0 "J2" H 10106 4596 50  0000 R CNN
 F 1 "Conn_ARM_JTAG_SWD_10" H 10106 4505 50  0000 R CNN
-F 2 "Connector_Samtec:Samtec_LSHM-105-xx.x-x-DV-N_2x05_P0.50mm_Vertical" H 10550 4550 50  0001 C CNN
+F 2 "Connector:Tag-Connect_TC2050-IDC-NL_2x05_P1.27mm_Vertical" H 10550 4550 50  0001 C CNN
 F 3 "http://infocenter.arm.com/help/topic/com.arm.doc.ddi0314h/DDI0314H_coresight_components_trm.pdf" V 10200 3300 50  0001 C CNN
 	1    10550 4550
 	-1   0    0    -1  
@@ -2016,15 +1981,10 @@ Text Label 9000 700  0    50   ~ 0
 VCC_3V3
 Text Label 10150 700  0    50   ~ 0
 VCC_3V3
-$Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C2
-U 1 1 B94C3227
-P 8650 1000
-F 0 "C2" H 8710 1115 59  0000 L BNN
-F 1 "0.1uF" H 8710 915 59  0000 L BNN
-F 2 "matchbox_cpu_v20:0805" H 8650 1000 50  0001 C CNN
-F 3 "" H 8650 1000 50  0001 C CNN
-	1    8650 1000
-	1    0    0    -1  
-$EndComp
+Wire Wire Line
+	8650 1200 8950 1200
+Wire Wire Line
+	8650 700  8950 700 
+Wire Wire Line
+	9000 700  9250 700 
 $EndSCHEMATC

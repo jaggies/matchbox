@@ -7,3 +7,8 @@ build
 apps/experimental/
 /Debug/
 TODO
+*.kicad_pcb-bak
+*.sch-bak
+*-cache.lib
+_autosave-*.kicad_pcb
+_autosave-*.sch

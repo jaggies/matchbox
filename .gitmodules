@@ -1,3 +1,6 @@
 [submodule "lib/hal/STM32CubeF4"]
 	path = lib/hal/STM32CubeF4
 	url = https://github.com/STMicroelectronics/STM32CubeF4
+[submodule "apps/experimental"]
+	path = apps/experimental
+	url = ssh://jmiller@atlantis.local/volume1/git/matchbox_experimental.git

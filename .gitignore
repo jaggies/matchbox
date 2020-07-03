@@ -4,7 +4,7 @@ build
 .cproject
 .project
 .settings
-apps/experimental/
+apps/experimental
 /Debug/
 TODO
 *.kicad_pcb-bak

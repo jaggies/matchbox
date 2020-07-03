@@ -1,0 +1,14 @@
+Matchbox is currently based on version V1.25 of STM32CubeF4 libraries provided by ST. 
+
+To build, follow these steps:
+
+1. clone the repository into lib/hal:
+   cd lib/hal && git clone https://github.com/STMicroelectronics/STM32CubeF4
+2. create symlinks 
+	./BSP -> STM32CubeF4/Drivers/BSP
+	./CMSIS -> STM32CubeF4/Drivers/CMSIS
+	./Middlewares -> STM32CubeF4/Middlewares
+	./STM32F4xx_HAL_Driver -> STM32CubeF4/Drivers/STM32F4xx_HAL_Driver
+3. apply the Jamfiles
+	cd lib/hal && tar xf patches/jamfiles.tar
+4. apply patches in the patches directory 

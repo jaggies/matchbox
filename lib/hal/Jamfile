@@ -1,0 +1,5 @@
+SubDir TOP lib hal ;
+SubInclude TOP lib hal BSP ;
+SubInclude TOP lib hal CMSIS ;
+SubInclude TOP lib hal Middlewares ;
+SubInclude TOP lib hal STM32F4xx_HAL_Driver ;

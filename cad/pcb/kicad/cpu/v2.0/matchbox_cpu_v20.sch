@@ -202,8 +202,8 @@ Wire Wire Line
 Text Label 7500 3450 2    70   ~ 0
 GND
 Wire Wire Line
-	10600 3500 10800 3500
-Text Label 10800 3500 0    70   ~ 0
+	10600 3950 10800 3950
+Text Label 10800 3950 0    70   ~ 0
 GND
 Wire Wire Line
 	10500 2450 10800 2450
@@ -226,8 +226,8 @@ Connection ~ 9400 3700
 Connection ~ 9400 3800
 Connection ~ 9400 3900
 Wire Wire Line
-	10500 1550 10800 1550
-Text Label 10800 1550 2    70   ~ 0
+	10500 3700 10800 3700
+Text Label 10800 3700 2    70   ~ 0
 GND
 Wire Wire Line
 	10800 1950 10500 1950
@@ -510,8 +510,6 @@ Wire Wire Line
 	14350 5800 14650 5800
 Text Label 14650 5800 2    70   ~ 0
 PA0
-Text Label 9800 3500 0    70   ~ 0
-RESET#
 Wire Wire Line
 	2350 1200 2550 1200
 Text Label 2350 1200 0    70   ~ 0
@@ -525,8 +523,8 @@ Wire Wire Line
 Text Label 11100 4600 0    70   ~ 0
 RESET#
 Wire Wire Line
-	9800 1550 10100 1550
-Text Label 9800 1550 0    70   ~ 0
+	9800 3700 10100 3700
+Text Label 9800 3700 0    70   ~ 0
 RESET#
 Wire Wire Line
 	4650 5900 4350 5900
@@ -1228,12 +1226,12 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C21
 U 1 1 D9B55D84
-P 10500 3500
-F 0 "C21" V 10585 3590 59  0000 L BNN
-F 1 "0.1uF" V 10515 3460 59  0000 R TNN
-F 2 "matchbox_cpu_v20:0805" H 10500 3500 50  0001 C CNN
-F 3 "" H 10500 3500 50  0001 C CNN
-	1    10500 3500
+P 10500 3950
+F 0 "C21" V 10585 4040 59  0000 L BNN
+F 1 "0.1uF" V 10515 3910 59  0000 R TNN
+F 2 "matchbox_cpu_v20:0805" H 10500 3950 50  0001 C CNN
+F 3 "" H 10500 3950 50  0001 C CNN
+	1    10500 3950
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -1305,12 +1303,12 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:B3U-3100PM-B RESET1
 U 1 1 0DBEFA40
-P 10300 1550
-F 0 "RESET1" H 10900 1550 59  0000 L BNN
-F 1 "B3U-3100PM-B" H 10300 1550 50  0001 C CNN
-F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 1550 50  0001 C CNN
-F 3 "" H 10300 1550 50  0001 C CNN
-	1    10300 1550
+P 10300 3700
+F 0 "RESET1" H 10900 3700 59  0000 L BNN
+F 1 "B3U-3100PM-B" H 10300 3700 50  0001 C CNN
+F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 3700 50  0001 C CNN
+F 3 "" H 10300 3700 50  0001 C CNN
+	1    10300 3700
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1964,5 +1962,8 @@ Wire Wire Line
 Wire Wire Line
 	8950 700  9250 700 
 Wire Wire Line
-	9800 3500 10300 3500
+	10100 3700 10100 3950
+Wire Wire Line
+	10100 3950 10300 3950
+Connection ~ 10100 3700
 $EndSCHEMATC

@@ -58,10 +58,6 @@ Connection ~ 9250 700
 Connection ~ 10450 700 
 Connection ~ 10750 700 
 Wire Wire Line
-	10600 3700 10800 3700
-Text Label 10800 3700 0    70   ~ 0
-VCC_3V3
-Wire Wire Line
 	8350 1550 8050 1550
 Text Label 8050 1550 0    70   ~ 0
 VCC_3V3
@@ -514,15 +510,8 @@ Wire Wire Line
 	14350 5800 14650 5800
 Text Label 14650 5800 2    70   ~ 0
 PA0
-Wire Wire Line
-	9800 3500 10200 3500
-Wire Wire Line
-	10200 3500 10200 3700
-Wire Wire Line
-	10200 3500 10300 3500
 Text Label 9800 3500 0    70   ~ 0
 RESET#
-Connection ~ 10200 3500
 Wire Wire Line
 	2350 1200 2550 1200
 Text Label 2350 1200 0    70   ~ 0
@@ -926,17 +915,6 @@ F 1 "LTC2954-2" H 13100 2400 42  0000 L BNN
 F 2 "matchbox_cpu_v20:SOT23-8" H 12700 1950 50  0001 C CNN
 F 3 "" H 12700 1950 50  0001 C CNN
 	1    12700 1950
-	1    0    0    -1  
-$EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R1
-U 1 1 B9BAFB95
-P 10400 3700
-F 0 "R1" H 10230 3729 59  0000 L BNN
-F 1 "10k" H 10510 3720 59  0000 L BNN
-F 2 "matchbox_cpu_v20:0805" H 10400 3700 50  0001 C CNN
-F 3 "" H 10400 3700 50  0001 C CNN
-	1    10400 3700
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1985,4 +1963,6 @@ Wire Wire Line
 	8650 700  8950 700 
 Wire Wire Line
 	8950 700  9250 700 
+Wire Wire Line
+	9800 3500 10300 3500
 $EndSCHEMATC

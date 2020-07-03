@@ -68,9 +68,9 @@ Wire Wire Line
 Text Label 10900 2250 0    70   ~ 0
 VCC_3V3
 Wire Wire Line
-	10800 3250 10500 3250
-Text Label 10800 3250 0    70   ~ 0
-VCC_3V3
+	11050 3250 10750 3250
+Text Label 11050 3250 0    70   ~ 0
+VBAT
 Wire Wire Line
 	14400 2150 14700 2150
 Text Label 14700 2150 2    70   ~ 0
@@ -206,8 +206,8 @@ Wire Wire Line
 Text Label 10800 3950 0    70   ~ 0
 GND
 Wire Wire Line
-	10500 2450 10800 2450
-Text Label 10800 2450 2    70   ~ 0
+	10800 2450 11100 2450
+Text Label 11100 2450 2    70   ~ 0
 GND
 Wire Wire Line
 	9400 3500 9400 3600
@@ -381,8 +381,6 @@ Text Label 12600 5500 2    70   ~ 0
 PC4
 Wire Wire Line
 	14000 2150 13800 2150
-Text Label 13800 2150 0    70   ~ 0
-PC4
 Wire Wire Line
 	4650 3500 4350 3500
 Text Label 4650 3500 2    70   ~ 0
@@ -415,7 +413,7 @@ Wire Wire Line
 	8850 2750 8050 2750
 Connection ~ 8850 2550
 Text Label 8050 2750 0    70   ~ 0
-PC5
+PC13
 Wire Wire Line
 	13150 5300 13450 5300
 Text Label 13150 5300 0    70   ~ 0
@@ -536,8 +534,6 @@ Text Label 12600 4800 2    70   ~ 0
 PC13
 Wire Wire Line
 	13800 1950 14000 1950
-Text Label 13800 1950 0    70   ~ 0
-PC13
 Wire Wire Line
 	12300 5000 12600 5000
 Text Label 12600 5000 2    70   ~ 0
@@ -599,7 +595,7 @@ PC1
 Wire Wire Line
 	10100 1750 9800 1750
 Text Label 9800 1750 0    70   ~ 0
-PC1
+PD14
 Wire Wire Line
 	4650 4800 4350 4800
 Text Label 4650 4800 2    70   ~ 0
@@ -774,8 +770,6 @@ Wire Wire Line
 	3150 800  3150 900 
 Text Label 3150 800  2    70   ~ 0
 VCC_BKUP
-Wire Wire Line
-	10100 3250 9800 3250
 Text Label 9800 3250 0    70   ~ 0
 VCC_BKUP
 Wire Wire Line
@@ -1193,12 +1187,12 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R11
 U 1 1 BC243054
-P 10300 2450
-F 0 "R11" H 10060 2469 59  0000 L BNN
-F 1 "10k" H 10400 2470 59  0000 L BNN
-F 2 "matchbox_cpu_v20:0805" H 10300 2450 50  0001 C CNN
-F 3 "" H 10300 2450 50  0001 C CNN
-	1    10300 2450
+P 10600 2450
+F 0 "R11" H 10360 2469 59  0000 L BNN
+F 1 "10k" H 10700 2470 59  0000 L BNN
+F 2 "matchbox_cpu_v20:0805" H 10600 2450 50  0001 C CNN
+F 3 "" H 10600 2450 50  0001 C CNN
+	1    10600 2450
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1281,12 +1275,12 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R14
 U 1 1 C93BD688
-P 10300 3250
-F 0 "R14" H 10170 3099 59  0000 L BNN
-F 1 "0k" H 10090 3270 59  0000 L BNN
-F 2 "matchbox_cpu_v20:0805" H 10300 3250 50  0001 C CNN
-F 3 "" H 10300 3250 50  0001 C CNN
-	1    10300 3250
+P 10550 3250
+F 0 "R14" H 10420 3099 59  0000 L BNN
+F 1 "100k" H 10400 3350 59  0000 L BNN
+F 2 "matchbox_cpu_v20:0805" H 10550 3250 50  0001 C CNN
+F 3 "" H 10550 3250 50  0001 C CNN
+	1    10550 3250
 	-1   0    0    1   
 $EndComp
 $Comp
@@ -1966,4 +1960,12 @@ Wire Wire Line
 Wire Wire Line
 	10100 3950 10300 3950
 Connection ~ 10100 3700
+Wire Wire Line
+	9800 3250 10350 3250
+Wire Wire Line
+	10100 2450 10400 2450
+Text Label 13800 2150 0    50   ~ 0
+PE15
+Text Label 14000 1950 2    50   ~ 0
+PD15
 $EndSCHEMATC

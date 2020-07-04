@@ -1592,8 +1592,6 @@ Wire Wire Line
 Wire Wire Line
 	2300 1600 2550 1600
 Wire Wire Line
-	2300 1700 2550 1700
-Wire Wire Line
 	3250 900  3250 800 
 Wire Wire Line
 	3250 800  3350 800 
@@ -1871,33 +1869,33 @@ VCC_USB
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C10
 U 1 1 FC1B2701
-P 2200 1500
-F 0 "C10" V 2175 1610 59  0000 L BNN
-F 1 "2.2uF" V 2175 1230 59  0000 L BNN
-F 2 "matchbox_cpu_v20:0805" H 2200 1500 50  0001 C CNN
-F 3 "" H 2200 1500 50  0001 C CNN
-	1    2200 1500
+P 1900 1500
+F 0 "C10" V 1875 1610 59  0000 L BNN
+F 1 "2.2uF" V 1875 1230 59  0000 L BNN
+F 2 "matchbox_cpu_v20:0805" H 1900 1500 50  0001 C CNN
+F 3 "" H 1900 1500 50  0001 C CNN
+	1    1900 1500
 	0    -1   -1   0   
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C9
 U 1 1 6468A20E
-P 2200 1700
-F 0 "C9" V 2165 1810 59  0000 L BNN
-F 1 "2.2uF" V 2165 1440 59  0000 L BNN
-F 2 "matchbox_cpu_v20:0805" H 2200 1700 50  0001 C CNN
-F 3 "" H 2200 1700 50  0001 C CNN
-	1    2200 1700
+P 1900 1700
+F 0 "C9" V 1865 1810 59  0000 L BNN
+F 1 "2.2uF" V 1865 1440 59  0000 L BNN
+F 2 "matchbox_cpu_v20:0805" H 1900 1700 50  0001 C CNN
+F 3 "" H 1900 1700 50  0001 C CNN
+	1    1900 1700
 	0    -1   -1   0   
 $EndComp
-Text Label 1900 1700 1    70   ~ 0
+Text Label 1600 1700 1    70   ~ 0
 GND
 Wire Wire Line
-	1900 1500 2000 1500
+	1600 1500 1700 1500
 Wire Wire Line
-	1900 1700 1900 1500
+	1600 1700 1600 1500
 Wire Wire Line
-	2000 1700 1900 1700
+	1700 1700 1600 1700
 $Comp
 L matchbox_ble_v01-eagle-import:MOLEX_MICROSD_PP SD1
 U 1 1 5F0A38BC
@@ -1968,4 +1966,49 @@ Text Label 13800 2150 0    50   ~ 0
 PE15
 Text Label 14000 1950 2    50   ~ 0
 PD15
+Text Label 1700 1950 0    50   ~ 0
+VREF
+Wire Wire Line
+	2000 1700 2550 1700
+Wire Wire Line
+	2300 1500 2000 1500
+$Comp
+L matchbox_cpu_v20-eagle-import:CAP0805 C2
+U 1 1 5F1A1888
+P 1950 2150
+F 0 "C2" H 2010 2265 59  0000 L BNN
+F 1 "1uF" H 2010 2065 59  0000 L BNN
+F 2 "matchbox_cpu_v20:0805" H 1950 2150 50  0001 C CNN
+F 3 "" H 1950 2150 50  0001 C CNN
+	1    1950 2150
+	1    0    0    -1  
+$EndComp
+Text Label 1700 2250 2    50   ~ 0
+GND
+Wire Wire Line
+	1700 1950 1950 1950
+Connection ~ 1950 1950
+Wire Wire Line
+	2550 1800 2300 1800
+Wire Wire Line
+	2300 1800 2300 1950
+Wire Wire Line
+	1950 1950 2300 1950
+$Comp
+L matchbox_cpu_v20-eagle-import:CAP0805 C0
+U 1 1 5F16146B
+P 2300 2150
+F 0 "C0" H 2360 2265 59  0000 L BNN
+F 1 "0.1uF" H 2360 2065 59  0000 L BNN
+F 2 "matchbox_cpu_v20:0805" H 2300 2150 50  0001 C CNN
+F 3 "" H 2300 2150 50  0001 C CNN
+	1    2300 2150
+	1    0    0    -1  
+$EndComp
+Connection ~ 2300 1950
+Wire Wire Line
+	1700 2250 1950 2250
+Connection ~ 1950 2250
+Wire Wire Line
+	1950 2250 2300 2250
 $EndSCHEMATC

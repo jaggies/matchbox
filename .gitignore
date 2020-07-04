@@ -10,5 +10,6 @@ TODO
 *.kicad_pcb-bak
 *.sch-bak
 *-cache.lib
+*.lck
 _autosave-*.kicad_pcb
 _autosave-*.sch

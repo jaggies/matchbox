@@ -646,7 +646,6 @@ Wire Wire Line
 	8750 1550 8850 1550
 Wire Wire Line
 	8750 1850 8850 1850
-Connection ~ 13800 1750
 Wire Wire Line
 	14200 1750 14200 1550
 Wire Wire Line
@@ -775,7 +774,6 @@ Wire Wire Line
 	12500 1350 13800 1350
 Text Label 12200 1750 0    70   ~ 0
 VCC_SEL
-Connection ~ 12500 1750
 Connection ~ 13800 1350
 Wire Wire Line
 	13150 5500 13450 5500
@@ -837,28 +835,6 @@ F 2 "Capacitor_SMD:C_0805_2012Metric" H 6500 1750 50  0001 C CNN
 F 3 "" H 6500 1750 50  0001 C CNN
 	1    6500 1750
 	0    -1   -1   0   
-$EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:LTC2954 U4
-U 1 1 48F34A05
-P 12700 1950
-F 0 "U4" H 12700 2400 42  0000 L BNN
-F 1 "LTC2954-2" H 13100 2400 42  0000 L BNN
-F 2 "matchbox_cpu_v20:SOT23-8" H 12700 1950 50  0001 C CNN
-F 3 "" H 12700 1950 50  0001 C CNN
-	1    12700 1950
-	1    0    0    -1  
-$EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:MCP1703 U2
-U 1 1 C2DEB937
-P 13000 3450
-F 0 "U2" H 12700 3675 59  0000 L BNN
-F 1 "MCP1703" H 12700 3575 59  0000 L BNN
-F 2 "matchbox_cpu_v20:SOT23A" H 13000 3450 50  0001 C CNN
-F 3 "" H 13000 3450 50  0001 C CNN
-	1    13000 3450
-	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C11
@@ -1158,10 +1134,10 @@ F 3 "" H 10550 3250 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:MICROUSB U$1
+L matchbox_cpu_v20-eagle-import:MICROUSB USB1
 U 1 1 BABD3B23
 P 8900 3700
-F 0 "U$1" H 8600 4050 59  0000 L BNN
+F 0 "USB1" H 8600 4050 59  0000 L BNN
 F 1 "MICROUSB" H 8900 3700 50  0001 C CNN
 F 2 "matchbox_cpu_v20:MICROUSB" H 8900 3700 50  0001 C CNN
 F 3 "" H 8900 3700 50  0001 C CNN
@@ -2009,6 +1985,30 @@ F 1 "1uF" H 8710 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 8650 1000 50  0001 C CNN
 F 3 "" H 8650 1000 50  0001 C CNN
 	1    8650 1000
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_cpu_v20-eagle-import:LTC2954 U4
+U 1 1 5F596120
+P 12700 1950
+F 0 "U4" H 13150 2497 42  0000 C CNN
+F 1 "LTC2954" H 13150 2418 42  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-8" H 12700 1950 50  0001 C CNN
+F 3 "" H 12700 1950 50  0001 C CNN
+	1    12700 1950
+	1    0    0    -1  
+$EndComp
+Connection ~ 12500 1750
+Connection ~ 13800 1750
+$Comp
+L matchbox_cpu_v20-eagle-import:MCP1703 U6
+U 1 1 5F6232B9
+P 13000 3450
+F 0 "U6" H 13000 3736 59  0000 C CNN
+F 1 "MCP1703" H 13000 3631 59  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 13000 3450 50  0001 C CNN
+F 3 "" H 13000 3450 50  0001 C CNN
+	1    13000 3450
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

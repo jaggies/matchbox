@@ -123,6 +123,9 @@ class Lcd {
 		// Draws a horizontal span at the current position
 		void span(int16_t dx);
 
+		// Refreshes LCD line buffers.
+		void refreshLineBuffers(Frame* frame);
+
 		static void refreshFrameCallback(void* arg);
 
 		void refreshFrame();

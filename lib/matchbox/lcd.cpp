@@ -30,6 +30,15 @@ Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
     bool doubleBuffer = config.doubleBuffer;
     _backBuffer = doubleBuffer ? new Frame() : _frontBuffer;
     _drawBuffer = _backBuffer;
+
+    // Ensure the LCD is properly updated when initialized
+    memset(_backBuffer, 0xa5, sizeof(Lcd::Frame));
+    refreshLineBuffers(_backBuffer);
+    if (_backBuffer != _frontBuffer) {
+        memset(_frontBuffer, 0xa5, sizeof(Lcd::Frame));
+        refreshLineBuffers(_frontBuffer);
+    }
+
     moveTo(0,0); // force _rasterOffset calculation
     memset(_fg, 0, sizeof(_fg));
     memset(_bg, 0xff, sizeof(_bg));
@@ -107,6 +116,17 @@ void Lcd::refreshFrame() {
     _frame++; // Toggle common driver once per frame
 }
 
+// Writes all SPI command content. This should be done after drawing in case
+// cmd/row data gets clobbered, which will cause the LCD to misbehave.
+void Lcd::refreshLineBuffers(Frame* frame) {
+    const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
+    for (int i = 0; i < _yres; i++) {
+        frame->line[i].cmd = cmd;
+        frame->line[i].row = i + 1;
+    }
+    frame->sync1 = _drawBuffer->sync2 = 0; // in case these get clobbered
+}
+
 void
 Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     // Fill up local pixel byte array
@@ -129,13 +149,7 @@ Lcd::clear(uint8_t r, uint8_t g, uint8_t b) {
     }
 
     if (!_config.doubleBuffer) {
-        // Restore the cmd/row data before drawing. If this gets clobbered, the LCD won't update properly.
-        const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
-        for (int i = 0; i < _yres; i++) {
-            _drawBuffer->line[i].cmd = cmd;
-            _drawBuffer->line[i].row = i + 1;
-        }
-        _drawBuffer->sync1 = _drawBuffer->sync2 = 0; // in case these get clobbered
+        refreshLineBuffers(_drawBuffer);
     }
 }
 
@@ -286,13 +300,7 @@ void Lcd::swapBuffers() {
     _doSwap = _config.doubleBuffer; /* reset in refresh */
 
     if (_config.doubleBuffer) {
-        // Restore the cmd/row data after drawing. If this gets clobbered, the LCD won't update.
-        const uint8_t cmd = bitSwap(0x80 | (_frame ? 0x40:0) | (_clear ? 0x20 : 0));
-        for (int i = 0; i < _yres; i++) {
-           _drawBuffer->line[i].cmd = cmd;
-           _drawBuffer->line[i].row = i + 1;
-        }
-        _drawBuffer->sync1 = _drawBuffer->sync2 = 0; // in case these get clobbered
+        refreshLineBuffers(_drawBuffer);
     }
 
     while (_doSwap) {

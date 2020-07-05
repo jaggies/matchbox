@@ -723,8 +723,6 @@ Connection ~ 6800 3450
 Connection ~ 6400 3450
 Wire Wire Line
 	9550 2150 9150 2150
-Text Label 9550 2150 2    70   ~ 0
-VCC_USBF
 Wire Wire Line
 	10300 2750 9800 2750
 Text Label 9800 2750 0    70   ~ 0
@@ -885,28 +883,6 @@ F 3 "" H 13200 2850 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:LED0603 D1
-U 1 1 484CEEF8
-P 8950 1550
-F 0 "D1" V 9090 1370 59  0000 L BNN
-F 1 "PWR" V 9075 1570 59  0000 L BNN
-F 2 "matchbox_cpu_v20:LED-0603" H 8950 1550 50  0001 C CNN
-F 3 "" H 8950 1550 50  0001 C CNN
-	1    8950 1550
-	0    -1   -1   0   
-$EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:LED0603 D2
-U 1 1 D4945A4D
-P 8950 1850
-F 0 "D2" V 9090 1670 59  0000 L BNN
-F 1 "STAT" V 9075 1870 59  0000 L BNN
-F 2 "matchbox_cpu_v20:LED-0603" H 8950 1850 50  0001 C CNN
-F 3 "" H 8950 1850 50  0001 C CNN
-	1    8950 1850
-	0    -1   -1   0   
-$EndComp
-$Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R3
 U 1 1 D483747B
 P 8550 1550
@@ -927,17 +903,6 @@ F 2 "Resistor_SMD:R_0805_2012Metric" H 8550 1850 50  0001 C CNN
 F 3 "" H 8550 1850 50  0001 C CNN
 	1    8550 1850
 	-1   0    0    1   
-$EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:FDN360P Q1
-U 1 1 7A211019
-P 14300 1450
-F 0 "Q1" V 14220 1370 59  0000 L BNN
-F 1 "FDN360P" V 14530 1550 59  0000 L BNN
-F 2 "matchbox_cpu_v20:SUPER-SOT3" H 14300 1450 50  0001 C CNN
-F 3 "" H 14300 1450 50  0001 C CNN
-	1    14300 1450
-	0    -1   -1   0   
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R6
@@ -962,17 +927,6 @@ F 3 "" H 13800 1550 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:LED0603 D3
-U 1 1 908C3510
-P 9050 2150
-F 0 "D3" V 9190 1970 59  0000 L BNN
-F 1 "CHG" V 9175 2170 59  0000 L BNN
-F 2 "matchbox_cpu_v20:LED-0603" H 9050 2150 50  0001 C CNN
-F 3 "" H 9050 2150 50  0001 C CNN
-	1    9050 2150
-	0    1    1    0   
-$EndComp
-$Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R8
 U 1 1 B35105BA
 P 8550 2150
@@ -982,17 +936,6 @@ F 2 "Resistor_SMD:R_0805_2012Metric" H 8550 2150 50  0001 C CNN
 F 3 "" H 8550 2150 50  0001 C CNN
 	1    8550 2150
 	-1   0    0    1   
-$EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:PTCSMD F1
-U 1 1 CDD216A9
-P 10500 2750
-F 0 "F1" H 10400 2870 59  0000 L BNN
-F 1 "PTCSMD" H 10370 2550 59  0000 L BNN
-F 2 "matchbox_cpu_v20:PTC-1206" H 10500 2750 50  0001 C CNN
-F 3 "" H 10500 2750 50  0001 C CNN
-	1    10500 2750
-	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R11
@@ -1048,28 +991,6 @@ F 2 "Resistor_SMD:R_0805_2012Metric" H 7100 3450 50  0001 C CNN
 F 3 "" H 7100 3450 50  0001 C CNN
 	1    7100 3450
 	1    0    0    -1  
-$EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:FDN360P Q2
-U 1 1 DA191B3C
-P 6300 3750
-F 0 "Q2" V 6220 3670 59  0000 L BNN
-F 1 "FDN360P" V 6490 3910 59  0000 L BNN
-F 2 "matchbox_cpu_v20:SUPER-SOT3" H 6300 3750 50  0001 C CNN
-F 3 "" H 6300 3750 50  0001 C CNN
-	1    6300 3750
-	0    1    1    0   
-$EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:DIODESOD123 D5
-U 1 1 8525DD4E
-P 6800 3650
-F 0 "D5" V 6841 3720 59  0000 L BNN
-F 1 "MBR120" H 6600 3509 59  0000 L BNN
-F 2 "matchbox_cpu_v20:SOD-123" H 6800 3650 50  0001 C CNN
-F 3 "" H 6800 3650 50  0001 C CNN
-	1    6800 3650
-	0    1    1    0   
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R13
@@ -1587,17 +1508,6 @@ Text Label 6100 1450 2    50   ~ 0
 OSC32K_IN
 Text Label 14650 5700 2    70   ~ 0
 PA1
-$Comp
-L Connector:Conn_ARM_JTAG_SWD_10 J2
-U 1 1 5F6CC73D
-P 8850 4950
-F 0 "J2" H 8406 4996 50  0000 R CNN
-F 1 "Conn_ARM_JTAG_SWD_10" H 8406 4905 50  0000 R CNN
-F 2 "Connector:Tag-Connect_TC2050-IDC-NL_2x05_P1.27mm_Vertical" H 8850 4950 50  0001 C CNN
-F 3 "http://infocenter.arm.com/help/topic/com.arm.doc.ddi0314h/DDI0314H_coresight_components_trm.pdf" V 8500 3700 50  0001 C CNN
-	1    8850 4950
-	-1   0    0    -1  
-$EndComp
 Wire Wire Line
 	5750 4650 5450 4650
 Wire Wire Line
@@ -1700,17 +1610,6 @@ Wire Wire Line
 	1600 1700 1600 1500
 Wire Wire Line
 	1700 1700 1600 1700
-$Comp
-L matchbox_ble_v01-eagle-import:MOLEX_MICROSD_PP SD1
-U 1 1 5F0A38BC
-P 6350 4950
-F 0 "SD1" H 6350 5587 42  0000 C CNN
-F 1 "MOLEX_MICROSD_PP" H 6350 5508 42  0000 C CNN
-F 2 "matchbox_ble_v01:MOLEX_MICROSD_PP" H 6350 5423 50  0000 C CNN
-F 3 "" H 6350 4950 50  0001 C CNN
-	1    6350 4950
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6950 4950 7100 4950
 Wire Wire Line
@@ -2059,4 +1958,105 @@ Wire Wire Line
 Wire Wire Line
 	8350 1200 8350 1100
 Connection ~ 8650 1200
+$Comp
+L matchbox_cpu_v20-eagle-import:FDN360P Q2
+U 1 1 5F0F2733
+P 6300 3750
+F 0 "Q2" V 6550 3750 59  0000 C CNN
+F 1 "FDN360P" V 6655 3750 59  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SuperSOT-3" H 6300 3750 50  0001 C CNN
+F 3 "" H 6300 3750 50  0001 C CNN
+	1    6300 3750
+	0    1    1    0   
+$EndComp
+$Comp
+L matchbox_cpu_v20-eagle-import:DIODESOD123 D5
+U 1 1 8525DD4E
+P 6800 3650
+F 0 "D5" V 6841 3720 59  0000 L BNN
+F 1 "MBR120" H 6600 3509 59  0000 L BNN
+F 2 "Diode_SMD:D_SOD-123" H 6800 3650 50  0001 C CNN
+F 3 "" H 6800 3650 50  0001 C CNN
+	1    6800 3650
+	0    1    1    0   
+$EndComp
+Text Label 9550 2150 2    70   ~ 0
+VCC_USBF
+$Comp
+L Connector:Conn_ARM_JTAG_SWD_10 J2
+U 1 1 5F6CC73D
+P 8850 4950
+F 0 "J2" H 8406 4996 50  0000 R CNN
+F 1 "Conn_ARM_JTAG_SWD_10" H 8406 4905 50  0001 R CNN
+F 2 "Connector:Tag-Connect_TC2050-IDC-NL_2x05_P1.27mm_Vertical" H 8850 4950 50  0001 C CNN
+F 3 "http://infocenter.arm.com/help/topic/com.arm.doc.ddi0314h/DDI0314H_coresight_components_trm.pdf" V 8500 3700 50  0001 C CNN
+	1    8850 4950
+	-1   0    0    -1  
+$EndComp
+$Comp
+L matchbox_ble_v01-eagle-import:MOLEX_MICROSD_PP SD1
+U 1 1 5F0A38BC
+P 6350 4950
+F 0 "SD1" H 6350 5587 42  0000 C CNN
+F 1 "MOLEX_MICROSD_PP" H 6350 5508 42  0000 C CNN
+F 2 "matchbox_ble_v01:MOLEX_MICROSD_PP" H 6350 5423 50  0001 C CNN
+F 3 "" H 6350 4950 50  0001 C CNN
+	1    6350 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_cpu_v20-eagle-import:FDN360P Q1
+U 1 1 7A211019
+P 14300 1450
+F 0 "Q1" V 14220 1370 59  0000 L BNN
+F 1 "FDN360P" V 14530 1550 59  0000 L BNN
+F 2 "Package_TO_SOT_SMD:SuperSOT-3" H 14300 1450 50  0001 C CNN
+F 3 "" H 14300 1450 50  0001 C CNN
+	1    14300 1450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L matchbox_cpu_v20-eagle-import:PTCTHERMISTOR1206 F1
+U 1 1 5F1B0FDE
+P 10500 2750
+F 0 "F1" H 10550 2930 59  0000 C CNN
+F 1 "PTCTHERMISTOR1206" H 10550 2931 59  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric" H 10500 2750 50  0001 C CNN
+F 3 "" H 10500 2750 50  0001 C CNN
+	1    10500 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_cpu_v20-eagle-import:LED0603 D1
+U 1 1 484CEEF8
+P 8950 1550
+F 0 "D1" V 9090 1370 59  0000 L BNN
+F 1 "PWR" V 9075 1570 59  0000 L BNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 8950 1550 50  0001 C CNN
+F 3 "" H 8950 1550 50  0001 C CNN
+	1    8950 1550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L matchbox_cpu_v20-eagle-import:LED0603 D2
+U 1 1 D4945A4D
+P 8950 1850
+F 0 "D2" V 9090 1670 59  0000 L BNN
+F 1 "STAT" V 9075 1870 59  0000 L BNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 8950 1850 50  0001 C CNN
+F 3 "" H 8950 1850 50  0001 C CNN
+	1    8950 1850
+	0    -1   -1   0   
+$EndComp
+$Comp
+L matchbox_cpu_v20-eagle-import:LED0603 D3
+U 1 1 908C3510
+P 9050 2150
+F 0 "D3" V 9190 1970 59  0000 L BNN
+F 1 "CHG" V 9175 2170 59  0000 L BNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 9050 2150 50  0001 C CNN
+F 3 "" H 9050 2150 50  0001 C CNN
+	1    9050 2150
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC

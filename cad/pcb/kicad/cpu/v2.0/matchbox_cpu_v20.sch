@@ -172,14 +172,6 @@ Connection ~ 10750 1200
 Connection ~ 11050 1200
 Connection ~ 11350 1200
 Wire Wire Line
-	7500 2950 7600 2950
-Wire Wire Line
-	7600 2950 7600 3050
-Wire Wire Line
-	7600 3050 7000 3050
-Text Label 7600 3000 0    70   ~ 0
-GND
-Wire Wire Line
 	6300 5900 6000 5900
 Text Label 6000 5900 0    70   ~ 0
 GND
@@ -529,8 +521,8 @@ Wire Wire Line
 Text Label 4650 5400 2    70   ~ 0
 PC8
 Wire Wire Line
-	7300 2850 7000 2850
-Text Label 7300 2850 0    70   ~ 0
+	9500 6150 9200 6150
+Text Label 9500 6150 0    70   ~ 0
 VBAT
 Wire Wire Line
 	11950 700  11650 700 
@@ -684,12 +676,6 @@ Wire Wire Line
 Text Label 8050 2150 0    70   ~ 0
 STAT
 Wire Wire Line
-	5700 3050 6200 3050
-Text Label 5700 3050 0    70   ~ 0
-STAT
-Wire Wire Line
-	7000 2950 7100 2950
-Wire Wire Line
 	14750 6100 14350 6100
 Wire Wire Line
 	14350 6100 14350 6000
@@ -718,10 +704,6 @@ VCC
 Wire Wire Line
 	11300 2750 10800 2750
 Text Label 11300 2750 2    70   ~ 0
-VCC_USBF
-Wire Wire Line
-	6200 2850 5700 2850
-Text Label 5700 2850 0    70   ~ 0
 VCC_USBF
 Text Label 11350 700  0    70   ~ 0
 VCC_USBF
@@ -980,17 +962,6 @@ F 3 "" H 13800 1550 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:MCP73831 U3
-U 1 1 9A04CEE8
-P 6600 2950
-F 0 "U3" H 6300 3170 59  0000 L BNN
-F 1 "MCP73831" H 6300 2650 59  0000 L BNN
-F 2 "matchbox_cpu_v20:SOT23-5" H 6600 2950 50  0001 C CNN
-F 3 "" H 6600 2950 50  0001 C CNN
-	1    6600 2950
-	1    0    0    -1  
-$EndComp
-$Comp
 L matchbox_cpu_v20-eagle-import:LED0603 D3
 U 1 1 908C3510
 P 9050 2150
@@ -1011,17 +982,6 @@ F 2 "Resistor_SMD:R_0805_2012Metric" H 8550 2150 50  0001 C CNN
 F 3 "" H 8550 2150 50  0001 C CNN
 	1    8550 2150
 	-1   0    0    1   
-$EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R9
-U 1 1 3AF85FDB
-P 7300 2950
-F 0 "R9" H 7050 2969 59  0000 L BNN
-F 1 "4.7k" H 7410 2970 59  0000 L BNN
-F 2 "Resistor_SMD:R_0805_2012Metric" H 7300 2950 50  0001 C CNN
-F 3 "" H 7300 2950 50  0001 C CNN
-	1    7300 2950
-	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:PTCSMD F1
@@ -1210,8 +1170,6 @@ F 3 "" H 9050 2550 50  0001 C CNN
 	1    9050 2550
 	1    0    0    -1  
 $EndComp
-Text Notes 7030 3160 0    59   ~ 0
-Ichg = 1000V / R9
 Text GLabel 10300 1650 0    10   BiDi ~ 0
 GND
 Text GLabel 10300 1850 0    10   BiDi ~ 0
@@ -1462,8 +1420,6 @@ Wire Wire Line
 Connection ~ 3550 800 
 Wire Wire Line
 	3550 800  3650 800 
-Text Label 3450 800  0    50   ~ 0
-GND
 Wire Wire Line
 	3650 800  3750 800 
 Wire Wire Line
@@ -1623,8 +1579,6 @@ Wire Wire Line
 Wire Wire Line
 	3650 6550 3650 6400
 Connection ~ 3550 6550
-Text Label 3650 6550 0    50   ~ 0
-VCC_3V3
 Text Label 6100 1750 2    70   ~ 0
 OSC_OUT
 Text Label 6100 1250 2    50   ~ 0
@@ -1793,9 +1747,7 @@ Wire Wire Line
 	13000 3850 13900 3850
 Wire Wire Line
 	13400 3450 13900 3450
-Text Label 9000 700  0    50   ~ 0
-VCC_3V3
-Text Label 10150 700  0    50   ~ 0
+Text Label 10750 700  0    50   ~ 0
 VCC_3V3
 Wire Wire Line
 	8650 1200 8950 1200
@@ -2011,4 +1963,100 @@ F 3 "" H 13000 3450 50  0001 C CNN
 	1    13000 3450
 	1    0    0    -1  
 $EndComp
+$Comp
+L Battery_Management:MCP73831-2-OT U3
+U 1 1 5F6BF62C
+P 8800 6250
+F 0 "U3" H 8800 6731 50  0000 C CNN
+F 1 "MCP73831-2-OT" H 9150 6000 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 8850 6000 50  0001 L CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20001984g.pdf" H 8650 6200 50  0001 C CNN
+	1    8800 6250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9700 6350 9200 6350
+Text Label 9700 6350 2    70   ~ 0
+STAT
+Text Label 9300 5950 2    70   ~ 0
+VCC_USBF
+$Comp
+L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R9
+U 1 1 3AF85FDB
+P 8600 6650
+F 0 "R9" H 8350 6669 59  0000 L BNN
+F 1 "4.7k" H 8710 6670 59  0000 L BNN
+F 2 "Resistor_SMD:R_0805_2012Metric" H 8600 6650 50  0001 C CNN
+F 3 "" H 8600 6650 50  0001 C CNN
+	1    8600 6650
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	8800 6650 8800 6550
+Wire Wire Line
+	8400 6650 8350 6650
+Wire Wire Line
+	8350 6350 8400 6350
+Wire Wire Line
+	8350 6350 8350 6650
+Text Notes 9150 6850 2    59   ~ 0
+Ichg = 1000V / R9
+Text Label 8800 6650 0    70   ~ 0
+GND
+Text Label 3650 6550 0    50   ~ 0
+GND
+Text Label 3750 800  0    50   ~ 0
+VCC_3V3
+Wire Wire Line
+	9300 5950 8800 5950
+$Comp
+L matchbox_cpu_v20-eagle-import:CAP0805 C24
+U 1 1 5FFA34D5
+P 9850 1000
+F 0 "C24" H 9910 1115 59  0000 L BNN
+F 1 "0.1uF" H 9910 915 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 9850 1000 50  0001 C CNN
+F 3 "" H 9850 1000 50  0001 C CNN
+	1    9850 1000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9850 800  9850 700 
+Wire Wire Line
+	9850 700  10150 700 
+Connection ~ 10150 700 
+Wire Wire Line
+	9850 1100 9850 1200
+Wire Wire Line
+	9850 1200 10150 1200
+Connection ~ 10150 1200
+Wire Wire Line
+	9550 700  9850 700 
+Connection ~ 9550 700 
+Connection ~ 9850 700 
+Wire Wire Line
+	9550 1200 9850 1200
+Connection ~ 9550 1200
+Connection ~ 9850 1200
+$Comp
+L matchbox_cpu_v20-eagle-import:CAP0805 C25
+U 1 1 60195439
+P 8350 1000
+F 0 "C25" H 8410 1115 59  0000 L BNN
+F 1 "1uF" H 8410 915 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 8350 1000 50  0001 C CNN
+F 3 "" H 8350 1000 50  0001 C CNN
+	1    8350 1000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8350 800  8350 700 
+Wire Wire Line
+	8350 700  8650 700 
+Connection ~ 8650 700 
+Wire Wire Line
+	8650 1200 8350 1200
+Wire Wire Line
+	8350 1200 8350 1100
+Connection ~ 8650 1200
 $EndSCHEMATC

@@ -1,8 +1,8 @@
-(module B3U-3100PM-B (layer F.Cu) (tedit 0)
+(module B3U-3100PM-B (layer F.Cu) (tedit 5F025986)
   (fp_text reference BOOT0 (at -1.25 0.625 180) (layer F.SilkS)
     (effects (font (size 0.57912 0.57912) (thickness 0.046329)) (justify left bottom mirror))
   )
-  (fp_text value B3U-3100PM-B (at 0 0) (layer F.SilkS) hide
+  (fp_text value B3U-3100PM-B (at 7.6 -4.4) (layer F.SilkS) hide
     (effects (font (size 1.27 1.27) (thickness 0.15)) (justify right top))
   )
   (fp_line (start -1.5 -1.25) (end -1.5 -1.05) (layer F.SilkS) (width 0.127))
@@ -20,6 +20,10 @@
   (fp_line (start 0.45 -1.95) (end 0.85 -1.6) (layer F.SilkS) (width 0.127))
   (fp_line (start 0.85 -1.6) (end 0.85 -1.25) (layer F.SilkS) (width 0.127))
   (fp_line (start -1.55 -1.55) (end 1.5 -1.55) (layer F.SilkS) (width 0.05))
+  (fp_line (start -1.8 -2.1) (end 1.8 -2.1) (layer F.CrtYd) (width 0.05))
+  (fp_line (start 1.8 -2.1) (end 1.8 1.5) (layer F.CrtYd) (width 0.05))
+  (fp_line (start 1.8 1.5) (end -1.8 1.5) (layer F.CrtYd) (width 0.05))
+  (fp_line (start -1.8 1.5) (end -1.8 -2.1) (layer F.CrtYd) (width 0.05))
   (pad 1 smd rect (at -1.7 0) (size 0.8 1.7) (layers F.Cu F.Paste F.Mask)
     (solder_mask_margin 0.0762))
   (pad 2 smd rect (at 1.7 0) (size 0.8 1.7) (layers F.Cu F.Paste F.Mask)

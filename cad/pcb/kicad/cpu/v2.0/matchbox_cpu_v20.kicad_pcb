@@ -642,6 +642,11 @@
       (net 59 /VCC_USBF) (solder_mask_margin 0.0762))
     (pad C smd roundrect (at 0 -0.877 270) (size 1 1) (layers Top F.Paste F.Mask) (roundrect_rratio 0.15)
       (net 137 "Net-(D4-PadC)") (solder_mask_margin 0.0762))
+    (model ${KISYS3DMOD}/LED_SMD.3dshapes/LED_0603_1608Metric.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
   )
 
   (module matchbox_cpu_v20:LED-0603 (layer Top) (tedit 5F025B5D) (tstamp 5F02E888)
@@ -665,6 +670,11 @@
       (net 136 "Net-(D3-PadA)") (solder_mask_margin 0.0762))
     (pad C smd roundrect (at 0 -0.877 90) (size 1 1) (layers Top F.Paste F.Mask) (roundrect_rratio 0.15)
       (net 1 GND) (solder_mask_margin 0.0762))
+    (model ${KISYS3DMOD}/LED_SMD.3dshapes/LED_0603_1608Metric.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
   )
 
   (module matchbox_cpu_v20:LED-0603 (layer Top) (tedit 5F025B5D) (tstamp 5EF88BD8)
@@ -688,6 +698,11 @@
       (net 58 "Net-(D2-PadA)") (solder_mask_margin 0.0762))
     (pad C smd roundrect (at 0 -0.877 90) (size 1 1) (layers Top F.Paste F.Mask) (roundrect_rratio 0.15)
       (net 1 GND) (solder_mask_margin 0.0762))
+    (model ${KISYS3DMOD}/LED_SMD.3dshapes/LED_0603_1608Metric.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
   )
 
   (module matchbox_cpu_v20:ABM11 (layer Top) (tedit 5F025AC7) (tstamp 5F03832D)

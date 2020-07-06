@@ -526,6 +526,11 @@
       (net 59 /VCC_USBF) (solder_mask_margin 0.0762))
     (pad C smd rect (at -1.575 0 270) (size 0.9 0.95) (layers Top F.Paste F.Mask)
       (net 57 /VCC_SEL) (solder_mask_margin 0.0762))
+    (model ${KISYS3DMOD}/Diode_SMD.3dshapes/D_SOD-123.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module matchbox_cpu_v20:SM02B-SRSS-TB (layer Top) (tedit 5F025C89) (tstamp 5EFD1A78)

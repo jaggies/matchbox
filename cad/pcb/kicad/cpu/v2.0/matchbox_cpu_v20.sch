@@ -2241,4 +2241,46 @@ F 3 "http://www.winbond.com/resource-files/w25q128jv_dtr%20revc%2003272018%20plu
 	1    8850 7700
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	8050 800  8050 700 
+Wire Wire Line
+	8050 700  8350 700 
+Connection ~ 8350 700 
+Wire Wire Line
+	8050 1100 8050 1200
+Wire Wire Line
+	8050 1200 8350 1200
+Connection ~ 8350 1200
+$Comp
+L matchbox_cpu_v20-eagle-import:CAP0805 C22
+U 1 1 60DA05C4
+P 8050 1000
+F 0 "C22" H 8110 1115 59  0000 L BNN
+F 1 "1uF" H 8150 900 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 8050 1000 50  0001 C CNN
+F 3 "" H 8050 1000 50  0001 C CNN
+	1    8050 1000
+	1    0    0    -1  
+$EndComp
+$Comp
+L matchbox_cpu_v20-eagle-import:CAP0805 C23
+U 1 1 60E86A5C
+P 7750 1000
+F 0 "C23" H 7810 1115 59  0000 L BNN
+F 1 "1uF" H 7850 900 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 7750 1000 50  0001 C CNN
+F 3 "" H 7750 1000 50  0001 C CNN
+	1    7750 1000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7750 800  7750 700 
+Wire Wire Line
+	7750 700  8050 700 
+Connection ~ 8050 700 
+Wire Wire Line
+	7750 1100 7750 1200
+Wire Wire Line
+	7750 1200 8050 1200
+Connection ~ 8050 1200
 $EndSCHEMATC

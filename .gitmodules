@@ -4,3 +4,6 @@
 [submodule "apps/experimental"]
 	path = apps/experimental
 	url = ssh://jmiller@atlantis.local/volume1/git/matchbox_experimental.git
+[submodule "lib/hal/STM32CubeH7"]
+	path = lib/hal/STM32CubeH7
+	url = https://github.com/STMicroelectronics/STM32CubeH7.git

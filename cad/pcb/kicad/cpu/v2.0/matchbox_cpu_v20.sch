@@ -115,8 +115,6 @@ Text Label 6850 1450 0    70   ~ 0
 GND
 Wire Wire Line
 	12500 2350 12190 2350
-Text Label 12190 2350 0    70   ~ 0
-GND
 Wire Wire Line
 	13700 2750 13700 2850
 Wire Wire Line
@@ -1094,7 +1092,7 @@ Text Label 11000 8450 0    70   ~ 0
 VCC_3V3
 Connection ~ 11400 8450
 Wire Wire Line
-	14350 7550 14650 7550
+	14350 7250 14650 7250
 Wire Wire Line
 	14750 6950 14350 6950
 Wire Wire Line
@@ -1110,47 +1108,17 @@ Text Label 12700 6950 2    70   ~ 0
 GND
 Connection ~ 12300 6950
 Wire Wire Line
-	14350 7450 14650 7450
-Wire Wire Line
-	13150 8150 13450 8150
-Wire Wire Line
-	13150 8050 13450 8050
-Wire Wire Line
-	13150 8250 13450 8250
-Wire Wire Line
-	13150 7950 13450 7950
-Wire Wire Line
-	13150 7350 13450 7350
-Wire Wire Line
-	13150 7250 13450 7250
-Wire Wire Line
-	14350 7650 14650 7650
-Wire Wire Line
-	11100 8150 11400 8150
-Wire Wire Line
-	11100 7950 11400 7950
-Wire Wire Line
-	11100 8050 11400 8050
-Wire Wire Line
-	14350 7750 14650 7750
+	14350 7150 14650 7150
 Wire Wire Line
 	14350 7350 14650 7350
 Wire Wire Line
-	11100 8250 11400 8250
+	14350 7450 14650 7450
+Wire Wire Line
+	14350 8150 14650 8150
 Wire Wire Line
 	12300 7850 12600 7850
 Wire Wire Line
-	11100 7350 11400 7350
-Wire Wire Line
-	11100 7250 11400 7250
-Wire Wire Line
 	12300 7950 12600 7950
-Wire Wire Line
-	13150 7650 13450 7650
-Wire Wire Line
-	13150 7550 13450 7550
-Wire Wire Line
-	13150 7450 13450 7450
 Wire Wire Line
 	11100 7850 11400 7850
 Wire Wire Line
@@ -1166,13 +1134,13 @@ Wire Wire Line
 Wire Wire Line
 	11100 7050 11400 7050
 Wire Wire Line
+	14350 7550 14650 7550
+Wire Wire Line
+	14350 7650 14650 7650
+Wire Wire Line
+	14350 7750 14650 7750
+Wire Wire Line
 	14350 7850 14650 7850
-Wire Wire Line
-	14350 7950 14650 7950
-Wire Wire Line
-	14350 8050 14650 8050
-Wire Wire Line
-	14350 8150 14650 8150
 Wire Wire Line
 	13150 6950 13450 6950
 Text Label 13150 6950 0    70   ~ 0
@@ -1198,24 +1166,14 @@ Wire Wire Line
 Wire Wire Line
 	12300 8150 12600 8150
 Wire Wire Line
-	14650 8250 14350 8250
-Wire Wire Line
-	12600 8250 12300 8250
-Wire Wire Line
-	14350 7150 14650 7150
+	14650 7950 14350 7950
 Wire Wire Line
 	12300 7250 12600 7250
 Wire Wire Line
-	14350 7250 14650 7250
-Wire Wire Line
-	13150 7050 13450 7050
-Wire Wire Line
-	13150 7150 13450 7150
-Wire Wire Line
-	14750 8450 14350 8450
+	14650 8450 14350 8450
 Wire Wire Line
 	14350 8450 14350 8350
-Text Label 14450 8450 0    70   ~ 0
+Text Label 14650 8450 2    70   ~ 0
 VCC
 Connection ~ 14350 8450
 Wire Wire Line
@@ -1225,10 +1183,6 @@ Wire Wire Line
 Text Label 12700 8450 2    70   ~ 0
 VCC
 Connection ~ 12300 8450
-Wire Wire Line
-	13150 7850 13450 7850
-Wire Wire Line
-	13150 7750 13450 7750
 $Comp
 L matchbox_cpu_v20-eagle-import:AS-ITM-00015 P4
 U 1 1 5F008F3C
@@ -2059,4 +2013,108 @@ F 3 "" H 6400 5800 50  0001 C CNN
 	1    6400 5800
 	1    0    0    -1  
 $EndComp
+Text Label 12600 7450 2    50   ~ 0
+PD0
+Text Label 12600 7550 2    50   ~ 0
+PD1
+Text Label 12600 7650 2    50   ~ 0
+PD2
+Text Label 12600 7750 2    50   ~ 0
+PD3
+Text Label 12600 7850 2    50   ~ 0
+PD4
+Text Label 12600 7950 2    50   ~ 0
+PD5
+Text Label 12600 8050 2    50   ~ 0
+PD6
+Text Label 12600 8150 2    50   ~ 0
+PD7
+Text Label 11100 7050 0    50   ~ 0
+PD8
+Text Label 11100 7150 0    50   ~ 0
+PD9
+Text Label 14650 7950 2    50   ~ 0
+PE8
+Text Label 11100 7450 0    50   ~ 0
+PE11
+Text Label 11100 7550 0    50   ~ 0
+PE12
+Text Label 11100 7650 0    50   ~ 0
+PE13
+Text Label 11100 7750 0    50   ~ 0
+PE14
+Text Label 11100 7850 0    50   ~ 0
+PD2
+Text Label 14650 7150 2    50   ~ 0
+PE0
+Text Label 14650 7250 2    50   ~ 0
+PE1
+Text Label 14650 7350 2    50   ~ 0
+PE2
+Text Label 14650 7450 2    50   ~ 0
+PE3
+Text Label 14650 7550 2    50   ~ 0
+PE4
+Text Label 14650 7650 2    50   ~ 0
+PE5
+Text Label 14650 7750 2    50   ~ 0
+PE6
+Text Label 14650 7850 2    50   ~ 0
+PE7
+Text Label 14650 8050 2    50   ~ 0
+PE9
+Text Label 14650 8150 2    50   ~ 0
+PE10
+Wire Wire Line
+	14350 8050 14650 8050
+Text Label 12600 7150 2    50   ~ 0
+PD10
+Text Label 12600 7250 2    50   ~ 0
+PD11
+Text Label 12600 7350 2    50   ~ 0
+PD12
+Text Label 12190 2350 0    70   ~ 0
+GND
+Wire Wire Line
+	14350 8250 14650 8250
+Wire Wire Line
+	13150 7750 13450 7750
+Wire Wire Line
+	13150 7850 13450 7850
+Wire Wire Line
+	13150 7150 13450 7150
+Wire Wire Line
+	13150 7050 13450 7050
+Wire Wire Line
+	13150 7450 13450 7450
+Wire Wire Line
+	13150 7550 13450 7550
+Wire Wire Line
+	13150 7650 13450 7650
+Wire Wire Line
+	13150 7250 13450 7250
+Wire Wire Line
+	13150 7350 13450 7350
+Wire Wire Line
+	13150 7950 13450 7950
+Wire Wire Line
+	13150 8250 13450 8250
+Wire Wire Line
+	13150 8050 13450 8050
+Wire Wire Line
+	13150 8150 13450 8150
+Wire Wire Line
+	12600 8250 12300 8250
+Wire Wire Line
+	11100 8250 11400 8250
+Wire Wire Line
+	11100 8150 11400 8150
+Wire Wire Line
+	11100 8050 11400 8050
+Wire Wire Line
+	11100 7950 11400 7950
+Wire Wire Line
+	11100 7250 11400 7250
+Wire Wire Line
+	11100 7350 11400 7350
 $EndSCHEMATC

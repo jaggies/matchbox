@@ -2117,4 +2117,128 @@ Wire Wire Line
 	11100 7250 11400 7250
 Wire Wire Line
 	11100 7350 11400 7350
+Text Label 6950 8500 0    50   ~ 0
+VCC_3V3
+Text Label 8850 9200 0    50   ~ 0
+GND
+Text Label 8850 8100 0    50   ~ 0
+GND
+Text Label 8850 8400 0    50   ~ 0
+VCC_3V3
+Text Label 8850 7300 0    50   ~ 0
+VCC_3V3
+$Comp
+L Jumper:Jumper_3_Bridged12 JP2
+U 1 1 60208830
+P 7250 8750
+F 0 "JP2" V 7296 8817 50  0000 L CNN
+F 1 "BANK2_SEL" V 7550 8300 50  0000 L CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm_NumberLabels" H 7250 8750 50  0001 C CNN
+F 3 "~" H 7250 8750 50  0001 C CNN
+	1    7250 8750
+	0    -1   -1   0   
+$EndComp
+Text Label 7650 8750 2    50   ~ 0
+BANK2_CS#
+Text Label 6950 9000 0    50   ~ 0
+PC11
+Wire Wire Line
+	7250 8500 6950 8500
+Wire Wire Line
+	7250 9000 6950 9000
+Wire Wire Line
+	7400 8750 7650 8750
+$Comp
+L Jumper:Jumper_3_Bridged12 JP1
+U 1 1 5FE244A7
+P 7250 7750
+F 0 "JP1" V 7296 7817 50  0000 L CNN
+F 1 "BANK1_SEL" V 7550 7300 50  0000 L CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm_NumberLabels" H 7250 7750 50  0001 C CNN
+F 3 "~" H 7250 7750 50  0001 C CNN
+	1    7250 7750
+	0    -1   -1   0   
+$EndComp
+Text Label 8000 8900 0    50   ~ 0
+PB2
+Text Label 8000 8700 0    50   ~ 0
+BANK2_CS#
+Wire Wire Line
+	8350 8900 8000 8900
+Wire Wire Line
+	8350 8700 8000 8700
+Text Label 9700 9000 2    50   ~ 0
+PE10
+Text Label 9700 8900 2    50   ~ 0
+PE9
+Text Label 9700 8700 2    50   ~ 0
+PE8
+Text Label 9700 8600 2    50   ~ 0
+PE7
+Wire Wire Line
+	9700 9000 9350 9000
+Wire Wire Line
+	9700 8900 9350 8900
+Wire Wire Line
+	9700 8700 9350 8700
+Wire Wire Line
+	9700 8600 9350 8600
+$Comp
+L Memory_Flash:W25Q128JVS U7
+U 1 1 5FA5C107
+P 8850 8800
+F 0 "U7" H 8500 9150 50  0000 C CNN
+F 1 "BANK2" H 8850 8800 50  0000 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 8850 8800 50  0001 C CNN
+F 3 "http://www.winbond.com/resource-files/w25q128jv_dtr%20revc%2003272018%20plus.pdf" H 8850 8800 50  0001 C CNN
+	1    8850 8800
+	1    0    0    -1  
+$EndComp
+Text Label 7650 7750 2    50   ~ 0
+BANK1_CS#
+Text Label 6950 8000 0    50   ~ 0
+PB10
+Text Label 6950 7500 0    50   ~ 0
+PB6
+Wire Wire Line
+	7250 7500 6950 7500
+Wire Wire Line
+	7250 8000 6950 8000
+Wire Wire Line
+	7400 7750 7650 7750
+Text Label 8000 7800 0    50   ~ 0
+PB2
+Text Label 8000 7600 0    50   ~ 0
+BANK1_CS#
+Text Label 9700 7900 2    50   ~ 0
+PD13
+Text Label 9700 7800 2    50   ~ 0
+PE2
+Text Label 9700 7600 2    50   ~ 0
+PD12
+Text Label 9700 7500 2    50   ~ 0
+PD11
+Wire Wire Line
+	9700 7900 9350 7900
+Wire Wire Line
+	9700 7800 9350 7800
+Wire Wire Line
+	9700 7600 9350 7600
+Wire Wire Line
+	9700 7500 9350 7500
+Wire Wire Line
+	8350 7800 8000 7800
+Wire Wire Line
+	8350 7600 8000 7600
+$Comp
+L Memory_Flash:W25Q128JVS U4
+U 1 1 5F581E06
+P 8850 7700
+F 0 "U4" H 8500 8050 50  0000 C CNN
+F 1 "BANK1" H 8850 7700 50  0000 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 8850 7700 50  0001 C CNN
+F 3 "http://www.winbond.com/resource-files/w25q128jv_dtr%20revc%2003272018%20plus.pdf" H 8850 7700 50  0001 C CNN
+	1    8850 7700
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

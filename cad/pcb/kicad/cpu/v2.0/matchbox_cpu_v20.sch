@@ -760,10 +760,10 @@ Wire Wire Line
 Wire Wire Line
 	8750 2150 8850 2150
 $Comp
-L matchbox_cpu_v20-eagle-import:AS-ITM-00015 P2
+L matchbox_cpu_v20-eagle-import:AS-ITM-00015 P3
 U 1 1 EBAB1841
 P 13850 5300
-F 0 "P2" H 13650 6150 59  0000 L BNN
+F 0 "P3" H 13650 6150 59  0000 L BNN
 F 1 "DF12-32-DP" H 13650 4300 59  0000 L BNN
 F 2 "matchbox_cpu_v20:DF12-32-DP" H 13850 5300 50  0001 C CNN
 F 3 "" H 13850 5300 50  0001 C CNN
@@ -815,10 +815,10 @@ F 3 "" H 6500 1750 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C24
+L matchbox_cpu_v20-eagle-import:CAP0805 C26
 U 1 1 C2E82A64
 P 13900 3750
-F 0 "C24" H 13960 3865 59  0000 L BNN
+F 0 "C26" H 13960 3865 59  0000 L BNN
 F 1 "1uF" H 13960 3665 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 13900 3750 50  0001 C CNN
 F 3 "" H 13900 3750 50  0001 C CNN
@@ -859,10 +859,10 @@ F 3 "" H 6400 1350 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C23
+L matchbox_cpu_v20-eagle-import:CAP0805 C25
 U 1 1 E5A05DC2
 P 13600 2750
-F 0 "C23" V 13685 2840 59  0000 L BNN
+F 0 "C25" V 13685 2840 59  0000 L BNN
 F 1 "1uF" V 13685 2550 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 13600 2750 50  0001 C CNN
 F 3 "" H 13600 2750 50  0001 C CNN
@@ -870,10 +870,10 @@ F 3 "" H 13600 2750 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C22
+L matchbox_cpu_v20-eagle-import:CAP0805 C24
 U 1 1 D13F2C18
 P 13200 2850
-F 0 "C22" V 13185 2960 59  0000 L BNN
+F 0 "C24" V 13185 2960 59  0000 L BNN
 F 1 ".033uF" V 13195 2500 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 13200 2850 50  0001 C CNN
 F 3 "" H 13200 2850 50  0001 C CNN
@@ -958,10 +958,10 @@ F 3 "" H 6400 5900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C17
+L matchbox_cpu_v20-eagle-import:CAP0805 C19
 U 1 1 D9B55D84
 P 10500 3950
-F 0 "C17" V 10585 4040 59  0000 L BNN
+F 0 "C19" V 10585 4040 59  0000 L BNN
 F 1 "0.1uF" V 10515 3910 59  0000 R TNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 10500 3950 50  0001 C CNN
 F 3 "" H 10500 3950 50  0001 C CNN
@@ -1195,10 +1195,10 @@ F 3 "" H 13850 7650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:AS-ITM-00015 P3
+L matchbox_cpu_v20-eagle-import:AS-ITM-00015 P2
 U 1 1 5F008F42
 P 11800 7650
-F 0 "P3" H 11600 8500 59  0000 L BNN
+F 0 "P2" H 11600 8500 59  0000 L BNN
 F 1 "DF12-32-DP" H 11600 6650 59  0000 L BNN
 F 2 "matchbox_cpu_v20:DF12-32-DP" H 11800 7650 50  0001 C CNN
 F 3 "" H 11800 7650 50  0001 C CNN
@@ -1499,9 +1499,9 @@ Wire Wire Line
 Text Label 8050 4650 0    50   ~ 0
 RESET#
 Text Label 8050 4850 0    50   ~ 0
-SWDCLK
+PA14
 Text Label 8050 4950 0    50   ~ 0
-SWDIO
+PA13
 Text Label 8050 5050 0    50   ~ 0
 PB3
 Text Label 8050 5150 0    50   ~ 0
@@ -1661,10 +1661,10 @@ Wire Wire Line
 Wire Wire Line
 	8650 800  8650 700 
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C21
+L matchbox_cpu_v20-eagle-import:CAP0805 C23
 U 1 1 EDA6B4AC
 P 11650 1000
-F 0 "C21" H 11710 1115 59  0000 L BNN
+F 0 "C23" H 11710 1115 59  0000 L BNN
 F 1 "10uF" H 11750 900 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 11650 1000 50  0001 C CNN
 F 3 "" H 11650 1000 50  0001 C CNN
@@ -1672,10 +1672,10 @@ F 3 "" H 11650 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C19
+L matchbox_cpu_v20-eagle-import:CAP0805 C21
 U 1 1 C606C766
 P 11050 1000
-F 0 "C19" H 11110 1115 59  0000 L BNN
+F 0 "C21" H 11110 1115 59  0000 L BNN
 F 1 "1uF" H 11110 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 11050 1000 50  0001 C CNN
 F 3 "" H 11050 1000 50  0001 C CNN
@@ -1683,10 +1683,10 @@ F 3 "" H 11050 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C18
+L matchbox_cpu_v20-eagle-import:CAP0805 C20
 U 1 1 82F3EB32
 P 10750 1000
-F 0 "C18" H 10810 1115 59  0000 L BNN
+F 0 "C20" H 10810 1115 59  0000 L BNN
 F 1 "0.1uF" H 10810 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 10750 1000 50  0001 C CNN
 F 3 "" H 10750 1000 50  0001 C CNN
@@ -1694,10 +1694,10 @@ F 3 "" H 10750 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C16
+L matchbox_cpu_v20-eagle-import:CAP0805 C18
 U 1 1 E877986F
 P 10450 1000
-F 0 "C16" H 10510 1115 59  0000 L BNN
+F 0 "C18" H 10510 1115 59  0000 L BNN
 F 1 "0.1uF" H 10510 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 10450 1000 50  0001 C CNN
 F 3 "" H 10450 1000 50  0001 C CNN
@@ -1705,10 +1705,10 @@ F 3 "" H 10450 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C15
+L matchbox_cpu_v20-eagle-import:CAP0805 C17
 U 1 1 F80B1965
 P 10150 1000
-F 0 "C15" H 10210 1115 59  0000 L BNN
+F 0 "C17" H 10210 1115 59  0000 L BNN
 F 1 "0.1uF" H 10210 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 10150 1000 50  0001 C CNN
 F 3 "" H 10150 1000 50  0001 C CNN
@@ -1716,10 +1716,10 @@ F 3 "" H 10150 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C20
+L matchbox_cpu_v20-eagle-import:CAP0805 C22
 U 1 1 12DA53AD
 P 11350 1000
-F 0 "C20" H 11410 1115 59  0000 L BNN
+F 0 "C22" H 11410 1115 59  0000 L BNN
 F 1 "10uF" H 11410 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 11350 1000 50  0001 C CNN
 F 3 "" H 11350 1000 50  0001 C CNN
@@ -1727,10 +1727,10 @@ F 3 "" H 11350 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C13
+L matchbox_cpu_v20-eagle-import:CAP0805 C15
 U 1 1 65EADBD0
 P 9550 1000
-F 0 "C13" H 9610 1115 59  0000 L BNN
+F 0 "C15" H 9610 1115 59  0000 L BNN
 F 1 "1uF" H 9610 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 9550 1000 50  0001 C CNN
 F 3 "" H 9550 1000 50  0001 C CNN
@@ -1738,10 +1738,10 @@ F 3 "" H 9550 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C12
+L matchbox_cpu_v20-eagle-import:CAP0805 C14
 U 1 1 295533C0
 P 9250 1000
-F 0 "C12" H 9310 1115 59  0000 L BNN
+F 0 "C14" H 9310 1115 59  0000 L BNN
 F 1 "0.1uF" H 9310 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 9250 1000 50  0001 C CNN
 F 3 "" H 9250 1000 50  0001 C CNN
@@ -1749,10 +1749,10 @@ F 3 "" H 9250 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C11
+L matchbox_cpu_v20-eagle-import:CAP0805 C13
 U 1 1 91680661
 P 8950 1000
-F 0 "C11" H 9010 1115 59  0000 L BNN
+F 0 "C13" H 9010 1115 59  0000 L BNN
 F 1 "1uF" H 9010 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 8950 1000 50  0001 C CNN
 F 3 "" H 8950 1000 50  0001 C CNN
@@ -1760,10 +1760,10 @@ F 3 "" H 8950 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C10
+L matchbox_cpu_v20-eagle-import:CAP0805 C12
 U 1 1 BA02A0BA
 P 8650 1000
-F 0 "C10" H 8710 1115 59  0000 L BNN
+F 0 "C12" H 8710 1115 59  0000 L BNN
 F 1 "1uF" H 8710 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 8650 1000 50  0001 C CNN
 F 3 "" H 8650 1000 50  0001 C CNN
@@ -1771,10 +1771,10 @@ F 3 "" H 8650 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:LTC2954 U3
+L matchbox_cpu_v20-eagle-import:LTC2954 U5
 U 1 1 5F596120
 P 12700 1950
-F 0 "U3" H 13150 2497 42  0000 C CNN
+F 0 "U5" H 13150 2497 42  0000 C CNN
 F 1 "LTC2954" H 13150 2418 42  0000 C CNN
 F 2 "Package_TO_SOT_SMD:SOT-23-8" H 12700 1950 50  0001 C CNN
 F 3 "" H 12700 1950 50  0001 C CNN
@@ -1841,10 +1841,10 @@ VCC_3V3
 Wire Wire Line
 	9300 5950 8800 5950
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C14
+L matchbox_cpu_v20-eagle-import:CAP0805 C16
 U 1 1 5FFA34D5
 P 9850 1000
-F 0 "C14" H 9910 1115 59  0000 L BNN
+F 0 "C16" H 9910 1115 59  0000 L BNN
 F 1 "0.1uF" H 9910 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 9850 1000 50  0001 C CNN
 F 3 "" H 9850 1000 50  0001 C CNN
@@ -1870,10 +1870,10 @@ Wire Wire Line
 Connection ~ 9550 1200
 Connection ~ 9850 1200
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C9
+L matchbox_cpu_v20-eagle-import:CAP0805 C11
 U 1 1 60195439
 P 8350 1000
-F 0 "C9" H 8410 1115 59  0000 L BNN
+F 0 "C11" H 8410 1115 59  0000 L BNN
 F 1 "1uF" H 8410 915 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 8350 1000 50  0001 C CNN
 F 3 "" H 8350 1000 50  0001 C CNN
@@ -2184,10 +2184,10 @@ Wire Wire Line
 Wire Wire Line
 	9700 8600 9350 8600
 $Comp
-L Memory_Flash:W25Q128JVS U7
+L Memory_Flash:W25Q128JVS U4
 U 1 1 5FA5C107
 P 8850 8800
-F 0 "U7" H 8500 9150 50  0000 C CNN
+F 0 "U4" H 8500 9150 50  0000 C CNN
 F 1 "BANK2" H 8850 8800 50  0000 C CNN
 F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 8850 8800 50  0001 C CNN
 F 3 "http://www.winbond.com/resource-files/w25q128jv_dtr%20revc%2003272018%20plus.pdf" H 8850 8800 50  0001 C CNN
@@ -2231,10 +2231,10 @@ Wire Wire Line
 Wire Wire Line
 	8350 7600 8000 7600
 $Comp
-L Memory_Flash:W25Q128JVS U4
+L Memory_Flash:W25Q128JVS U3
 U 1 1 5F581E06
 P 8850 7700
-F 0 "U4" H 8500 8050 50  0000 C CNN
+F 0 "U3" H 8500 8050 50  0000 C CNN
 F 1 "BANK1" H 8850 7700 50  0000 C CNN
 F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 8850 7700 50  0001 C CNN
 F 3 "http://www.winbond.com/resource-files/w25q128jv_dtr%20revc%2003272018%20plus.pdf" H 8850 7700 50  0001 C CNN
@@ -2252,10 +2252,10 @@ Wire Wire Line
 	8050 1200 8350 1200
 Connection ~ 8350 1200
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C22
+L matchbox_cpu_v20-eagle-import:CAP0805 C10
 U 1 1 60DA05C4
 P 8050 1000
-F 0 "C22" H 8110 1115 59  0000 L BNN
+F 0 "C10" H 8110 1115 59  0000 L BNN
 F 1 "1uF" H 8150 900 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 8050 1000 50  0001 C CNN
 F 3 "" H 8050 1000 50  0001 C CNN
@@ -2263,10 +2263,10 @@ F 3 "" H 8050 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:CAP0805 C23
+L matchbox_cpu_v20-eagle-import:CAP0805 C9
 U 1 1 60E86A5C
 P 7750 1000
-F 0 "C23" H 7810 1115 59  0000 L BNN
+F 0 "C9" H 7810 1115 59  0000 L BNN
 F 1 "1uF" H 7850 900 59  0000 L BNN
 F 2 "Capacitor_SMD:C_0805_2012Metric" H 7750 1000 50  0001 C CNN
 F 3 "" H 7750 1000 50  0001 C CNN

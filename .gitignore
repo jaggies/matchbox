@@ -13,3 +13,6 @@ TODO
 *.lck
 _autosave-*.kicad_pcb
 _autosave-*.sch
+
+# ignore H7 stuff for now...
+lib/hal/STM32CubeH7

@@ -17,5 +17,3 @@ _autosave-*.sch
 # ignore gerber file directory
 cad/pcb/kicad/gerber
 
-# ignore H7 stuff for now...
-lib/hal/STM32CubeH7

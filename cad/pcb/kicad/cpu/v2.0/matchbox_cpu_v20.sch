@@ -28,7 +28,7 @@ Text Label 11000 6100 0    70   ~ 0
 VCC_3V3
 Connection ~ 11400 6100
 Wire Wire Line
-	13900 3450 13900 3550
+	7250 9050 7250 9150
 Wire Wire Line
 	9550 700  9550 800 
 Wire Wire Line
@@ -47,19 +47,19 @@ Wire Wire Line
 	8350 1550 8050 1550
 Text Label 8050 1550 0    70   ~ 0
 VCC_3V3
-Text Label 13500 3450 0    70   ~ 0
+Text Label 6850 9050 0    70   ~ 0
 VCC_3V3
 Wire Wire Line
-	10900 2250 10500 2250
-Text Label 10900 2250 0    70   ~ 0
+	10900 1650 10500 1650
+Text Label 10550 1650 0    70   ~ 0
 VCC_3V3
 Wire Wire Line
-	11050 3250 10750 3250
-Text Label 11050 3250 0    70   ~ 0
+	9300 3000 9000 3000
+Text Label 9300 3000 0    70   ~ 0
 VBAT
 Wire Wire Line
-	14400 2150 14700 2150
-Text Label 14700 2150 2    70   ~ 0
+	7750 7750 8050 7750
+Text Label 8050 7750 2    70   ~ 0
 VCC_3V3
 Wire Wire Line
 	4650 4300 4350 4300
@@ -84,8 +84,8 @@ Text Label 12700 4600 2    70   ~ 0
 GND
 Connection ~ 12300 4600
 Wire Wire Line
-	8400 3900 8300 3900
-Text Label 8300 3900 2    70   ~ 0
+	8400 4200 8300 4200
+Text Label 8300 4200 2    70   ~ 0
 GND
 Wire Wire Line
 	6600 2350 6900 2350
@@ -103,7 +103,7 @@ Wire Wire Line
 	6600 2050 6300 2050
 Text Label 6600 2050 2    70   ~ 0
 GND
-Text Label 13000 3840 0    70   ~ 0
+Text Label 6350 9440 0    70   ~ 0
 GND
 Wire Wire Line
 	6800 1450 6900 1450
@@ -114,12 +114,12 @@ Wire Wire Line
 Text Label 6850 1450 0    70   ~ 0
 GND
 Wire Wire Line
-	12500 2350 12190 2350
+	5850 7950 5540 7950
 Wire Wire Line
-	13700 2750 13700 2850
+	7050 8350 7050 8450
 Wire Wire Line
-	13700 2850 13300 2850
-Text Label 13700 2850 0    70   ~ 0
+	7050 8450 6650 8450
+Text Label 7050 8450 0    70   ~ 0
 GND
 Wire Wire Line
 	9550 1550 9150 1550
@@ -170,48 +170,48 @@ Connection ~ 10750 1200
 Connection ~ 11050 1200
 Connection ~ 11350 1200
 Wire Wire Line
-	6300 5900 6000 5900
-Text Label 6000 5900 0    70   ~ 0
+	5850 6800 5550 6800
+Text Label 5550 6800 0    70   ~ 0
 GND
 Wire Wire Line
-	7300 3450 7500 3450
-Text Label 7500 3450 2    70   ~ 0
+	7300 3750 7500 3750
+Text Label 7500 3750 2    70   ~ 0
 GND
 Wire Wire Line
-	10600 3950 10800 3950
-Text Label 10800 3950 0    70   ~ 0
+	10600 2750 10800 2750
+Text Label 10800 2750 0    70   ~ 0
 GND
 Wire Wire Line
-	10800 2450 11100 2450
-Text Label 11100 2450 2    70   ~ 0
+	10800 1850 11100 1850
+Text Label 11100 1850 2    70   ~ 0
 GND
-Wire Wire Line
-	9400 3500 9400 3600
-Wire Wire Line
-	9400 3600 9400 3700
-Wire Wire Line
-	9400 3700 9400 3800
 Wire Wire Line
 	9400 3800 9400 3900
 Wire Wire Line
 	9400 3900 9400 4000
-Text Label 9400 3700 0    70   ~ 0
+Wire Wire Line
+	9400 4000 9400 4100
+Wire Wire Line
+	9400 4100 9400 4200
+Wire Wire Line
+	9400 4200 9400 4300
+Text Label 9400 4000 0    70   ~ 0
 GND
-Connection ~ 9400 3600
-Connection ~ 9400 3700
-Connection ~ 9400 3800
 Connection ~ 9400 3900
+Connection ~ 9400 4000
+Connection ~ 9400 4100
+Connection ~ 9400 4200
 Wire Wire Line
-	10500 3700 10800 3700
-Text Label 10800 3700 2    70   ~ 0
+	10500 2500 10800 2500
+Text Label 10800 2500 2    70   ~ 0
 GND
 Wire Wire Line
-	10800 1950 10500 1950
-Text Label 10800 1950 2    70   ~ 0
+	10800 2300 10500 2300
+Text Label 10800 2300 2    70   ~ 0
 GND
 Wire Wire Line
-	10800 1750 10500 1750
-Text Label 10800 1750 2    70   ~ 0
+	10800 2100 10500 2100
+Text Label 10800 2100 2    70   ~ 0
 GND
 Wire Wire Line
 	9550 2550 9250 2550
@@ -318,21 +318,21 @@ Wire Wire Line
 Text Label 4650 2200 2    70   ~ 0
 USB_ID
 Wire Wire Line
-	8300 3800 8400 3800
-Text Label 8300 3800 2    70   ~ 0
+	8300 4100 8400 4100
+Text Label 8300 4100 2    70   ~ 0
 USB_ID
 Wire Wire Line
 	4650 2300 4350 2300
 Text Label 4650 2300 2    70   ~ 0
 USB_D-
 Wire Wire Line
-	8300 3600 8400 3600
+	8300 3900 8400 3900
 Wire Wire Line
 	4650 2400 4350 2400
 Text Label 4650 2400 2    70   ~ 0
 USB_D+
 Wire Wire Line
-	8300 3700 8400 3700
+	8300 4000 8400 4000
 Wire Wire Line
 	2550 2700 2350 2700
 Text Label 2350 2700 2    70   ~ 0
@@ -356,7 +356,7 @@ Wire Wire Line
 Text Label 12600 5500 2    70   ~ 0
 PC4
 Wire Wire Line
-	14000 2150 13800 2150
+	7350 7750 7150 7750
 Wire Wire Line
 	4650 3500 4350 3500
 Text Label 4650 3500 2    70   ~ 0
@@ -497,8 +497,8 @@ Wire Wire Line
 Text Label 11100 4600 0    70   ~ 0
 RESET#
 Wire Wire Line
-	9800 3700 10100 3700
-Text Label 9800 3700 0    70   ~ 0
+	9800 2500 10100 2500
+Text Label 9800 2500 0    70   ~ 0
 RESET#
 Wire Wire Line
 	4650 5900 4350 5900
@@ -509,7 +509,7 @@ Wire Wire Line
 Text Label 12600 4800 2    70   ~ 0
 PC13
 Wire Wire Line
-	13800 1950 14000 1950
+	7150 7550 7350 7550
 Wire Wire Line
 	12300 5000 12600 5000
 Text Label 12600 5000 2    70   ~ 0
@@ -519,8 +519,8 @@ Wire Wire Line
 Text Label 4650 5400 2    70   ~ 0
 PC8
 Wire Wire Line
-	9500 6150 9200 6150
-Text Label 9500 6150 0    70   ~ 0
+	8900 8500 8600 8500
+Text Label 8900 8500 0    70   ~ 0
 VBAT
 Wire Wire Line
 	11950 700  11650 700 
@@ -529,10 +529,10 @@ Wire Wire Line
 Text Label 11950 700  0    70   ~ 0
 VBAT
 Wire Wire Line
-	6300 5800 6000 5800
-Text Label 6000 5800 0    70   ~ 0
+	5850 6700 5550 6700
+Text Label 5550 6700 0    70   ~ 0
 VBAT
-Text Label 5700 3850 0    70   ~ 0
+Text Label 5700 4150 0    70   ~ 0
 VBAT
 Wire Wire Line
 	4650 6000 4350 6000
@@ -569,8 +569,8 @@ Wire Wire Line
 Text Label 12600 5200 2    70   ~ 0
 PC1
 Wire Wire Line
-	10100 1750 9800 1750
-Text Label 9800 1750 0    70   ~ 0
+	10100 2100 9800 2100
+Text Label 9800 2100 0    70   ~ 0
 PD14
 Wire Wire Line
 	4650 4800 4350 4800
@@ -605,12 +605,12 @@ Wire Wire Line
 Text Label 12600 5800 2    70   ~ 0
 PC7
 Wire Wire Line
-	13000 2750 13000 2850
+	6350 8350 6350 8450
 Wire Wire Line
-	13300 2750 13400 2750
+	6650 8350 6750 8350
 Wire Wire Line
-	12500 1950 12200 1950
-Text Label 12200 1950 0    70   ~ 0
+	5850 7550 5550 7550
+Text Label 5550 7550 0    70   ~ 0
 PWR_ON
 Wire Wire Line
 	14650 5900 14350 5900
@@ -621,8 +621,8 @@ Wire Wire Line
 Text Label 12600 5900 2    70   ~ 0
 PWR_ON
 Wire Wire Line
-	10100 1950 9800 1950
-Text Label 9800 1950 0    70   ~ 0
+	10100 2300 9800 2300
+Text Label 9800 2300 0    70   ~ 0
 PWR_ON
 Wire Wire Line
 	4650 2500 4350 2500
@@ -637,7 +637,7 @@ Wire Wire Line
 Wire Wire Line
 	8750 1850 8850 1850
 Wire Wire Line
-	14200 1750 14200 1550
+	7550 7350 7550 7150
 Wire Wire Line
 	4650 2100 4350 2100
 Text Label 4650 2100 2    70   ~ 0
@@ -651,12 +651,12 @@ Wire Wire Line
 Text Label 2350 1400 0    70   ~ 0
 BOOT0
 Wire Wire Line
-	9800 2250 10100 2250
+	9800 1650 10100 1650
 Wire Wire Line
-	10100 2250 10100 2450
-Text Label 9800 2250 0    70   ~ 0
+	10100 1650 10100 1850
+Text Label 9800 1650 0    70   ~ 0
 BOOT0
-Connection ~ 10100 2250
+Connection ~ 10100 1650
 Wire Wire Line
 	4650 2000 4350 2000
 Text Label 4650 2000 2    70   ~ 0
@@ -688,71 +688,71 @@ Text Label 12700 6100 2    70   ~ 0
 VCC
 Connection ~ 12300 6100
 Wire Wire Line
-	14700 1350 14500 1350
-Text Label 14700 1350 2    70   ~ 0
+	8050 6950 7850 6950
+Text Label 8050 6950 2    70   ~ 0
 VCC
 Wire Wire Line
-	12600 3450 12200 3450
-Text Label 12400 3450 0    70   ~ 0
+	5950 9050 5550 9050
+Text Label 5750 9050 0    70   ~ 0
 VCC
 Wire Wire Line
 	8350 2550 8050 2550
 Text Label 8050 2550 0    70   ~ 0
 VCC
 Wire Wire Line
-	11300 2750 10800 2750
-Text Label 11300 2750 2    70   ~ 0
+	7000 9750 6500 9750
+Text Label 7000 9750 2    70   ~ 0
 VCC_USBF
 Text Label 11350 700  0    70   ~ 0
 VCC_USBF
 Wire Wire Line
-	6400 3450 5700 3450
+	6400 3750 5700 3750
 Wire Wire Line
-	6400 3450 6800 3450
+	6400 3750 6800 3750
 Wire Wire Line
-	6800 3550 6800 3450
+	6800 3850 6800 3750
 Wire Wire Line
-	6800 3450 6900 3450
+	6800 3750 6900 3750
 Wire Wire Line
-	6400 3450 6400 3650
-Text Label 5700 3450 0    70   ~ 0
+	6400 3750 6400 3950
+Text Label 5700 3750 0    70   ~ 0
 VCC_USBF
-Connection ~ 6800 3450
-Connection ~ 6400 3450
+Connection ~ 6800 3750
+Connection ~ 6400 3750
 Wire Wire Line
 	9550 2150 9150 2150
 Wire Wire Line
-	10300 2750 9800 2750
-Text Label 9800 2750 0    70   ~ 0
+	6000 9750 5500 9750
+Text Label 5500 9750 0    70   ~ 0
 VCC_USB
 Wire Wire Line
-	8400 3500 8300 3500
+	8400 3800 8300 3800
 Wire Wire Line
 	3150 800  3150 900 
 Text Label 3150 800  2    70   ~ 0
 VCC_BKUP
-Text Label 9800 3250 0    70   ~ 0
+Text Label 8050 3000 0    70   ~ 0
 VCC_BKUP
 Wire Wire Line
-	6800 3850 6500 3850
+	6800 4150 6500 4150
 Wire Wire Line
-	6800 3850 6800 3750
+	6800 4150 6800 4050
 Wire Wire Line
-	6800 3850 7500 3850
-Text Label 7500 3850 2    70   ~ 0
+	6800 4150 7500 4150
+Text Label 7500 4150 2    70   ~ 0
 VCC_SEL
-Connection ~ 6800 3850
+Connection ~ 6800 4150
 Wire Wire Line
-	12500 1750 12200 1750
+	5850 7350 5550 7350
 Wire Wire Line
-	13800 1350 14100 1350
+	7150 6950 7450 6950
 Wire Wire Line
-	12500 1750 12500 1350
+	5850 7350 5850 6950
 Wire Wire Line
-	12500 1350 13800 1350
-Text Label 12200 1750 0    70   ~ 0
+	5850 6950 7150 6950
+Text Label 5550 7350 0    70   ~ 0
 VCC_SEL
-Connection ~ 13800 1350
+Connection ~ 7150 6950
 Wire Wire Line
 	13150 5500 13450 5500
 Wire Wire Line
@@ -817,12 +817,12 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C26
 U 1 1 C2E82A64
-P 13900 3750
-F 0 "C26" H 13960 3865 59  0000 L BNN
-F 1 "1uF" H 13960 3665 59  0000 L BNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 13900 3750 50  0001 C CNN
-F 3 "" H 13900 3750 50  0001 C CNN
-	1    13900 3750
+P 7250 9350
+F 0 "C26" H 7310 9465 59  0000 L BNN
+F 1 "1uF" H 7310 9265 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 7250 9350 50  0001 C CNN
+F 3 "" H 7250 9350 50  0001 C CNN
+	1    7250 9350
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -861,23 +861,23 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C25
 U 1 1 E5A05DC2
-P 13600 2750
-F 0 "C25" V 13685 2840 59  0000 L BNN
-F 1 "1uF" V 13685 2550 59  0000 L BNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 13600 2750 50  0001 C CNN
-F 3 "" H 13600 2750 50  0001 C CNN
-	1    13600 2750
+P 6950 8350
+F 0 "C25" V 7035 8440 59  0000 L BNN
+F 1 "1uF" V 7035 8150 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 6950 8350 50  0001 C CNN
+F 3 "" H 6950 8350 50  0001 C CNN
+	1    6950 8350
 	0    -1   -1   0   
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C24
 U 1 1 D13F2C18
-P 13200 2850
-F 0 "C24" V 13185 2960 59  0000 L BNN
-F 1 ".033uF" V 13195 2500 59  0000 L BNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 13200 2850 50  0001 C CNN
-F 3 "" H 13200 2850 50  0001 C CNN
-	1    13200 2850
+P 6550 8450
+F 0 "C24" V 6535 8560 59  0000 L BNN
+F 1 ".033uF" V 6545 8100 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 6550 8450 50  0001 C CNN
+F 3 "" H 6550 8450 50  0001 C CNN
+	1    6550 8450
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -905,23 +905,23 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R11
 U 1 1 0309F1BD
-P 14000 1750
-F 0 "R11" H 13850 1509 59  0000 L BNN
-F 1 "100k" H 13850 1620 59  0000 L BNN
-F 2 "Resistor_SMD:R_0805_2012Metric" H 14000 1750 50  0001 C CNN
-F 3 "" H 14000 1750 50  0001 C CNN
-	1    14000 1750
+P 7350 7350
+F 0 "R11" H 7200 7109 59  0000 L BNN
+F 1 "100k" H 7200 7220 59  0000 L BNN
+F 2 "Resistor_SMD:R_0805_2012Metric" H 7350 7350 50  0001 C CNN
+F 3 "" H 7350 7350 50  0001 C CNN
+	1    7350 7350
 	-1   0    0    1   
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R10
 U 1 1 F9EF3F38
-P 13800 1550
-F 0 "R10" H 13650 1609 59  0000 L BNN
-F 1 "100k" H 13650 1420 59  0000 L BNN
-F 2 "Resistor_SMD:R_0805_2012Metric" H 13800 1550 50  0001 C CNN
-F 3 "" H 13800 1550 50  0001 C CNN
-	1    13800 1550
+P 7150 7150
+F 0 "R10" H 7000 7209 59  0000 L BNN
+F 1 "100k" H 7000 7020 59  0000 L BNN
+F 2 "Resistor_SMD:R_0805_2012Metric" H 7150 7150 50  0001 C CNN
+F 3 "" H 7150 7150 50  0001 C CNN
+	1    7150 7150
 	0    1    1    0   
 $EndComp
 $Comp
@@ -938,111 +938,111 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R9
 U 1 1 BC243054
-P 10600 2450
-F 0 "R9" H 10360 2469 59  0000 L BNN
-F 1 "10k" H 10700 2470 59  0000 L BNN
-F 2 "Resistor_SMD:R_0805_2012Metric" H 10600 2450 50  0001 C CNN
-F 3 "" H 10600 2450 50  0001 C CNN
-	1    10600 2450
+P 10600 1850
+F 0 "R9" H 10360 1869 59  0000 L BNN
+F 1 "10k" H 10700 1870 59  0000 L BNN
+F 2 "Resistor_SMD:R_0805_2012Metric" H 10600 1850 50  0001 C CNN
+F 3 "" H 10600 1850 50  0001 C CNN
+	1    10600 1850
 	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:?M02B-SRSS-TBS CN1
 U 2 1 F1A938BF
-P 6400 5900
-F 0 "CN1" H 6500 5870 51  0000 L BNN
-F 1 "?M02B-SRSS-TBS" H 6370 5955 51  0001 L BNN
-F 2 "matchbox_cpu_v20:SM02B-SRSS-TB" H 6400 5900 50  0001 C CNN
-F 3 "" H 6400 5900 50  0001 C CNN
-	2    6400 5900
+P 5950 6800
+F 0 "CN1" H 6050 6770 51  0000 L BNN
+F 1 "?M02B-SRSS-TBS" H 5920 6855 51  0001 L BNN
+F 2 "matchbox_cpu_v20:SM02B-SRSS-TB" H 5950 6800 50  0001 C CNN
+F 3 "" H 5950 6800 50  0001 C CNN
+	2    5950 6800
 	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C19
 U 1 1 D9B55D84
-P 10500 3950
-F 0 "C19" V 10585 4040 59  0000 L BNN
-F 1 "0.1uF" V 10515 3910 59  0000 R TNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 10500 3950 50  0001 C CNN
-F 3 "" H 10500 3950 50  0001 C CNN
-	1    10500 3950
+P 10500 2750
+F 0 "C19" V 10585 2840 59  0000 L BNN
+F 1 "0.1uF" V 10515 2710 59  0000 R TNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 10500 2750 50  0001 C CNN
+F 3 "" H 10500 2750 50  0001 C CNN
+	1    10500 2750
 	0    -1   -1   0   
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R1
 U 1 1 6D1C4BFB
-P 7100 3450
-F 0 "R1" H 6950 3509 59  0000 L BNN
-F 1 "4.7k" H 6950 3320 59  0000 L BNN
-F 2 "Resistor_SMD:R_0805_2012Metric" H 7100 3450 50  0001 C CNN
-F 3 "" H 7100 3450 50  0001 C CNN
-	1    7100 3450
+P 7100 3750
+F 0 "R1" H 6950 3809 59  0000 L BNN
+F 1 "4.7k" H 6950 3620 59  0000 L BNN
+F 2 "Resistor_SMD:R_0805_2012Metric" H 7100 3750 50  0001 C CNN
+F 3 "" H 7100 3750 50  0001 C CNN
+	1    7100 3750
 	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R12
 U 1 1 DEE37B10
-P 14200 2150
-F 0 "R12" H 14000 2019 59  0000 L BNN
-F 1 "10k" H 14270 2020 59  0000 L BNN
-F 2 "Resistor_SMD:R_0805_2012Metric" H 14200 2150 50  0001 C CNN
-F 3 "" H 14200 2150 50  0001 C CNN
-	1    14200 2150
+P 7550 7750
+F 0 "R12" H 7350 7619 59  0000 L BNN
+F 1 "10k" H 7620 7620 59  0000 L BNN
+F 2 "Resistor_SMD:R_0805_2012Metric" H 7550 7750 50  0001 C CNN
+F 3 "" H 7550 7750 50  0001 C CNN
+	1    7550 7750
 	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R8
 U 1 1 C93BD688
-P 10550 3250
-F 0 "R8" H 10420 3099 59  0000 L BNN
-F 1 "100k" H 10400 3350 59  0000 L BNN
-F 2 "Resistor_SMD:R_0805_2012Metric" H 10550 3250 50  0001 C CNN
-F 3 "" H 10550 3250 50  0001 C CNN
-	1    10550 3250
+P 8800 3000
+F 0 "R8" H 8670 2849 59  0000 L BNN
+F 1 "100k" H 8650 3100 59  0000 L BNN
+F 2 "Resistor_SMD:R_0805_2012Metric" H 8800 3000 50  0001 C CNN
+F 3 "" H 8800 3000 50  0001 C CNN
+	1    8800 3000
 	-1   0    0    1   
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:MICROUSB USB1
 U 1 1 BABD3B23
-P 8900 3700
-F 0 "USB1" H 8600 4050 59  0000 L BNN
-F 1 "MICROUSB" H 8900 3700 50  0001 C CNN
-F 2 "matchbox_cpu_v20:MICROUSB" H 8900 3700 50  0001 C CNN
-F 3 "" H 8900 3700 50  0001 C CNN
-	1    8900 3700
+P 8900 4000
+F 0 "USB1" H 8600 4350 59  0000 L BNN
+F 1 "MICROUSB" H 8900 4000 50  0001 C CNN
+F 2 "matchbox_cpu_v20:MICROUSB" H 8900 4000 50  0001 C CNN
+F 3 "" H 8900 4000 50  0001 C CNN
+	1    8900 4000
 	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:B3U-3100PM-B SW1
 U 1 1 E9E31E47
-P 10300 1750
-F 0 "SW1" H 10900 1750 59  0000 L BNN
-F 1 "B3U-3100PM-B" H 10300 1750 50  0001 C CNN
-F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 1750 50  0001 C CNN
-F 3 "" H 10300 1750 50  0001 C CNN
-	1    10300 1750
+P 10300 2100
+F 0 "SW1" H 10900 2100 59  0000 L BNN
+F 1 "B3U-3100PM-B" H 10300 2100 50  0001 C CNN
+F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 2100 50  0001 C CNN
+F 3 "" H 10300 2100 50  0001 C CNN
+	1    10300 2100
 	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:B3U-3100PM-B SW2
 U 1 1 3E953372
-P 10300 1950
-F 0 "SW2" H 10900 1950 59  0000 L BNN
-F 1 "B3U-3100PM-B" H 10300 1950 50  0001 C CNN
-F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 1950 50  0001 C CNN
-F 3 "" H 10300 1950 50  0001 C CNN
-	1    10300 1950
+P 10300 2300
+F 0 "SW2" H 10900 2300 59  0000 L BNN
+F 1 "B3U-3100PM-B" H 10300 2300 50  0001 C CNN
+F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 2300 50  0001 C CNN
+F 3 "" H 10300 2300 50  0001 C CNN
+	1    10300 2300
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:B3U-3100PM-B BOOT1
+L matchbox_cpu_v20-eagle-import:B3U-3100PM-B SW0
 U 1 1 A708F301
-P 10300 2250
-F 0 "BOOT1" H 10200 2150 59  0000 L BNN
-F 1 "B3U-3100PM-B" H 10300 2250 50  0001 C CNN
-F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 2250 50  0001 C CNN
-F 3 "" H 10300 2250 50  0001 C CNN
-	1    10300 2250
+P 10300 1650
+F 0 "SW0" H 11100 1650 59  0000 L BNN
+F 1 "BOOT0" H 10300 1650 50  0001 C CNN
+F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 1650 50  0001 C CNN
+F 3 "" H 10300 1650 50  0001 C CNN
+	1    10300 1650
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1067,16 +1067,16 @@ F 3 "" H 9050 2550 50  0001 C CNN
 	1    9050 2550
 	1    0    0    -1  
 $EndComp
-Text GLabel 10300 1650 0    10   BiDi ~ 0
+Text GLabel 10300 2000 0    10   BiDi ~ 0
 GND
-Text GLabel 10300 1850 0    10   BiDi ~ 0
+Text GLabel 10300 2200 0    10   BiDi ~ 0
 GND
-Text GLabel 10300 2050 0    10   BiDi ~ 0
+Text GLabel 10300 2400 0    10   BiDi ~ 0
 GND
-Text GLabel 10300 2350 0    10   BiDi ~ 0
+Text GLabel 10300 1750 0    10   BiDi ~ 0
 GND
 Wire Wire Line
-	5700 3850 6100 3850
+	5700 4150 6100 4150
 Wire Wire Line
 	13450 8350 13450 8450
 Wire Wire Line
@@ -1441,12 +1441,6 @@ OSC32K_IN
 Text Label 14650 5700 2    70   ~ 0
 PA1
 Wire Wire Line
-	5750 4650 5450 4650
-Wire Wire Line
-	5750 4750 5450 4750
-Wire Wire Line
-	5750 4850 5450 4850
-Wire Wire Line
 	5750 4950 5450 4950
 Wire Wire Line
 	5750 5050 5450 5050
@@ -1457,60 +1451,56 @@ Wire Wire Line
 Wire Wire Line
 	5750 5350 5450 5350
 Wire Wire Line
-	6950 4650 7200 4650
-Text Label 5450 5250 0    50   ~ 0
+	5750 5450 5450 5450
+Wire Wire Line
+	5750 5550 5450 5550
+Wire Wire Line
+	5750 5650 5450 5650
+Wire Wire Line
+	6950 4950 7200 4950
+Text Label 5450 5550 0    50   ~ 0
 PC8
-Text Label 5450 4650 0    50   ~ 0
-PC10
-Text Label 5450 4750 0    50   ~ 0
-PC11
-Text Label 5450 4850 0    50   ~ 0
-PD2
-Text Label 5450 5050 0    50   ~ 0
-PC12
-Text Label 5450 5350 0    50   ~ 0
-PC9
 Text Label 5450 4950 0    50   ~ 0
-GND
+PC10
+Text Label 5450 5050 0    50   ~ 0
+PC11
 Text Label 5450 5150 0    50   ~ 0
-VCC_3V3
-Text Label 7200 4650 2    50   ~ 0
-PB8
-Text Label 8850 4350 0    50   ~ 0
-VCC_3V3
-Wire Wire Line
-	8850 5550 8850 5650
-Wire Wire Line
-	8850 5650 8950 5650
-Wire Wire Line
-	8950 5650 8950 5550
-Text Label 8950 5650 0    50   ~ 0
+PD2
+Text Label 5450 5350 0    50   ~ 0
+PC12
+Text Label 5450 5650 0    50   ~ 0
+PC9
+Text Label 5450 5250 0    50   ~ 0
 GND
+Text Label 5450 5450 0    50   ~ 0
+VCC_3V3
+Text Label 7200 4950 2    50   ~ 0
+PB8
+Text Label 8300 4600 2    50   ~ 0
+VCC_3V3
 Wire Wire Line
-	8350 4650 8050 4650
-Wire Wire Line
-	8350 4850 8050 4850
+	8200 4700 8300 4700
 Wire Wire Line
 	8350 4950 8050 4950
 Wire Wire Line
-	8350 5050 8050 5050
-Wire Wire Line
 	8350 5150 8050 5150
-Text Label 8050 4650 0    50   ~ 0
-RESET#
-Text Label 8050 4850 0    50   ~ 0
-PA14
+Wire Wire Line
+	8350 5250 8050 5250
+Wire Wire Line
+	8350 5350 8050 5350
 Text Label 8050 4950 0    50   ~ 0
-PA13
-Text Label 8050 5050 0    50   ~ 0
-PB3
+RESET#
 Text Label 8050 5150 0    50   ~ 0
-PA15
-Text Label 8300 3600 2    70   ~ 0
+PA14
+Text Label 8050 5250 0    50   ~ 0
+PA13
+Text Label 8050 5350 0    50   ~ 0
+PB3
+Text Label 8300 3900 2    70   ~ 0
 USB_D-
-Text Label 8300 3700 2    70   ~ 0
+Text Label 8300 4000 2    70   ~ 0
 USB_D+
-Text Label 8300 3500 2    70   ~ 0
+Text Label 8300 3800 2    70   ~ 0
 VCC_USB
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C1
@@ -1543,41 +1533,41 @@ Wire Wire Line
 Wire Wire Line
 	1700 1700 1600 1700
 Wire Wire Line
-	6950 4950 7100 4950
-Wire Wire Line
-	7100 4950 7100 5050
-Wire Wire Line
-	7100 5050 6950 5050
-Wire Wire Line
-	7100 5050 7100 5150
-Wire Wire Line
-	7100 5150 6950 5150
-Connection ~ 7100 5050
-Wire Wire Line
-	7100 5150 7100 5250
-Wire Wire Line
-	7100 5250 6950 5250
-Connection ~ 7100 5150
+	6950 5250 7100 5250
 Wire Wire Line
 	7100 5250 7100 5350
 Wire Wire Line
 	7100 5350 6950 5350
-Connection ~ 7100 5250
-Text Label 7100 4950 0    50   ~ 0
+Wire Wire Line
+	7100 5350 7100 5450
+Wire Wire Line
+	7100 5450 6950 5450
+Connection ~ 7100 5350
+Wire Wire Line
+	7100 5450 7100 5550
+Wire Wire Line
+	7100 5550 6950 5550
+Connection ~ 7100 5450
+Wire Wire Line
+	7100 5550 7100 5650
+Wire Wire Line
+	7100 5650 6950 5650
+Connection ~ 7100 5550
+Text Label 7100 5250 0    50   ~ 0
 GND
 Text Label 9550 1200 0    50   ~ 0
 GND
 Text Label 10150 1200 0    50   ~ 0
 GND
 Wire Wire Line
-	13000 3750 13000 3850
+	6350 9350 6350 9450
 Wire Wire Line
-	13000 3850 13000 3860
-Connection ~ 13000 3850
+	6350 9450 6350 9460
+Connection ~ 6350 9450
 Wire Wire Line
-	13000 3850 13900 3850
+	6350 9450 7250 9450
 Wire Wire Line
-	13400 3450 13900 3450
+	6750 9050 7250 9050
 Text Label 10750 700  0    50   ~ 0
 VCC_3V3
 Wire Wire Line
@@ -1587,17 +1577,17 @@ Wire Wire Line
 Wire Wire Line
 	8950 700  9250 700 
 Wire Wire Line
-	10100 3700 10100 3950
+	10100 2500 10100 2750
 Wire Wire Line
-	10100 3950 10300 3950
-Connection ~ 10100 3700
+	10100 2750 10300 2750
+Connection ~ 10100 2500
 Wire Wire Line
-	9800 3250 10350 3250
+	8050 3000 8600 3000
 Wire Wire Line
-	10100 2450 10400 2450
-Text Label 13800 2150 0    50   ~ 0
+	10100 1850 10400 1850
+Text Label 7150 7750 0    50   ~ 0
 PE15
-Text Label 14000 1950 2    50   ~ 0
+Text Label 7350 7550 2    50   ~ 0
 PD15
 Text Label 1700 1950 0    50   ~ 0
 VREF
@@ -1773,73 +1763,73 @@ $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:LTC2954 U5
 U 1 1 5F596120
-P 12700 1950
-F 0 "U5" H 13150 2497 42  0000 C CNN
-F 1 "LTC2954" H 13150 2418 42  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-8" H 12700 1950 50  0001 C CNN
-F 3 "" H 12700 1950 50  0001 C CNN
-	1    12700 1950
+P 6050 7550
+F 0 "U5" H 6500 8097 42  0000 C CNN
+F 1 "LTC2954" H 6500 8018 42  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-8" H 6050 7550 50  0001 C CNN
+F 3 "" H 6050 7550 50  0001 C CNN
+	1    6050 7550
 	1    0    0    -1  
 $EndComp
-Connection ~ 12500 1750
-Connection ~ 13800 1750
+Connection ~ 5850 7350
+Connection ~ 7150 7350
 $Comp
-L matchbox_cpu_v20-eagle-import:MCP1703 REG1
+L matchbox_cpu_v20-eagle-import:MCP1703 U6
 U 1 1 5F6232B9
-P 13000 3450
-F 0 "REG1" H 13000 3736 59  0000 C CNN
-F 1 "MCP1703" H 13000 3631 59  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-23" H 13000 3450 50  0001 C CNN
-F 3 "" H 13000 3450 50  0001 C CNN
-	1    13000 3450
+P 6350 9050
+F 0 "U6" H 6350 9336 59  0000 C CNN
+F 1 "MCP1703" H 6350 9231 59  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 6350 9050 50  0001 C CNN
+F 3 "" H 6350 9050 50  0001 C CNN
+	1    6350 9050
 	1    0    0    -1  
 $EndComp
 $Comp
 L Battery_Management:MCP73831-2-OT U2
 U 1 1 5F6BF62C
-P 8800 6250
-F 0 "U2" H 8800 6731 50  0000 C CNN
-F 1 "MCP73831-2-OT" H 9150 6000 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-5" H 8850 6000 50  0001 L CIN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20001984g.pdf" H 8650 6200 50  0001 C CNN
-	1    8800 6250
+P 8200 8600
+F 0 "U2" H 8200 9081 50  0000 C CNN
+F 1 "MCP73831-2-OT" H 8550 8350 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 8250 8350 50  0001 L CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20001984g.pdf" H 8050 8550 50  0001 C CNN
+	1    8200 8600
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9700 6350 9200 6350
-Text Label 9700 6350 2    70   ~ 0
+	9100 8700 8600 8700
+Text Label 9100 8700 2    70   ~ 0
 STAT
-Text Label 9300 5950 2    70   ~ 0
+Text Label 8700 8300 2    70   ~ 0
 VCC_USBF
 $Comp
 L matchbox_cpu_v20-eagle-import:RESISTOR0805-RES R6
 U 1 1 3AF85FDB
-P 8600 6650
-F 0 "R6" H 8350 6669 59  0000 L BNN
-F 1 "4.7k" H 8710 6670 59  0000 L BNN
-F 2 "Resistor_SMD:R_0805_2012Metric" H 8600 6650 50  0001 C CNN
-F 3 "" H 8600 6650 50  0001 C CNN
-	1    8600 6650
+P 8000 9000
+F 0 "R6" H 7750 9019 59  0000 L BNN
+F 1 "4.7k" H 8110 9020 59  0000 L BNN
+F 2 "Resistor_SMD:R_0805_2012Metric" H 8000 9000 50  0001 C CNN
+F 3 "" H 8000 9000 50  0001 C CNN
+	1    8000 9000
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	8800 6650 8800 6550
+	8200 9000 8200 8900
 Wire Wire Line
-	8400 6650 8350 6650
+	7800 9000 7750 9000
 Wire Wire Line
-	8350 6350 8400 6350
+	7750 8700 7800 8700
 Wire Wire Line
-	8350 6350 8350 6650
-Text Notes 9150 6850 2    59   ~ 0
+	7750 8700 7750 9000
+Text Notes 8550 9200 2    59   ~ 0
 Ichg = 1000V / R9
-Text Label 8800 6650 0    70   ~ 0
+Text Label 8200 9000 0    70   ~ 0
 GND
 Text Label 3650 6550 0    50   ~ 0
 GND
 Text Label 3750 800  0    50   ~ 0
 VCC_3V3
 Wire Wire Line
-	9300 5950 8800 5950
+	8700 8300 8200 8300
 $Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C16
 U 1 1 5FFA34D5
@@ -1893,69 +1883,58 @@ Connection ~ 8650 1200
 $Comp
 L matchbox_cpu_v20-eagle-import:FDN360P Q1
 U 1 1 5F0F2733
-P 6300 3750
-F 0 "Q1" V 6550 3750 59  0000 C CNN
-F 1 "FDN360P" V 6655 3750 59  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SuperSOT-3" H 6300 3750 50  0001 C CNN
-F 3 "" H 6300 3750 50  0001 C CNN
-	1    6300 3750
+P 6300 4050
+F 0 "Q1" V 6550 4050 59  0000 C CNN
+F 1 "FDN360P" V 6655 4050 59  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SuperSOT-3" H 6300 4050 50  0001 C CNN
+F 3 "" H 6300 4050 50  0001 C CNN
+	1    6300 4050
 	0    1    1    0   
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:DIODESOD123 D1
 U 1 1 8525DD4E
-P 6800 3650
-F 0 "D1" V 6841 3720 59  0000 L BNN
-F 1 "MBR120" H 6600 3509 59  0000 L BNN
-F 2 "Diode_SMD:D_SOD-123" H 6800 3650 50  0001 C CNN
-F 3 "" H 6800 3650 50  0001 C CNN
-	1    6800 3650
+P 6800 3950
+F 0 "D1" V 6841 4020 59  0000 L BNN
+F 1 "MBR120" H 6600 3809 59  0000 L BNN
+F 2 "Diode_SMD:D_SOD-123" H 6800 3950 50  0001 C CNN
+F 3 "" H 6800 3950 50  0001 C CNN
+	1    6800 3950
 	0    1    1    0   
 $EndComp
 Text Label 9550 2150 2    70   ~ 0
 VCC_USBF
 $Comp
-L Connector:Conn_ARM_JTAG_SWD_10 J1
-U 1 1 5F6CC73D
-P 8850 4950
-F 0 "J1" H 8406 4996 50  0000 R CNN
-F 1 "Conn_ARM_JTAG_SWD_10" H 8406 4905 50  0001 R CNN
-F 2 "Connector:Tag-Connect_TC2050-IDC-NL_2x05_P1.27mm_Vertical" H 8850 4950 50  0001 C CNN
-F 3 "http://infocenter.arm.com/help/topic/com.arm.doc.ddi0314h/DDI0314H_coresight_components_trm.pdf" V 8500 3700 50  0001 C CNN
-	1    8850 4950
-	-1   0    0    -1  
-$EndComp
-$Comp
 L matchbox_ble_v01-eagle-import:MOLEX_MICROSD_PP SD1
 U 1 1 5F0A38BC
-P 6350 4950
-F 0 "SD1" H 6350 5587 42  0000 C CNN
-F 1 "MOLEX_MICROSD_PP" H 6350 5508 42  0000 C CNN
-F 2 "matchbox_ble_v01:MOLEX_MICROSD_PP" H 6350 5423 50  0001 C CNN
-F 3 "" H 6350 4950 50  0001 C CNN
-	1    6350 4950
+P 6350 5250
+F 0 "SD1" H 6350 5887 42  0000 C CNN
+F 1 "MOLEX_MICROSD_PP" H 6350 5808 42  0000 C CNN
+F 2 "matchbox_ble_v01:MOLEX_MICROSD_PP" H 6350 5723 50  0001 C CNN
+F 3 "" H 6350 5250 50  0001 C CNN
+	1    6350 5250
 	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:FDN360P Q2
 U 1 1 7A211019
-P 14300 1450
-F 0 "Q2" V 14220 1370 59  0000 L BNN
-F 1 "FDN360P" V 14530 1550 59  0000 L BNN
-F 2 "Package_TO_SOT_SMD:SuperSOT-3" H 14300 1450 50  0001 C CNN
-F 3 "" H 14300 1450 50  0001 C CNN
-	1    14300 1450
+P 7650 7050
+F 0 "Q2" V 7570 6970 59  0000 L BNN
+F 1 "FDN360P" V 7880 7150 59  0000 L BNN
+F 2 "Package_TO_SOT_SMD:SuperSOT-3" H 7650 7050 50  0001 C CNN
+F 3 "" H 7650 7050 50  0001 C CNN
+	1    7650 7050
 	0    -1   -1   0   
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:PTCTHERMISTOR1206 F1
 U 1 1 5F1B0FDE
-P 10500 2750
-F 0 "F1" H 10550 2930 59  0000 C CNN
-F 1 "PTCTHERMISTOR1206" H 10550 2931 59  0001 C CNN
-F 2 "Resistor_SMD:R_1206_3216Metric" H 10500 2750 50  0001 C CNN
-F 3 "" H 10500 2750 50  0001 C CNN
-	1    10500 2750
+P 6200 9750
+F 0 "F1" H 6250 9930 59  0000 C CNN
+F 1 "PTCTHERMISTOR1206" H 6250 9931 59  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric" H 6200 9750 50  0001 C CNN
+F 3 "" H 6200 9750 50  0001 C CNN
+	1    6200 9750
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1992,25 +1971,25 @@ F 3 "" H 9050 2150 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:B3U-3100PM-B RESET1
+L matchbox_cpu_v20-eagle-import:B3U-3100PM-B SW3
 U 1 1 0DBEFA40
-P 10300 3700
-F 0 "RESET1" H 10900 3700 59  0000 L BNN
-F 1 "B3U-3100PM-B" H 10300 3700 50  0001 C CNN
-F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 3700 50  0001 C CNN
-F 3 "" H 10300 3700 50  0001 C CNN
-	1    10300 3700
+P 10300 2500
+F 0 "SW3" H 10900 2500 59  0000 L BNN
+F 1 "RESET" H 10300 2500 50  0001 C CNN
+F 2 "matchbox_cpu_v20:B3U-3100PM-B" H 10300 2500 50  0001 C CNN
+F 3 "" H 10300 2500 50  0001 C CNN
+	1    10300 2500
 	1    0    0    -1  
 $EndComp
 $Comp
 L matchbox_cpu_v20-eagle-import:?M02B-SRSS-TBS CN1
 U 1 1 F1A938B3
-P 6400 5800
-F 0 "CN1" H 6500 5770 51  0000 L BNN
-F 1 "?M02B-SRSS-TBS" H 6370 5855 51  0001 L BNN
-F 2 "matchbox_cpu_v20:SM02B-SRSS-TB" H 6400 5800 50  0001 C CNN
-F 3 "" H 6400 5800 50  0001 C CNN
-	1    6400 5800
+P 5950 6700
+F 0 "CN1" H 6050 6670 51  0000 L BNN
+F 1 "?M02B-SRSS-TBS" H 5920 6755 51  0001 L BNN
+F 2 "matchbox_cpu_v20:SM02B-SRSS-TB" H 5950 6700 50  0001 C CNN
+F 3 "" H 5950 6700 50  0001 C CNN
+	1    5950 6700
 	1    0    0    -1  
 $EndComp
 Text Label 12600 7450 2    50   ~ 0
@@ -2073,7 +2052,7 @@ Text Label 12600 7250 2    50   ~ 0
 PD11
 Text Label 12600 7350 2    50   ~ 0
 PD12
-Text Label 12190 2350 0    70   ~ 0
+Text Label 5540 7950 0    70   ~ 0
 GND
 Wire Wire Line
 	14350 8250 14650 8250
@@ -2117,128 +2096,128 @@ Wire Wire Line
 	11100 7250 11400 7250
 Wire Wire Line
 	11100 7350 11400 7350
-Text Label 6950 8500 0    50   ~ 0
+Text Label 1600 8300 0    50   ~ 0
 VCC_3V3
-Text Label 8850 9200 0    50   ~ 0
+Text Label 3500 9000 0    50   ~ 0
 GND
-Text Label 8850 8100 0    50   ~ 0
+Text Label 3500 7900 0    50   ~ 0
 GND
-Text Label 8850 8400 0    50   ~ 0
+Text Label 3500 8200 0    50   ~ 0
 VCC_3V3
-Text Label 8850 7300 0    50   ~ 0
+Text Label 3500 7100 0    50   ~ 0
 VCC_3V3
 $Comp
 L Jumper:Jumper_3_Bridged12 JP2
 U 1 1 60208830
-P 7250 8750
-F 0 "JP2" V 7296 8817 50  0000 L CNN
-F 1 "BANK2_SEL" V 7550 8300 50  0000 L CNN
-F 2 "Jumper:SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm_NumberLabels" H 7250 8750 50  0001 C CNN
-F 3 "~" H 7250 8750 50  0001 C CNN
-	1    7250 8750
+P 1900 8550
+F 0 "JP2" V 1946 8617 50  0000 L CNN
+F 1 "BANK2_SEL" V 2200 8100 50  0000 L CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm_NumberLabels" H 1900 8550 50  0001 C CNN
+F 3 "~" H 1900 8550 50  0001 C CNN
+	1    1900 8550
 	0    -1   -1   0   
 $EndComp
-Text Label 7650 8750 2    50   ~ 0
+Text Label 2300 8550 2    50   ~ 0
 BANK2_CS#
-Text Label 6950 9000 0    50   ~ 0
+Text Label 1600 8800 0    50   ~ 0
 PC11
 Wire Wire Line
-	7250 8500 6950 8500
+	1900 8300 1600 8300
 Wire Wire Line
-	7250 9000 6950 9000
+	1900 8800 1600 8800
 Wire Wire Line
-	7400 8750 7650 8750
+	2050 8550 2300 8550
 $Comp
 L Jumper:Jumper_3_Bridged12 JP1
 U 1 1 5FE244A7
-P 7250 7750
-F 0 "JP1" V 7296 7817 50  0000 L CNN
-F 1 "BANK1_SEL" V 7550 7300 50  0000 L CNN
-F 2 "Jumper:SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm_NumberLabels" H 7250 7750 50  0001 C CNN
-F 3 "~" H 7250 7750 50  0001 C CNN
-	1    7250 7750
+P 1900 7550
+F 0 "JP1" V 1946 7617 50  0000 L CNN
+F 1 "BANK1_SEL" V 2200 7100 50  0000 L CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm_NumberLabels" H 1900 7550 50  0001 C CNN
+F 3 "~" H 1900 7550 50  0001 C CNN
+	1    1900 7550
 	0    -1   -1   0   
 $EndComp
-Text Label 8000 8900 0    50   ~ 0
+Text Label 2650 8700 0    50   ~ 0
 PB2
-Text Label 8000 8700 0    50   ~ 0
+Text Label 2650 8500 0    50   ~ 0
 BANK2_CS#
 Wire Wire Line
-	8350 8900 8000 8900
+	3000 8700 2650 8700
 Wire Wire Line
-	8350 8700 8000 8700
-Text Label 9700 9000 2    50   ~ 0
+	3000 8500 2650 8500
+Text Label 4350 8800 2    50   ~ 0
 PE10
-Text Label 9700 8900 2    50   ~ 0
+Text Label 4350 8700 2    50   ~ 0
 PE9
-Text Label 9700 8700 2    50   ~ 0
+Text Label 4350 8500 2    50   ~ 0
 PE8
-Text Label 9700 8600 2    50   ~ 0
+Text Label 4350 8400 2    50   ~ 0
 PE7
 Wire Wire Line
-	9700 9000 9350 9000
+	4350 8800 4000 8800
 Wire Wire Line
-	9700 8900 9350 8900
+	4350 8700 4000 8700
 Wire Wire Line
-	9700 8700 9350 8700
+	4350 8500 4000 8500
 Wire Wire Line
-	9700 8600 9350 8600
+	4350 8400 4000 8400
 $Comp
 L Memory_Flash:W25Q128JVS U4
 U 1 1 5FA5C107
-P 8850 8800
-F 0 "U4" H 8500 9150 50  0000 C CNN
-F 1 "BANK2" H 8850 8800 50  0000 C CNN
-F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 8850 8800 50  0001 C CNN
-F 3 "http://www.winbond.com/resource-files/w25q128jv_dtr%20revc%2003272018%20plus.pdf" H 8850 8800 50  0001 C CNN
-	1    8850 8800
+P 3500 8600
+F 0 "U4" H 3150 8950 50  0000 C CNN
+F 1 "BANK2" H 3500 8600 50  0000 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 3500 8600 50  0001 C CNN
+F 3 "http://www.winbond.com/resource-files/w25q128jv_dtr%20revc%2003272018%20plus.pdf" H 3500 8600 50  0001 C CNN
+	1    3500 8600
 	1    0    0    -1  
 $EndComp
-Text Label 7650 7750 2    50   ~ 0
+Text Label 2300 7550 2    50   ~ 0
 BANK1_CS#
-Text Label 6950 8000 0    50   ~ 0
+Text Label 1600 7800 0    50   ~ 0
 PB10
-Text Label 6950 7500 0    50   ~ 0
+Text Label 1600 7300 0    50   ~ 0
 PB6
 Wire Wire Line
-	7250 7500 6950 7500
+	1900 7300 1600 7300
 Wire Wire Line
-	7250 8000 6950 8000
+	1900 7800 1600 7800
 Wire Wire Line
-	7400 7750 7650 7750
-Text Label 8000 7800 0    50   ~ 0
+	2050 7550 2300 7550
+Text Label 2650 7600 0    50   ~ 0
 PB2
-Text Label 8000 7600 0    50   ~ 0
+Text Label 2650 7400 0    50   ~ 0
 BANK1_CS#
-Text Label 9700 7900 2    50   ~ 0
+Text Label 4350 7700 2    50   ~ 0
 PD13
-Text Label 9700 7800 2    50   ~ 0
+Text Label 4350 7600 2    50   ~ 0
 PE2
-Text Label 9700 7600 2    50   ~ 0
+Text Label 4350 7400 2    50   ~ 0
 PD12
-Text Label 9700 7500 2    50   ~ 0
+Text Label 4350 7300 2    50   ~ 0
 PD11
 Wire Wire Line
-	9700 7900 9350 7900
+	4350 7700 4000 7700
 Wire Wire Line
-	9700 7800 9350 7800
+	4350 7600 4000 7600
 Wire Wire Line
-	9700 7600 9350 7600
+	4350 7400 4000 7400
 Wire Wire Line
-	9700 7500 9350 7500
+	4350 7300 4000 7300
 Wire Wire Line
-	8350 7800 8000 7800
+	3000 7600 2650 7600
 Wire Wire Line
-	8350 7600 8000 7600
+	3000 7400 2650 7400
 $Comp
 L Memory_Flash:W25Q128JVS U3
 U 1 1 5F581E06
-P 8850 7700
-F 0 "U3" H 8500 8050 50  0000 C CNN
-F 1 "BANK1" H 8850 7700 50  0000 C CNN
-F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 8850 7700 50  0001 C CNN
-F 3 "http://www.winbond.com/resource-files/w25q128jv_dtr%20revc%2003272018%20plus.pdf" H 8850 7700 50  0001 C CNN
-	1    8850 7700
+P 3500 7500
+F 0 "U3" H 3150 7850 50  0000 C CNN
+F 1 "BANK1" H 3500 7500 50  0000 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 3500 7500 50  0001 C CNN
+F 3 "http://www.winbond.com/resource-files/w25q128jv_dtr%20revc%2003272018%20plus.pdf" H 3500 7500 50  0001 C CNN
+	1    3500 7500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -2283,4 +2262,117 @@ Wire Wire Line
 Wire Wire Line
 	7750 1200 8050 1200
 Connection ~ 8050 1200
+$Comp
+L Connector:TestPoint TP1
+U 1 1 5F385C2F
+P 8300 4600
+F 0 "TP1" V 8300 5150 50  0000 R CNN
+F 1 "VCC_3V3" H 8242 4717 50  0001 R CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 8500 4600 50  0001 C CNN
+F 3 "~" H 8500 4600 50  0001 C CNN
+	1    8300 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP3
+U 1 1 5F385C35
+P 8350 4950
+F 0 "TP3" V 8350 5138 50  0001 L CNN
+F 1 "RESET" V 8350 5138 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 8550 4950 50  0001 C CNN
+F 3 "~" H 8550 4950 50  0001 C CNN
+	1    8350 4950
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP6
+U 1 1 5F385C41
+P 8350 5350
+F 0 "TP6" V 8304 5538 50  0001 L CNN
+F 1 "SWO/TDO" V 8350 5550 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 8550 5350 50  0001 C CNN
+F 3 "~" H 8550 5350 50  0001 C CNN
+	1    8350 5350
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP7
+U 1 1 5F385C47
+P 8350 5450
+F 0 "TP7" V 8304 5638 50  0001 L CNN
+F 1 "TDI" V 8350 5650 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 8550 5450 50  0001 C CNN
+F 3 "~" H 8550 5450 50  0001 C CNN
+	1    8350 5450
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP2
+U 1 1 5F385C4D
+P 8300 4700
+F 0 "TP2" H 8254 4888 50  0001 L CNN
+F 1 "GND" V 8300 4950 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 8500 4700 50  0001 C CNN
+F 3 "~" H 8500 4700 50  0001 C CNN
+	1    8300 4700
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP4
+U 1 1 5F385C53
+P 8350 5150
+F 0 "TP4" V 8304 5338 50  0001 L CNN
+F 1 "SWDCLK/TCK" V 8350 5350 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 8550 5150 50  0001 C CNN
+F 3 "~" H 8550 5150 50  0001 C CNN
+	1    8350 5150
+	0    1    1    0   
+$EndComp
+Text Label 8050 5450 0    50   ~ 0
+PA15
+Wire Wire Line
+	8350 5450 8050 5450
+Wire Wire Line
+	8350 5650 8050 5650
+Text Label 8050 5650 0    50   ~ 0
+PB14
+$Comp
+L Connector:TestPoint TP8
+U 1 1 5F68E57E
+P 8350 5650
+F 0 "TP8" V 8304 5838 50  0001 L CNN
+F 1 "TX" V 8350 5850 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 8550 5650 50  0001 C CNN
+F 3 "~" H 8550 5650 50  0001 C CNN
+	1    8350 5650
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP9
+U 1 1 5F68E584
+P 8350 5750
+F 0 "TP9" V 8304 5938 50  0001 L CNN
+F 1 "RX" V 8350 5950 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 8550 5750 50  0001 C CNN
+F 3 "~" H 8550 5750 50  0001 C CNN
+	1    8350 5750
+	0    1    1    0   
+$EndComp
+Text Label 8050 5750 0    50   ~ 0
+PB15
+Wire Wire Line
+	8350 5750 8050 5750
+$Comp
+L Connector:TestPoint TP5
+U 1 1 5F385C3B
+P 8350 5250
+F 0 "TP5" V 8304 5438 50  0001 L CNN
+F 1 "SWDIO/TMS" V 8350 5450 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 8550 5250 50  0001 C CNN
+F 3 "~" H 8550 5250 50  0001 C CNN
+	1    8350 5250
+	0    1    1    0   
+$EndComp
+Text Label 8200 4700 0    50   ~ 0
+GND
 $EndSCHEMATC

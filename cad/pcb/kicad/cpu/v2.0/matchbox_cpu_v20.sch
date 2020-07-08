@@ -1447,11 +1447,11 @@ Wire Wire Line
 Wire Wire Line
 	5750 5150 5450 5150
 Wire Wire Line
-	5750 5250 5450 5250
+	5750 5450 5450 5450
 Wire Wire Line
 	5750 5350 5450 5350
 Wire Wire Line
-	5750 5450 5450 5450
+	5750 5250 5450 5250
 Wire Wire Line
 	5750 5550 5450 5550
 Wire Wire Line
@@ -1470,9 +1470,9 @@ Text Label 5450 5350 0    50   ~ 0
 PC12
 Text Label 5450 5650 0    50   ~ 0
 PC9
-Text Label 5450 5250 0    50   ~ 0
-GND
 Text Label 5450 5450 0    50   ~ 0
+GND
+Text Label 5450 5250 0    50   ~ 0
 VCC_3V3
 Text Label 7200 4950 2    50   ~ 0
 PB8

@@ -170,10 +170,6 @@ Connection ~ 10750 1200
 Connection ~ 11050 1200
 Connection ~ 11350 1200
 Wire Wire Line
-	5850 6800 5550 6800
-Text Label 5550 6800 0    70   ~ 0
-GND
-Wire Wire Line
 	7300 3750 7500 3750
 Text Label 7500 3750 2    70   ~ 0
 GND
@@ -334,16 +330,16 @@ USB_D+
 Wire Wire Line
 	8300 4000 8400 4000
 Wire Wire Line
-	2550 2700 2350 2700
-Text Label 2350 2700 2    70   ~ 0
+	2550 2600 2350 2600
+Text Label 2350 2600 2    70   ~ 0
 OSC_IN
 Wire Wire Line
 	6100 2350 6300 2350
-Text Label 6100 2350 2    70   ~ 0
+Text Label 6100 1750 2    70   ~ 0
 OSC_IN
 Wire Wire Line
-	2550 2600 2350 2600
-Text Label 2350 2600 2    70   ~ 0
+	2550 2700 2350 2700
+Text Label 2350 2700 2    70   ~ 0
 OSC_OUT
 Wire Wire Line
 	6300 1750 6100 1750
@@ -528,10 +524,6 @@ Wire Wire Line
 	11650 700  11650 800 
 Text Label 11950 700  0    70   ~ 0
 VBAT
-Wire Wire Line
-	5850 6700 5550 6700
-Text Label 5550 6700 0    70   ~ 0
-VBAT
 Text Label 5700 4150 0    70   ~ 0
 VBAT
 Wire Wire Line
@@ -539,10 +531,7 @@ Wire Wire Line
 Text Label 4650 6000 0    70   ~ 0
 OSC32K_IN
 Wire Wire Line
-	6100 1450 6400 1450
-Wire Wire Line
 	6400 1450 6500 1450
-Connection ~ 6400 1450
 Wire Wire Line
 	4650 6100 4350 6100
 Text Label 4650 6100 0    70   ~ 0
@@ -947,17 +936,6 @@ F 3 "" H 10600 1850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:?M02B-SRSS-TBS CN1
-U 2 1 F1A938BF
-P 5950 6800
-F 0 "CN1" H 6050 6770 51  0000 L BNN
-F 1 "?M02B-SRSS-TBS" H 5920 6855 51  0001 L BNN
-F 2 "matchbox_cpu_v20:SM02B-SRSS-TB" H 5950 6800 50  0001 C CNN
-F 3 "" H 5950 6800 50  0001 C CNN
-	2    5950 6800
-	1    0    0    -1  
-$EndComp
-$Comp
 L matchbox_cpu_v20-eagle-import:CAP0805 C19
 U 1 1 D9B55D84
 P 10500 2750
@@ -1205,17 +1183,6 @@ F 3 "" H 11800 7650 50  0001 C CNN
 	1    11800 7650
 	1    0    0    -1  
 $EndComp
-$Comp
-L MCU_ST_STM32H7:STM32H743VITx U1
-U 1 1 5F63FCB6
-P 3450 3600
-F 0 "U1" H 2800 950 50  0000 C CNN
-F 1 "STM32H743VG" H 3450 3550 50  0000 C CNN
-F 2 "Package_QFP:LQFP-100_14x14mm_P0.5mm" H 2750 1000 50  0000 R CNN
-F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00387108.pdf" H 3450 3600 50  0001 C CNN
-	1    3450 3600
-	1    0    0    -1  
-$EndComp
 Text Label 4650 1200 2    70   ~ 0
 PA0
 Wire Wire Line
@@ -1432,12 +1399,10 @@ Wire Wire Line
 Wire Wire Line
 	3650 6550 3650 6400
 Connection ~ 3550 6550
-Text Label 6100 1750 2    70   ~ 0
+Text Label 6100 2350 2    70   ~ 0
 OSC_OUT
 Text Label 6100 1250 2    50   ~ 0
 OSC32K_OUT
-Text Label 6100 1450 2    50   ~ 0
-OSC32K_IN
 Text Label 14650 5700 2    70   ~ 0
 PA1
 Wire Wire Line
@@ -1981,17 +1946,6 @@ F 3 "" H 10300 2500 50  0001 C CNN
 	1    10300 2500
 	1    0    0    -1  
 $EndComp
-$Comp
-L matchbox_cpu_v20-eagle-import:?M02B-SRSS-TBS CN1
-U 1 1 F1A938B3
-P 5950 6700
-F 0 "CN1" H 6050 6670 51  0000 L BNN
-F 1 "?M02B-SRSS-TBS" H 5920 6755 51  0001 L BNN
-F 2 "matchbox_cpu_v20:SM02B-SRSS-TB" H 5950 6700 50  0001 C CNN
-F 3 "" H 5950 6700 50  0001 C CNN
-	1    5950 6700
-	1    0    0    -1  
-$EndComp
 Text Label 12600 7450 2    50   ~ 0
 PD0
 Text Label 12600 7550 2    50   ~ 0
@@ -2375,4 +2329,39 @@ F 3 "~" H 8550 5250 50  0001 C CNN
 $EndComp
 Text Label 8200 4700 0    50   ~ 0
 GND
+$Comp
+L MCU_ST_STM32H7:STM32H753VITx U1
+U 1 1 604C34C2
+P 3450 3600
+F 0 "U1" H 3450 711 50  0000 C CNN
+F 1 "STM32H753VITx" H 3450 3700 50  0000 C CNN
+F 2 "Package_QFP:LQFP-100_14x14mm_P0.5mm" H 2750 1000 50  0001 R CNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00388325.pdf" H 3450 3600 50  0001 C CNN
+	1    3450 3600
+	1    0    0    -1  
+$EndComp
+Connection ~ 6400 1450
+Text Label 6100 1450 2    50   ~ 0
+OSC32K_IN
+Wire Wire Line
+	6100 1450 6400 1450
+$Comp
+L Connector_Generic:Conn_01x02 BATT1
+U 1 1 607E2FE5
+P 6400 6250
+F 0 "BATT1" H 6480 6242 50  0000 L CNN
+F 1 "SM02B-SRSS-TBS" H 6480 6151 50  0000 L CNN
+F 2 "matchbox_cpu_v20:SM02B-SRSS-TB" H 6400 6250 50  0001 C CNN
+F 3 "~" H 6400 6250 50  0001 C CNN
+	1    6400 6250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6200 6350 5900 6350
+Text Label 5900 6350 0    70   ~ 0
+GND
+Wire Wire Line
+	6200 6250 5900 6250
+Text Label 5900 6250 0    70   ~ 0
+VBAT
 $EndSCHEMATC

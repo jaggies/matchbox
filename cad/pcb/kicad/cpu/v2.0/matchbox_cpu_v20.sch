@@ -602,10 +602,10 @@ Wire Wire Line
 Wire Wire Line
 	8200 1850 8300 1850
 $Comp
-L matchbox_cpu_v20-eagle-import:AS-ITM-00015 P3
+L matchbox_cpu_v20-eagle-import:AS-ITM-00015 P2
 U 1 1 EBAB1841
 P 13850 5300
-F 0 "P3" H 13650 6150 59  0000 L BNN
+F 0 "P2" H 13650 6150 59  0000 L BNN
 F 1 "DF12-32-DP" H 13650 4300 59  0000 L BNN
 F 2 "matchbox_cpu_v20:DF12-32-DP" H 13850 5300 50  0001 C CNN
 F 3 "" H 13850 5300 50  0001 C CNN
@@ -879,10 +879,10 @@ F 3 "" H 13850 7650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L matchbox_cpu_v20-eagle-import:AS-ITM-00015 P2
+L matchbox_cpu_v20-eagle-import:AS-ITM-00015 P3
 U 1 1 5F008F42
 P 11800 7650
-F 0 "P2" H 11600 8500 59  0000 L BNN
+F 0 "P3" H 11600 8500 59  0000 L BNN
 F 1 "DF12-32-DP" H 11600 6650 59  0000 L BNN
 F 2 "matchbox_cpu_v20:DF12-32-DP" H 11800 7650 50  0001 C CNN
 F 3 "" H 11800 7650 50  0001 C CNN

@@ -2,7 +2,6 @@ SubDir TOP lib ;
 
 SubInclude TOP lib bridge ;
 SubInclude TOP lib compat ;
-SubInclude TOP lib config ;
 SubInclude TOP lib font ;
 SubInclude TOP lib gl ;
 SubInclude TOP lib hal ;

@@ -13,7 +13,6 @@ CC = $(GCC_PATH)-gcc ;
 C++ = $(GCC_PATH)-g++ ;
 LD = $(GCC_PATH)-ld ;
 RANLIB = $(GCC_PATH)-ranlib ;
-MEMMAP = $(TOP)/devices/STM32F415RG_FLASH.ld ;
 LINK = $(C++) ;
 
 OPTIM = -Os -g ;
@@ -33,5 +32,5 @@ LDFLAGS += -mfpu=fpv4-sp-d16 -mthumb -mfloat-abi=hard ; #/ --specs=nosys.specs ;
 
 CC += $(CFLAGS) $(COPT) ;
 C++ += $(CFLAGS) ;
-LINK += $(LDFLAGS) -L $(ALL_LOCATE_TARGET) -T $(MEMMAP) -Wl,--gc-sections -mcpu=cortex-m4 ;
+LINK += $(LDFLAGS) -L $(ALL_LOCATE_TARGET) -Wl,--gc-sections -mcpu=cortex-m4 ;
 

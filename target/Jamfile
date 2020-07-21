@@ -1,4 +1,4 @@
 SubDir TOP target ;
 
 SubInclude TOP target stm32f4xx ;
-SubInclude TOP target stm32h7xx ;
+#SubInclude TOP target stm32h7xx ;

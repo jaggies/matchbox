@@ -1,5 +1,5 @@
 SubDir TOP ;
 
-SubInclude TOP apps ;
 SubInclude TOP target ;
 SubInclude TOP lib ;
+SubInclude TOP apps ;

@@ -7,6 +7,9 @@ SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Include ;
 MEMMAP = $(TOP)/target/stm32f4xx/STM32F415RG_FLASH.ld ;
 LINK += -T $(MEMMAP) ;
 
+DEFINES += STM32F415xx __FPU_PRESENT=1U ;
+echo $DEFINES ;
+
 Library libhal :
 	startup_stm32f415xx.s
 	system_stm32f4xx.c

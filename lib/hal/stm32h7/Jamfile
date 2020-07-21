@@ -59,14 +59,14 @@ SubDir TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class ;
 SubDir TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library ;
 #SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class ;
 #SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Core ;
-# STM32CubeH7/Middlewares/Third_Party/FatFS/src/option/Jamfile
-SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src option ;
+# STM32CubeH7/Middlewares/Third_Party/FatFs/src/option/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFs src option ;
 
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
-SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FatFS src ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FatFs src ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
@@ -81,14 +81,14 @@ Library libfatfs :
 	syscall.c
 	unicode.c
 ;
-# STM32CubeH7/Middlewares/Third_Party/FatFS/src/drivers/Jamfile
-SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src drivers ;
+# STM32CubeH7/Middlewares/Third_Party/FatFs/src/drivers/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFs src drivers ;
 
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
-SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FatFS src ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FatFs src ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
@@ -100,8 +100,8 @@ Library libfatfs :
 	#sram_diskio.c
 	#usbh_diskio.c
 ;
-# STM32CubeH7/Middlewares/Third_Party/FatFS/src/Jamfile
-SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src ;
+# STM32CubeH7/Middlewares/Third_Party/FatFs/src/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFs src ;
 
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
@@ -119,11 +119,11 @@ Library libfatfs :
 	ff_gen_drv.c
 ;
 
-#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src option ;
-#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src drivers ;
-# STM32CubeH7/Middlewares/Third_Party/FatFS/Jamfile
-SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS ;
-#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFs src option ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFs src drivers ;
+# STM32CubeH7/Middlewares/Third_Party/FatFs/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFs ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFs src ;
 # STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/Jamfile
 SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable MemMang ;
 SubDirHdrs $(TOP) lib config ;
@@ -226,7 +226,7 @@ SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS ;
 #SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source ;
 # STM32CubeH7/Middlewares/Third_Party/Jamfile
 SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party ;
-#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFs ;
 #SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS ;
 ##SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party LibJPEG ;
 ##SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party LwIP ;

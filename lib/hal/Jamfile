@@ -1,4 +1,4 @@
 SubDir TOP lib hal ;
 
-SubInclude TOP lib hal stm32f4 ;
-#SubInclude TOP lib hal stm32h7 ;
+#SubInclude TOP lib hal stm32f4 ;
+SubInclude TOP lib hal stm32h7 ;

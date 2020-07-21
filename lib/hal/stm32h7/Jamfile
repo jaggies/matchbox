@@ -1,0 +1,707 @@
+SubDir TOP lib hal stm32h7 ;
+
+# STM32CubeH7/Middlewares/ST/STM32_USB_Host_Library/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Host_Library ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Host_Library Class ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Host_Library Core ;
+
+
+# STM32CubeH7/Middlewares/ST/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares ST ;
+##SubInclude TOP lib hal STM32CubeH7 Middlewares ST STemWin ;
+##SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_Audio ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library ;
+##SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Host_Library ;
+# STM32CubeH7/Middlewares/ST/STM32_USB_Device_Library/Core/Src/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Core Src ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Core Inc ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
+
+Library libusb : 
+	#usbd_conf_template.c
+	usbd_core.c
+	usbd_ctlreq.c
+	usbd_ioreq.c
+;
+# STM32CubeH7/Middlewares/ST/STM32_USB_Device_Library/Core/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Core ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Core Src ;
+# STM32CubeH7/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class CDC Src ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Core Inc ;
+
+Library libusb : 
+	usbd_cdc.c
+	#usbd_cdc_if_template.c
+;
+# STM32CubeH7/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class CDC ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class CDC Src ;
+# STM32CubeH7/Middlewares/ST/STM32_USB_Device_Library/Class/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class ;
+##SubInclude TOP lib hal Middlewares ST STM32_USB_Device_Library Class AUDIO ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class CDC ;
+##SubInclude TOP lib hal Middlewares ST STM32_USB_Device_Library Class CustomHID ;
+##SubInclude TOP lib hal Middlewares ST STM32_USB_Device_Library Class DFU ;
+##SubInclude TOP lib hal Middlewares ST STM32_USB_Device_Library Class HID ;
+##SubInclude TOP lib hal Middlewares ST STM32_USB_Device_Library Class MSC ;
+# STM32CubeH7/Middlewares/ST/STM32_USB_Device_Library/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Core ;
+# STM32CubeH7/Middlewares/Third_Party/FatFS/src/option/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src option ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FatFS src ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+SubDirHdrs $(TOP) lib matchbox ;
+
+Library libfatfs : 
+	#cc932.c
+	#cc936.c
+	#cc949.c
+	#cc950.c
+	#ccsbcs.c
+	syscall.c
+	unicode.c
+;
+# STM32CubeH7/Middlewares/Third_Party/FatFS/src/drivers/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src drivers ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FatFS src ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+SubDirHdrs $(TOP) lib matchbox ;
+
+Library libfatfs : 
+	#sd_diskio.c
+	#sdram_diskio.c
+	#sram_diskio.c
+	#usbh_diskio.c
+;
+# STM32CubeH7/Middlewares/Third_Party/FatFS/src/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares ST STM32_USB_Host_Library Core Inc ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+SubDirHdrs $(TOP) lib matchbox ;
+
+Library libfatfs : 
+	diskio.c 
+	ff.c 
+	ff_gen_drv.c
+;
+
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src option ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src drivers ;
+# STM32CubeH7/Middlewares/Third_Party/FatFS/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS src ;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable MemMang ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+
+#TODO: This is hard-wired to include CM4F. Make configurable.
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+
+Library libfreertos : 
+	# pick one....
+	#heap_1.c
+	#heap_2.c
+	heap_3.c
+	#heap_4.c
+	#heap_5.c
+	;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM3 ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+
+Library libfreertos : 
+	port.c
+;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3_MPU/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM3_MPU ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+
+Library libfreertos : 
+	port.c
+;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM0 ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+
+Library libfreertos : 
+	port.c
+;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+
+Library libfreertos : 
+	port.c
+;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM7 r0p1 ;
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+
+Library libfreertos : 
+	port.c
+;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM7 ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM7 r0p1 ;
+
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable MemMang ;
+
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+
+Library libfreertos : 
+	cmsis_os.c
+;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+
+Library libfreertos : 
+	croutine.c
+	event_groups.c
+	list.c
+	queue.c
+	tasks.c
+	timers.c
+;
+
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable ;
+# STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source ;
+# STM32CubeH7/Middlewares/Third_Party/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares Third_Party ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FatFS ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS ;
+##SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party LibJPEG ;
+##SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party LwIP ;
+##SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party PolarSSL ;
+# STM32CubeH7/Middlewares/Jamfile
+SubDir TOP lib hal STM32CubeH7 Middlewares ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ST ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares Third_Party ;
+# STM32CubeH7/Drivers/STM32H7xx_HAL_Driver/Src/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Src ;
+
+SubDirHdrs $(TOP) lib config ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
+
+Library libhal : 
+	stm32h7xx_hal.c
+	stm32h7xx_hal_adc.c
+	stm32h7xx_hal_adc_ex.c
+	stm32h7xx_hal_can.c
+	stm32h7xx_hal_cec.c
+	stm32h7xx_hal_cortex.c
+	stm32h7xx_hal_crc.c
+	stm32h7xx_hal_cryp.c
+	stm32h7xx_hal_cryp_ex.c
+	stm32h7xx_hal_dac.c
+	stm32h7xx_hal_dac_ex.c
+	stm32h7xx_hal_dcmi.c
+	stm32h7xx_hal_dcmi_ex.c
+	stm32h7xx_hal_dfsdm.c
+	stm32h7xx_hal_dma.c
+	stm32h7xx_hal_dma2d.c
+	stm32h7xx_hal_dma_ex.c
+	stm32h7xx_hal_dsi.c
+	stm32h7xx_hal_eth.c
+	stm32h7xx_hal_flash.c
+	stm32h7xx_hal_flash_ex.c
+	stm32h7xx_hal_flash_ramfunc.c
+	stm32h7xx_hal_fmpi2c.c
+	stm32h7xx_hal_fmpi2c_ex.c
+	stm32h7xx_hal_gpio.c
+	stm32h7xx_hal_hash.c
+	stm32h7xx_hal_hash_ex.c
+	stm32h7xx_hal_hcd.c
+	stm32h7xx_hal_i2c.c
+	stm32h7xx_hal_i2c_ex.c
+	stm32h7xx_hal_i2s.c
+	stm32h7xx_hal_i2s_ex.c
+	stm32h7xx_hal_irda.c
+	stm32h7xx_hal_iwdg.c
+	stm32h7xx_hal_lptim.c
+	stm32h7xx_hal_ltdc.c
+	stm32h7xx_hal_ltdc_ex.c
+	#stm32h7xx_hal_msp_template.c
+	stm32h7xx_hal_nand.c
+	stm32h7xx_hal_nor.c
+	stm32h7xx_hal_pccard.c
+	stm32h7xx_hal_pcd.c
+	stm32h7xx_hal_pcd_ex.c
+	stm32h7xx_hal_pwr.c
+	stm32h7xx_hal_pwr_ex.c
+	stm32h7xx_hal_qspi.c
+	stm32h7xx_hal_rcc.c
+	stm32h7xx_hal_rcc_ex.c
+	stm32h7xx_hal_rng.c
+	stm32h7xx_hal_rtc.c
+	stm32h7xx_hal_rtc_ex.c
+	stm32h7xx_hal_sai.c
+	stm32h7xx_hal_sai_ex.c
+	stm32h7xx_hal_sd.c
+	stm32h7xx_hal_sdram.c
+	stm32h7xx_hal_smartcard.c
+	stm32h7xx_hal_spdifrx.c
+	stm32h7xx_hal_spi.c
+	stm32h7xx_hal_sram.c
+	stm32h7xx_hal_tim.c
+	stm32h7xx_hal_tim_ex.c
+	#stm32h7xx_hal_timebase_rtc_alarm_template.c
+	#stm32h7xx_hal_timebase_rtc_wakeup_template.c
+	#stm32h7xx_hal_timebase_tim_template.c
+	stm32h7xx_hal_uart.c
+	stm32h7xx_hal_usart.c
+	stm32h7xx_hal_wwdg.c
+	stm32h7xx_ll_fmc.c
+	stm32h7xx_ll_fsmc.c
+	stm32h7xx_ll_sdmmc.c
+	stm32h7xx_ll_usb.c
+;
+# STM32CubeH7/Drivers/STM32H7xx_HAL_Driver/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Src ;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/BasicMathFunctions/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source BasicMathFunctions ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp : 
+	arm_abs_f32.c
+	arm_abs_q15.c
+	arm_abs_q31.c
+	arm_abs_q7.c
+	arm_add_f32.c
+	arm_add_q15.c
+	arm_add_q31.c
+	arm_add_q7.c
+	arm_dot_prod_f32.c
+	arm_dot_prod_q15.c
+	arm_dot_prod_q31.c
+	arm_dot_prod_q7.c
+	arm_mult_f32.c
+	arm_mult_q15.c
+	arm_mult_q31.c
+	arm_mult_q7.c
+	arm_negate_f32.c
+	arm_negate_q15.c
+	arm_negate_q31.c
+	arm_negate_q7.c
+	arm_offset_f32.c
+	arm_offset_q15.c
+	arm_offset_q31.c
+	arm_offset_q7.c
+	arm_scale_f32.c
+	arm_scale_q15.c
+	arm_scale_q31.c
+	arm_scale_q7.c
+	arm_shift_q15.c
+	arm_shift_q31.c
+	arm_shift_q7.c
+	arm_sub_f32.c
+	arm_sub_q15.c
+	arm_sub_q31.c
+	arm_sub_q7.c
+	;
+
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/TransformFunctions/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source TransformFunctions ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp : 
+	arm_bitreversal.c
+	arm_cfft_f32.c
+	arm_cfft_q15.c
+	arm_cfft_q31.c
+	arm_cfft_radix2_f32.c
+	arm_cfft_radix2_init_f32.c
+	arm_cfft_radix2_init_q15.c
+	arm_cfft_radix2_init_q31.c
+	arm_cfft_radix2_q15.c
+	arm_cfft_radix2_q31.c
+	arm_cfft_radix4_f32.c
+	arm_cfft_radix4_init_f32.c
+	arm_cfft_radix4_init_q15.c
+	arm_cfft_radix4_init_q31.c
+	arm_cfft_radix4_q15.c
+	arm_cfft_radix4_q31.c
+	arm_cfft_radix8_f32.c
+	arm_dct4_f32.c
+	arm_dct4_init_f32.c
+	arm_dct4_init_q15.c
+	arm_dct4_init_q31.c
+	arm_dct4_q15.c
+	arm_dct4_q31.c
+	arm_rfft_f32.c
+	arm_rfft_fast_f32.c
+	arm_rfft_fast_init_f32.c
+	arm_rfft_init_f32.c
+	arm_rfft_init_q15.c
+	arm_rfft_init_q31.c
+	arm_rfft_q15.c
+	arm_rfft_q31.c
+	;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/ComplexMathFunctions/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source ComplexMathFunctions ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp : 
+	arm_cmplx_conj_f32.c
+	arm_cmplx_conj_q15.c
+	arm_cmplx_conj_q31.c
+	arm_cmplx_dot_prod_f32.c
+	arm_cmplx_dot_prod_q15.c
+	arm_cmplx_dot_prod_q31.c
+	arm_cmplx_mag_f32.c
+	arm_cmplx_mag_q15.c
+	arm_cmplx_mag_q31.c
+	arm_cmplx_mag_squared_f32.c
+	arm_cmplx_mag_squared_q15.c
+	arm_cmplx_mag_squared_q31.c
+	arm_cmplx_mult_cmplx_f32.c
+	arm_cmplx_mult_cmplx_q15.c
+	arm_cmplx_mult_cmplx_q31.c
+	arm_cmplx_mult_real_f32.c
+	arm_cmplx_mult_real_q15.c
+	arm_cmplx_mult_real_q31.c
+;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/FilteringFunctions/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source FilteringFunctions ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp : 
+	arm_biquad_cascade_df1_32x64_init_q31.c
+	arm_biquad_cascade_df1_32x64_q31.c
+	arm_biquad_cascade_df1_f32.c
+	arm_biquad_cascade_df1_fast_q15.c
+	arm_biquad_cascade_df1_fast_q31.c
+	arm_biquad_cascade_df1_init_f32.c
+	arm_biquad_cascade_df1_init_q15.c
+	arm_biquad_cascade_df1_init_q31.c
+	arm_biquad_cascade_df1_q15.c
+	arm_biquad_cascade_df1_q31.c
+	arm_biquad_cascade_df2T_f32.c
+	arm_biquad_cascade_df2T_f64.c
+	arm_biquad_cascade_df2T_init_f32.c
+	arm_biquad_cascade_df2T_init_f64.c
+	arm_biquad_cascade_stereo_df2T_f32.c
+	arm_biquad_cascade_stereo_df2T_init_f32.c
+	arm_conv_f32.c
+	arm_conv_fast_opt_q15.c
+	arm_conv_fast_q15.c
+	arm_conv_fast_q31.c
+	arm_conv_opt_q15.c
+	arm_conv_opt_q7.c
+	arm_conv_partial_f32.c
+	arm_conv_partial_fast_opt_q15.c
+	arm_conv_partial_fast_q15.c
+	arm_conv_partial_fast_q31.c
+	arm_conv_partial_opt_q15.c
+	arm_conv_partial_opt_q7.c
+	arm_conv_partial_q15.c
+	arm_conv_partial_q31.c
+	arm_conv_partial_q7.c
+	arm_conv_q15.c
+	arm_conv_q31.c
+	arm_conv_q7.c
+	arm_correlate_f32.c
+	arm_correlate_fast_opt_q15.c
+	arm_correlate_fast_q15.c
+	arm_correlate_fast_q31.c
+	arm_correlate_opt_q15.c
+	arm_correlate_opt_q7.c
+	arm_correlate_q15.c
+	arm_correlate_q31.c
+	arm_correlate_q7.c
+	arm_fir_decimate_f32.c
+	arm_fir_decimate_fast_q15.c
+	arm_fir_decimate_fast_q31.c
+	arm_fir_decimate_init_f32.c
+	arm_fir_decimate_init_q15.c
+	arm_fir_decimate_init_q31.c
+	arm_fir_decimate_q15.c
+	arm_fir_decimate_q31.c
+	arm_fir_f32.c
+	arm_fir_fast_q15.c
+	arm_fir_fast_q31.c
+	arm_fir_init_f32.c
+	arm_fir_init_q15.c
+	arm_fir_init_q31.c
+	arm_fir_init_q7.c
+	arm_fir_interpolate_f32.c
+	arm_fir_interpolate_init_f32.c
+	arm_fir_interpolate_init_q15.c
+	arm_fir_interpolate_init_q31.c
+	arm_fir_interpolate_q15.c
+	arm_fir_interpolate_q31.c
+	arm_fir_lattice_f32.c
+	arm_fir_lattice_init_f32.c
+	arm_fir_lattice_init_q15.c
+	arm_fir_lattice_init_q31.c
+	arm_fir_lattice_q15.c
+	arm_fir_lattice_q31.c
+	arm_fir_q15.c
+	arm_fir_q31.c
+	arm_fir_q7.c
+	arm_fir_sparse_f32.c
+	arm_fir_sparse_init_f32.c
+	arm_fir_sparse_init_q15.c
+	arm_fir_sparse_init_q31.c
+	arm_fir_sparse_init_q7.c
+	arm_fir_sparse_q15.c
+	arm_fir_sparse_q31.c
+	arm_fir_sparse_q7.c
+	arm_iir_lattice_f32.c
+	arm_iir_lattice_init_f32.c
+	arm_iir_lattice_init_q15.c
+	arm_iir_lattice_init_q31.c
+	arm_iir_lattice_q15.c
+	arm_iir_lattice_q31.c
+	arm_lms_f32.c
+	arm_lms_init_f32.c
+	arm_lms_init_q15.c
+	arm_lms_init_q31.c
+	arm_lms_norm_f32.c
+	arm_lms_norm_init_f32.c
+	arm_lms_norm_init_q15.c
+	arm_lms_norm_init_q31.c
+	arm_lms_norm_q15.c
+	arm_lms_norm_q31.c
+	arm_lms_q15.c
+	arm_lms_q31.c
+;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/StatisticsFunctions/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source StatisticsFunctions ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp : 
+	arm_max_f32.c
+	arm_max_q15.c
+	arm_max_q31.c
+	arm_max_q7.c
+	arm_mean_f32.c
+	arm_mean_q15.c
+	arm_mean_q31.c
+	arm_mean_q7.c
+	arm_min_f32.c
+	arm_min_q15.c
+	arm_min_q31.c
+	arm_min_q7.c
+	arm_power_f32.c
+	arm_power_q15.c
+	arm_power_q31.c
+	arm_power_q7.c
+	arm_rms_f32.c
+	arm_rms_q15.c
+	arm_rms_q31.c
+	arm_std_f32.c
+	arm_std_q15.c
+	arm_std_q31.c
+	arm_var_f32.c
+	arm_var_q15.c
+	arm_var_q31.c
+	;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/MatrixFunctions/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source MatrixFunctions ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp : 
+	arm_mat_add_f32.c
+	arm_mat_add_q15.c
+	arm_mat_add_q31.c
+	arm_mat_cmplx_mult_f32.c
+	arm_mat_cmplx_mult_q15.c
+	arm_mat_cmplx_mult_q31.c
+	arm_mat_init_f32.c
+	arm_mat_init_q15.c
+	arm_mat_init_q31.c
+	arm_mat_inverse_f32.c
+	arm_mat_inverse_f64.c
+	arm_mat_mult_f32.c
+	arm_mat_mult_fast_q15.c
+	arm_mat_mult_fast_q31.c
+	arm_mat_mult_q15.c
+	arm_mat_mult_q31.c
+	arm_mat_scale_f32.c
+	arm_mat_scale_q15.c
+	arm_mat_scale_q31.c
+	arm_mat_sub_f32.c
+	arm_mat_sub_q15.c
+	arm_mat_sub_q31.c
+	arm_mat_trans_f32.c
+	arm_mat_trans_q15.c
+	arm_mat_trans_q31.c
+	;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/SupportFunctions/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source SupportFunctions ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp : 
+	arm_copy_f32.c
+	arm_copy_q15.c
+	arm_copy_q31.c
+	arm_copy_q7.c
+	arm_fill_f32.c
+	arm_fill_q15.c
+	arm_fill_q31.c
+	arm_fill_q7.c
+	arm_float_to_q15.c
+	arm_float_to_q31.c
+	arm_float_to_q7.c
+	arm_q15_to_float.c
+	arm_q15_to_q31.c
+	arm_q15_to_q7.c
+	arm_q31_to_float.c
+	arm_q31_to_q15.c
+	arm_q31_to_q7.c
+	arm_q7_to_float.c
+	arm_q7_to_q15.c
+	arm_q7_to_q31.c
+	;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/ControllerFunctions/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source ControllerFunctions ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp : 
+	arm_pid_init_f32.c
+	arm_pid_init_q15.c
+	arm_pid_init_q31.c
+	arm_pid_reset_f32.c
+	arm_pid_reset_q15.c
+	arm_pid_reset_q31.c
+	arm_sin_cos_f32.c
+	arm_sin_cos_q31.c
+;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/CommonTables/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source CommonTables ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp : 
+	arm_common_tables.c
+	arm_const_structs.c
+	;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/FastMathFunctions/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source FastMathFunctions ;
+
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS DSP Include ;
+
+Library libdsp :
+	arm_cos_f32.c
+	arm_cos_q15.c
+	arm_cos_q31.c
+	arm_sin_f32.c
+	arm_sin_q15.c
+	arm_sin_q31.c
+	arm_sqrt_q15.c
+	arm_sqrt_q31.c
+;
+# STM32CubeH7/Drivers/CMSIS/DSP/Source/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source BasicMathFunctions ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source CommonTables ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source ComplexMathFunctions ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source ControllerFunctions ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source FastMathFunctions ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source FilteringFunctions ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source MatrixFunctions ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source StatisticsFunctions ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source SupportFunctions ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source TransformFunctions ;
+# STM32CubeH7/Drivers/CMSIS/DSP/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS DSP ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP Source ;
+# STM32CubeH7/Drivers/CMSIS/RTOS/Jamfile
+# STM32CubeH7/Drivers/CMSIS/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers CMSIS ;
+##SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS DSP ;
+##SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS Device ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS RTOS ;
+# STM32CubeH7/Drivers/BSP/Jamfile
+SubDir TOP lib hal STM32CubeH7 Drivers BSP ;
+##SubInclude TOP lib hal STM32CubeH7 Drivers BSP STM32H7-MatchBox ;
+# STM32CubeH7/Drivers/Jamfile
+SubDir TOP lib hal ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers BSP ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers CMSIS ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver ;
+# STM32CubeH7/Jamfile
+SubDir TOP lib hal STM32CubeH7 ;
+#SubInclude TOP lib hal STM32CubeH7 Drivers ;
+#SubInclude TOP lib hal STM32CubeH7 Middlewares ;

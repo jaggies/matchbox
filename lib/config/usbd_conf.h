@@ -40,8 +40,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if defined(STM32H7XX)
+#include "stm32h7xx.h"
+#include "stm32h7xx_hal.h"
+#elif defined(STM32F4XX)
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal.h"
+#else
+error "Unknown STM32 variant"
+#endif
 
 /** @addtogroup USBD_OTG_DRIVER
   * @{

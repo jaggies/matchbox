@@ -4,9 +4,12 @@ if $(OS) = MACOSX {
 } else {
 	GCC_HOME = /bin/ ;
 }
+
+TARGET ?= stm32f4xx ;
+
 ARCH = arm-none-eabi ;
 GCC_PATH = $(GCC_HOME)$(ARCH) ;
-ALL_LOCATE_TARGET = $(TOP)/build/$(ARCH) ;
+ALL_LOCATE_TARGET = $(TOP)/build/$(ARCH)/$(TARGET) ;
 AS = $(GCC_PATH)-as ;
 AR = $(GCC_PATH)-ar cur ;
 CC = $(GCC_PATH)-gcc ;

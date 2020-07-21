@@ -9,7 +9,7 @@
 #define UTIL_H_
 
 #include <stdio.h>
-#include "stm32f4xx_hal_rtc.h"
+#include "stm32.h"
 
 #define Number(a) (sizeof(a) / sizeof(a[0]))
 

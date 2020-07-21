@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
+#include "stm32f4xx_hal.h"
 #include "ff_gen_drv.h"
 #include "sd_diskio_dma.h"
 

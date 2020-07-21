@@ -5,10 +5,7 @@
  *      Author: jmiller
  */
 #include <string.h> // memset
-#include "stm32f4xx.h" // chip-specific defines
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_hal_dma.h"
-#include "stm32f4xx_hal_spi.h"
+#include "stm32.h"
 #include "spi.h"
 #include "util.h"
 

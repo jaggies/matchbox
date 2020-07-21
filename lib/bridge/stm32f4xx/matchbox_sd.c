@@ -5,6 +5,7 @@
  *      Author: jmiller
  */
 #include <stdio.h>
+#include "stm32.h"
 #include "cmsis_os.h" // osThreadYield()
 #include "util.h"
 #include "matchbox_it.h"

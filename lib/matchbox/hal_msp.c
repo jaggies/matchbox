@@ -11,7 +11,7 @@
  */
 
 
-#include "stm32f4xx_hal.h"
+#include "stm32.h"
 
 __weak void Error_Handler() {
 

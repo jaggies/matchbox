@@ -1,6 +1,5 @@
 SubDir TOP apps fatfs ;
-SubDirHdrs $(TOP) lib bridge bsp ;
-SubDirHdrs $(TOP) lib bridge sd ;
+SubDirHdrs $(TOP) lib bridge ;
 SubDirHdrs $(TOP) lib matchbox ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;

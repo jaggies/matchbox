@@ -1,5 +1,4 @@
-#include "stm32f4xx.h"
-#include "stm32f4xx_hal.h"
+#include "stm32.h"
 #include "usbd_def.h"
 #include "usbd_core.h"
 

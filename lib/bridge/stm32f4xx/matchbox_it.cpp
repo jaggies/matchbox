@@ -4,8 +4,8 @@
  *  Created on: Jul 9, 2016
  *      Author: jmiller
  */
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx.h"
+
+#include "stm32.h"
 #include "matchbox_it.h"
 #include "cmsis_os.h"
 

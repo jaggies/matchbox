@@ -8,8 +8,7 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-#include "stm32f4xx_hal_dma.h"
-#include "stm32f4xx_hal_spi.h"
+#include "stm32.h"
 
 extern "C" void SPI1_IRQHandler();
 extern "C" void SPI2_IRQHandler();

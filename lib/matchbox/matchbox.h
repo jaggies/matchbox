@@ -8,7 +8,7 @@
 #ifndef MATCHBOX_H_
 #define MATCHBOX_H_
 
-#include "stm32f4xx_hal.h"
+#include "stm32.h"
 #include "cmsis_os.h"
 #include "board.h"
 #include "gpio.h"

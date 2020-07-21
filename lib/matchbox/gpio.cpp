@@ -6,9 +6,7 @@
  */
 
 #include <assert.h>
-#include "stm32f4xx.h" // chip-specific defines
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_hal_sd.h"
+#include "stm32.h"
 #include "cmsis_os.h"
 #include "gpio.h"
 #include "util.h"

@@ -5,10 +5,7 @@
  *      Author: jmiller
  */
 #include <string.h>
-#include <stm32f4xx.h> // chip-specific defines
-#include <stm32f4xx_hal_dma.h>
-#include <stm32f4xx_hal_tim.h>
-#include <stm32f4xx_hal_pwr_ex.h>
+#include "stm32.h"
 #include "cmsis_os.h"
 #include "usbd_desc.h"
 #include "usbd_cdc.h"

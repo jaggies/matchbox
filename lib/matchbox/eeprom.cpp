@@ -4,7 +4,8 @@
  *  Created on: Jul 20, 2016
  *      Author: jmiller
  */
-#include <stm32f4xx_hal.h>
+
+#include "stm32.h"
 #include "eeprom.h"
 
 uint8_t Eeprom::read(uint16_t addr) const {

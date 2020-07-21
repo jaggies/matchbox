@@ -5,8 +5,8 @@
  *      Author: jmiller
  */
 
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_hal_tim.h"
+#include "stm32.h"
+
 TIM_HandleTypeDef htim1;
 uint32_t uwIncrementState = 0;
 

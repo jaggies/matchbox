@@ -1,22 +1,31 @@
-SubDir TOP lib bridge bsp ;
+SubDir TOP lib bridge stm32f4xx ;
 
 SubDirHdrs $(TOP) lib bridge ;
 SubDirHdrs $(TOP) lib config ;
-SubDirHdrs $(TOP) lib matchbox ; #util.h
+SubDirHdrs $(TOP) lib matchbox ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FatFS src ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FatFS src drivers ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Core Inc ;
+SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
+
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers STM32F4xx_HAL_Driver Inc ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Device ST STM32F4xx Include ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Include ;
 
-#SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
-#SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Core Inc ;
+Library libmatchbox :
+	matchbox_it.cpp
+	matchbox_sd.c
+; 
 
 Library libmatchbox :
-	matchbox_it.cpp # interrupt handlers
-	matchbox_sd.c
+	#sd_diskio_bspv1.c
+	#sd_diskio_bspv2.c
+	sd_diskio_dma_bspv1.c
+	#sd_diskio_dma_bspv2.c
+	#sd_diskio_dma_rtos_bspv1.c
+	#sd_diskio_dma_rtos_bspv2.c
 	;
 

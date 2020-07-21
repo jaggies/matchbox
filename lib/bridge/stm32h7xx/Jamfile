@@ -1,0 +1,5 @@
+SubDir TOP lib bridge stm32h7xx ;
+
+SubInclude TOP lib bridge stm32h7xx sd ;
+
+

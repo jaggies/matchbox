@@ -9,8 +9,7 @@
 #define GPIO_H_
 
 #include <stdint.h>
-#include "stm32f4xx_hal_gpio.h"
-#include "stm32f4xx_hal_cortex.h" // For NVIC stuff.
+#include "stm32.h"
 
 enum {
     // PC14 and PC15 are reserved for the LSE oscillator

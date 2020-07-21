@@ -1,7 +1,5 @@
 SubDir TOP lib bridge ;
 
-SubInclude TOP lib bridge bsp ;
-SubInclude TOP lib bridge sd ;
-SubInclude TOP lib bridge usb ;
+SubInclude TOP lib bridge $(TARGET) ;
 
 

@@ -8,8 +8,7 @@
 #ifndef ADC_H_
 #define ADC_H_
 
-#include "stm32f4xx_hal_dma.h"
-#include "stm32f4xx_hal_adc.h"
+#include "stm32.h"
 
 extern "C" void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*);
 extern "C" void ADC_IRQHandler(void);

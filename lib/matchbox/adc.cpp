@@ -6,8 +6,7 @@
  */
 
 #include <string.h> // bzero
-#include "stm32f4xx.h" // chip-specific defines
-#include "stm32f4xx_hal.h"
+#include "stm32.h"
 #include "adc.h"
 #include "util.h"
 

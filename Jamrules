@@ -28,10 +28,35 @@ DEFINES = __STM32__ ARM_MATH_CM4 HSE_VALUE=16000000 ;
 #DEFINES += USE_HW_RTC ;
 
 #TODO: Find a better way to add target-specific include directories
-CFLAGS += -I$(TOP)/lib/core/$(TARGET) -I$(TOP)target/$(TARGET) ;
+if $(TARGET) = stm32f4xx {
+	STM32INC += lib/hal/STM32CubeF4/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc ;
+	STM32INC += lib/hal/STM32CubeF4/Middlewares/Third_Party/FatFS/src ;
+	STM32INC += lib/hal/STM32CubeF4/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS ;
+	STM32INC += lib/hal/STM32CubeF4/Middlewares/Third_Party/FreeRTOS/Source/include ;
+	STM32INC += lib/hal/STM32CubeF4/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F ;
+	STM32INC += lib/hal/STM32CubeF4/Middlewares/ST/STM32_USB_Device_Library/Core/Inc ;
+	STM32INC += lib/hal/STM32CubeF4/Drivers/STM32F4xx_HAL_Driver/Inc ;
+	STM32INC += lib/hal/STM32CubeF4/Drivers/CMSIS/Device/ST/STM32F4xx/Include ;
+	STM32INC += lib/hal/STM32CubeF4/Drivers/CMSIS/Include ;
+} else if $(TARGET) = stm32h7xx {
+	STM32INC += lib/hal/STM32CubeH7/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc ;
+	STM32INC += lib/hal/STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS ;
+	STM32INC += lib/hal/STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/include ;
+	STM32INC += lib/hal/STM32CubeH7/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F ;
+	STM32INC += lib/hal/STM32CubeH7/Middlewares/ST/STM32_USB_Device_Library/Core/Inc ;
+	STM32INC += lib/hal/STM32CubeH7/Drivers/STM32H7xx_HAL_Driver/Inc ;
+	STM32INC += lib/hal/STM32CubeH7/Drivers/CMSIS/Device/ST/STM32H7xx/Include ;
+	STM32INC += lib/hal/STM32CubeH7/Drivers/CMSIS/Include ;
+	STM32INC += lib/hal/STM32CubeH7/Middlewares/Third_Party/FatFs/src ;
+} else {
+	echo "Unsupported target" ;
+	exit ;
+}
+
+INCLUDE += $(TOP)/lib/core/$(TARGET) $(TOP)target/$(TARGET) $(STM32INC) ;
 
 # M4 with hardware floating point
-CFLAGS += $(OPTIM) -D$(DEFINES) -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 ;
+CFLAGS += $(OPTIM) -D$(DEFINES) -I$(INCLUDE) -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mcpu=cortex-m4 ;
 CCFLAGS += $(CFLAGS) -std=c99 ;
 C++FLAGS += $(CFLAGS) -fno-rtti -fno-exceptions ;
 

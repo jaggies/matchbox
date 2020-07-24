@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <stm32f4xx.h>
+#include "stm32.h"
 #include "eeprom.h"
 #include "arduino_spi.h"
 #include "arduino_serial.h"

@@ -149,21 +149,23 @@ Library libfreertos :
 	port.c
 ;
 # STM32CubeF4/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3_MPU/Jamfile
-SubDir TOP lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM3_MPU ;
-SubDirHdrs $(TOP) lib config ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
+#SubDir TOP lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM3_MPU ;
+#SubDirHdrs $(TOP) lib config ;
+#SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
+#
+#Library libfreertos : 
+	#port.c
+#;
 
-Library libfreertos : 
-	port.c
-;
 # STM32CubeF4/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/Jamfile
-SubDir TOP lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM0 ;
-SubDirHdrs $(TOP) lib config ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
+#SubDir TOP lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM0 ;
+#SubDirHdrs $(TOP) lib config ;
+#SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
+#
+#Library libfreertos : 
+	#port.c
+#;
 
-Library libfreertos : 
-	port.c
-;
 # STM32CubeF4/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/Jamfile
 SubDir TOP lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
 SubDirHdrs $(TOP) lib config ;
@@ -173,13 +175,14 @@ Library libfreertos :
 	port.c
 ;
 # STM32CubeF4/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/Jamfile
-SubDir TOP lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM7 r0p1 ;
-SubDirHdrs $(TOP) lib config ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
+#SubDir TOP lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM7 r0p1 ;
+#SubDirHdrs $(TOP) lib config ;
+#SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
+#
+#Library libfreertos : 
+	#port.c
+#;
 
-Library libfreertos : 
-	port.c
-;
 # STM32CubeF4/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/Jamfile
 SubDir TOP lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM7 ;
 #SubInclude TOP lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM7 r0p1 ;

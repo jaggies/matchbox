@@ -2,15 +2,28 @@ SubDir TOP lib nordic libraries BLE ;
 SubDirHdrs $(TOP) lib arduino ;
 SubDirHdrs $(TOP) lib core ;
 SubDirHdrs $(TOP) lib config ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Core Inc ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers STM32F4xx_HAL_Driver Inc ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Device ST STM32F4xx Include ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Include ;
 SubDirHdrs $(TOP) lib render ;
+
+if $(TARGET) = stm32f4xx {
+    SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
+    SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+    SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
+    SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+    SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Core Inc ;
+    SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers STM32F4xx_HAL_Driver Inc ;
+    SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Device ST STM32F4xx Include ;
+    SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Include ;
+} else {
+    SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
+    SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
+    SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source include ;
+    SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
+    SubDirHdrs $(TOP) lib hal STM32CubeH7 Middlewares ST STM32_USB_Device_Library Core Inc ;
+    SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers STM32H7xx_HAL_Driver Inc ;
+    SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
+    SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
+}
+
 
 Library libnordic :
 	aci_queue.cpp

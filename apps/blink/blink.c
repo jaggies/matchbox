@@ -5,7 +5,7 @@
  *      Author: jmiller
  */
 
-#include <stm32f4xx_hal.h>
+#include <stm32.h>
 
 // This symbol needs to be overloaded here to allow HAL to handle the system timer.
 void SysTick_Handler(void)

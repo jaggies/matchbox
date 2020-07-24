@@ -2,15 +2,6 @@ SubDir TOP apps sdio_dma_test ;
 SubDirHdrs $(TOP) lib core ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Device ST STM32F4xx Include ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Include ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers STM32F4xx_HAL_Driver Inc ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Core Inc ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Class CDC Inc ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FatFS src ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source include ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source portable GCC ARM_CM4F ;
-SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
 
 LINKLIBS on sdio_dma_test = -Wl,--whole-archive -lmatchbox -lusb -lfreertos -lhal -Wl,--no-whole-archive ;
 

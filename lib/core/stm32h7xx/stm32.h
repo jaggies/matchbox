@@ -10,7 +10,7 @@
 #ifndef LIB_BRIDGE_STM32_H_
 #define LIB_BRIDGE_STM32_H_
 
-#include "stm32f4xx_hal_conf.h"
-#include "stm32f4xx_hal.h"
+#include "stm32h7xx_hal_conf.h"
+#include "stm32h7xx_hal.h"
 
 #endif /* LIB_BRIDGE_STM32_H_ */

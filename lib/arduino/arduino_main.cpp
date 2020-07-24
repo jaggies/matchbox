@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <spi.h>
+#include "stm32.h"
+#include "spi.h"
 #include "arduino.h"
 
 // Instantiations of static classes

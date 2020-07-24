@@ -20,6 +20,12 @@
 
 #define BLE_PRESENT
 
+Lcd::Config::Config() : doubleBuffer(0), en(LCD_PEN_PIN), scs(LCD_SCS_PIN), extc(LCD_EXTC_PIN),
+                        disp(LCD_DISP_PIN)
+{
+
+}
+
 Lcd::Lcd(Spi& spi, const Config& config) : _spi(spi), _config(config),
         _clear(1), _frame(0), _currentFont(getFont("roboto_bold_10")),
         _xres(LCD_XRES), _yres(LCD_YRES), _depth(LCD_DEPTH), _line_size(LCD_XRES*LCD_DEPTH/8),

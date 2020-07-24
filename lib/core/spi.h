@@ -8,8 +8,6 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-#include "stm32.h"
-
 extern "C" void SPI1_IRQHandler();
 extern "C" void SPI2_IRQHandler();
 extern "C" void SPI3_IRQHandler();

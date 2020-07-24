@@ -11,7 +11,6 @@
 #include <stdint.h>
 #include "spi.h"
 #include "font.h"
-#include "board.h"
 
 #define LCD_SIZE (YRES * LCD_LINE_SIZE) // size of lcd frame in bytes
 #define LCD_DEPTH 3 // 3 == color, 1 == mono
@@ -23,8 +22,7 @@ class Lcd {
 	public:
         enum FontSize { FONT_SMALL, FONT_MEDIUM, FONT_LARGE };
         struct Config {
-                Config() : doubleBuffer(0), en(LCD_PEN_PIN), scs(LCD_SCS_PIN), extc(LCD_EXTC_PIN),
-                        disp(LCD_DISP_PIN) { }
+                Config();
                 Config& setDoubleBuffered(bool db) { doubleBuffer = db ? 1 : 0; return *this; }
                 Config& setPowerEnable(int pin) { en = pin; return *this; }
                 Config& setChipSelect(int pin) { scs = pin; return *this; }

@@ -5,8 +5,12 @@
  *      Author: jmiller
  */
 
-#include <spi.h>
-#include <arduino_spi.h>
+#include <cstdint>
+#include "stm32.h"
+#include "spi.h"
+#include "util.h"
+#include "arduino_spi.h"
+
 
 static Spi* arduino_spi = NULL; // the underlying implementation
 

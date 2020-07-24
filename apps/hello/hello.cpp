@@ -15,7 +15,7 @@ void StartDefaultTask(void const * argument);
 void buttonHandler(uint32_t pin, void* data) {
     int &count = *(int*) data;
     switch (pin) {
-        case SW1_PIN:
+        case SW1:
             count++;
             printf("Hello, count = %d\n", count);
             break;
@@ -40,9 +40,9 @@ int main(void) {
 }
 
 void StartDefaultTask(void const * argument) {
-    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
+    Pin led(LED1, Pin::Config().setMode(Pin::MODE_OUTPUT));
     int count = 0;
-    Button b1(SW1_PIN, buttonHandler, &count);
+    Button b1(SW1, buttonHandler, &count);
 
     while (1) {
         led.write(count++ & 1);

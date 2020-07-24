@@ -8,6 +8,7 @@
 #include <cstdio>
 #include "matchbox.h"
 #include "util.h"
+#include "board.h"
 
 uint64_t pups;
 uint64_t drivers;
@@ -40,7 +41,7 @@ void checkIoPins(uint64_t* pullUpCheck, uint64_t* driver, uint64_t* receiver) {
     *driver = *receiver = 0ULL;
     volatile int dly;
     for (int k = 0; k < Number(pins); k++) {
-        if (k == POWER_PIN)
+        if (k == PWR_KILL)
             continue; // don't kill the power!
         pinInitOutput(pins[k], 0); // pull it down
 //        HAL_Delay(1); // wait for things to settle (10pF/10k = 100ns)

@@ -18,11 +18,11 @@ void StartDefaultTask(void const * argument);
 void buttonHandler(uint32_t pin, void* data) {
     int &count = *(int*) data;
     switch (pin) {
-        case SW1_PIN:
+        case SW1:
             count++;
             printf("Hello Pin1, count = %d\n", count);
             break;
-        case SW2_PIN:
+        case SW2:
             count++;
             printf("Hello Pin2, count = %d\n", count);
             break;
@@ -50,9 +50,9 @@ void StartDefaultTask(void const * argument) {
     MatchBox* mb = (MatchBox*) argument;
     int b1count = 0;
     int b2count = 0;
-    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
-    Button b1(SW1_PIN, buttonHandler, &b1count);
-//    Button b2(SW2_PIN, buttonHandler, &b2count); // causes a hang.. to investigate...
+    Pin led(LED1, Pin::Config().setMode(Pin::MODE_OUTPUT));
+    Button b1(SW1, buttonHandler, &b1count);
+//    Button b2(SW2, buttonHandler, &b2count); // causes a hang.. to investigate...
     Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST).setClockDiv(Spi::DIV32));
     Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
 

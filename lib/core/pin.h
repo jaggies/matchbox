@@ -8,6 +8,8 @@
 #ifndef PIN_H_
 #define PIN_H_
 
+#include "board.h"
+
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 class Pin {

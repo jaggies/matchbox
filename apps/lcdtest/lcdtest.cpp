@@ -20,7 +20,7 @@ void StartDefaultTask(void const * argument);
 
 static void toggleLed() {
     static uint8_t data;
-    writePin(LED_PIN, (data++) & 1);
+    writePin(LED1, (data++) & 1);
 }
 
 int main(void)
@@ -112,7 +112,7 @@ static void adcCallback(const uint16_t* values, int n, void* arg) {
 void buttonHandler(uint32_t pin, void* data) {
     int &mode = *(int*) data;
     switch (pin) {
-        case SW1_PIN:
+        case SW1:
             mode++;
             break;
         default:
@@ -127,10 +127,10 @@ void StartDefaultTask(void const * argument)
   Spi spi2(Spi::SP2, Spi::Config().setOrder(Spi::LSB_FIRST).setClockDiv(Spi::DIV32));
   Lcd lcd(spi2, Lcd::Config().setDoubleBuffered(true));
   Adc adc(Adc::AD1, lcd.getWidth());
-  Button b1(SW1_PIN, buttonHandler, &mode);
+  Button b1(SW1, buttonHandler, &mode);
   uint16_t samples[lcd.getWidth()];
 
-  pinInitOutput(LED_PIN, 1);
+  pinInitOutput(LED1, 1);
 
   int f;
   debug("RCC_HCLK = %d\n", HAL_RCC_GetHCLKFreq());

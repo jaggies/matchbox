@@ -1,6 +1,6 @@
 #include "cmsis_os.h"
 #include "arduino.h"
-#include "gpio.h"
+#include "board.h"
 #include "pin.h"
 
 static Button *button[16];

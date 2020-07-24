@@ -11,7 +11,6 @@
 #include "stm32.h"
 #include "cmsis_os.h"
 #include "board.h"
-#include "gpio.h"
 
 class Pin;
 

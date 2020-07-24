@@ -13,7 +13,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include "font.h"
-#include "gpio.h"
+#include "board.h"
 #include "lcd.h"
 #include "util.h"
 #include "cmsis_os.h" // osThreadYield()

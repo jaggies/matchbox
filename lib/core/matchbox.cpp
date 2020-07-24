@@ -11,7 +11,7 @@
 #include "usbd_cdc.h"
 #include "usbserial.h"
 #include "matchbox.h"
-#include "gpio.h"
+#include "board.h"
 #include "util.h"
 #include "pin.h"
 
@@ -62,11 +62,11 @@ static void maybeJumpToBootloader() {
     const fPtr bootLoader = (fPtr) *(uint32_t*) 0x1fff0004;
 
     // Jump to bootloader if SW1 is low at reset
-    pinInitInput(SW1_PIN);
-    if (!readPin(SW1_PIN)) {
-        pinInitOutput(LED_PIN, 1);
+    pinInitInput(SW1);
+    if (!readPin(SW1)) {
+        pinInitOutput(LED1, 1);
         for (int i = 0; i < 40; i++) {
-            writePin(LED_PIN, i % 2);
+            writePin(LED1, i % 2);
             HAL_Delay(50);
         }
         SysTick->CTRL = 0; // Reset Systick timer

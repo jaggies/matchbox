@@ -202,7 +202,7 @@ void dumpBlock(uint8_t* data, int block) {
 }
 
 void StartDefaultTask(void const * argument) {
-    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
+    Pin led(LED1, Pin::Config().setMode(Pin::MODE_OUTPUT));
     printf("initialize sdio\n");
     if (!sdInit()) {
         error("Failed to initialize sdio\n");

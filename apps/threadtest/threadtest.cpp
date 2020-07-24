@@ -8,6 +8,7 @@
 #include <cstdio>
 #include "matchbox.h"
 #include "cmsis_os.h"
+#include "board.h" // low-level pin manipulation
 
 volatile int count = 1;
 
@@ -125,8 +126,8 @@ int main(void) {
     ReconfigureGPIO();
 
     // except LED and Power
-    pinInitOutput(POWER_PIN, 1);
-    pinInitOutput(LED_PIN, 1);
+    pinInitOutput(PWR_KILL, 1);
+    pinInitOutput(LED1, 1);
 
     // ???  osKernelInitialize();
 

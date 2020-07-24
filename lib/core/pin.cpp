@@ -6,7 +6,7 @@
  */
 
 #include "stm32.h"
-#include "gpio.h"
+#include "board.h"
 #include "pin.h"
 
 // TODO: These are probably device-dependent

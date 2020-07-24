@@ -11,14 +11,8 @@
 #include <stdint.h>
 #include "spi.h"
 #include "font.h"
+#include "board.h"
 
-// TODO: Move these to a config file
-#define LCD_PEN_PIN PB9
-#define LCD_SCLK_PIN PB10
-#define LCD_SI_PIN PC3
-#define LCD_SCS_PIN PB1
-#define LCD_EXTC_PIN PB4
-#define LCD_DISP_PIN PB5
 #define LCD_SIZE (YRES * LCD_LINE_SIZE) // size of lcd frame in bytes
 #define LCD_DEPTH 3 // 3 == color, 1 == mono
 #define LCD_XRES 128

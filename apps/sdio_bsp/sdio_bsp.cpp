@@ -108,7 +108,7 @@ void dumpBlock(uint8_t* data, int block) {
 
 
 void StartDefaultTask(void const * argument) {
-    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
+    Pin led(LED1, Pin::Config().setMode(Pin::MODE_OUTPUT));
     Pin det(SDIO_DET, Pin::Config()
         .setMode(Pin::MODE_INPUT)
         .setEdge(Pin::EDGE_FALLING)

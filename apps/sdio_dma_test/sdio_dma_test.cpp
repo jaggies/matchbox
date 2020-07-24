@@ -319,7 +319,7 @@ void DMA2_Stream6_IRQHandler() {
 }
 
 void StartDefaultTask(void const * argument) {
-    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
+    Pin led(LED1, Pin::Config().setMode(Pin::MODE_OUTPUT));
     _led = &led;
 
     printf("Initializing SDIO DMA test...\n");

@@ -140,7 +140,7 @@ void toggleLed(Pin& led) {
 
 void StartDefaultTask(void const * argument) {
     MatchBox* mb = (MatchBox*) argument;
-    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
+    Pin led(LED1, Pin::Config().setMode(Pin::MODE_OUTPUT));
     FATFS FatFs = {0};   /* Work area (file system object) for logical drive */
     FRESULT status;
     char path[4];

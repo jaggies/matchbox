@@ -7,7 +7,6 @@
 
 #include <stdint.h>
 #include <algorithm> // min/max
-#include "gpio.h"
 #include "OrderedDither.h"
 #include "Interpolator.h"
 #include "triangle.h"

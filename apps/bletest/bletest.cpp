@@ -5,7 +5,6 @@
  *      Author: jmiller
  */
 #include <math.h>
-#include "ble_v01.h"
 #include "lib_aci.h"
 #include "aci_setup.h"
 #include "matchbox.h"
@@ -94,7 +93,7 @@ static const hal_aci_data_t setup_msgs[NB_SETUP_MESSAGES] = SETUP_MESSAGES_CONTE
 static struct aci_state_t aci_state;
 
 void StartDefaultTask(void const * argument) {
-    Pin led(LED_PIN, Pin::Config().setMode(Pin::MODE_OUTPUT));
+    Pin led(LED1, Pin::Config().setMode(Pin::MODE_OUTPUT));
     nrf8001Setup();
     Status status;
     Channel chan;

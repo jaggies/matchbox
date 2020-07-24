@@ -1,5 +1,5 @@
 /*
- * matchbox.cpp
+ * pinio.cpp
  *
  *  Created on: Jun 8, 2016
  *      Author: jmiller
@@ -8,7 +8,7 @@
 #include <assert.h>
 #include "stm32.h"
 #include "cmsis_os.h"
-#include "gpio.h"
+#include "pinio.h"
 #include "util.h"
 
 static GPIO_TypeDef* _bus[] = {

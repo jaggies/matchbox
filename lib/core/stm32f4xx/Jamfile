@@ -1,8 +1,8 @@
-SubDir TOP lib bridge stm32f4xx ;
+SubDir TOP lib core stm32f4xx ;
 
 SubDirHdrs $(TOP) lib bridge ;
 SubDirHdrs $(TOP) lib config ;
-SubDirHdrs $(TOP) lib matchbox ;
+SubDirHdrs $(TOP) lib core ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FatFS src ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FatFS src drivers ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares Third_Party FreeRTOS Source CMSIS_RTOS ;
@@ -16,8 +16,11 @@ SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Device ST STM32F4xx Include 
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Include ;
 
 Library libmatchbox :
+	hal_msp.c
+	hal_timebase.c
 	matchbox_it.cpp
 	matchbox_sd.c
+	usbserial_ll.c
 ; 
 
 Library libmatchbox :

@@ -1,5 +1,0 @@
-SubDir TOP lib bridge ;
-
-SubInclude TOP lib bridge $(TARGET) ;
-
-

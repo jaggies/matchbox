@@ -1,5 +1,5 @@
 SubDir TOP apps nrfclass ;
-SubDirHdrs $(TOP) lib matchbox ;
+SubDirHdrs $(TOP) lib core ;
 SubDirHdrs $(TOP) lib compat ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;

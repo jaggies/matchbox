@@ -1,5 +1,5 @@
 SubDir TOP apps lcdtest ;
-SubDirHdrs $(TOP) lib matchbox ;
+SubDirHdrs $(TOP) lib core ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Device ST STM32F4xx Include ;

@@ -1,6 +1,6 @@
 SubDir TOP apps bletest ;
+SubDirHdrs $(TOP) lib arduino ;
 SubDirHdrs $(TOP) lib core ;
-SubDirHdrs $(TOP) lib compat ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib render ;
 SubDirHdrs $(TOP) lib nordic libraries BLE ;

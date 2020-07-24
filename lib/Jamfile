@@ -2,7 +2,7 @@ SubDir TOP lib ;
 
 SubInclude TOP lib hal ;
 
-SubInclude TOP lib compat ;
+SubInclude TOP lib arduino ;
 SubInclude TOP lib font ;
 SubInclude TOP lib gl ;
 SubInclude TOP lib core ;

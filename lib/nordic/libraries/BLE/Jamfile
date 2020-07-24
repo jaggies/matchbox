@@ -1,5 +1,5 @@
 SubDir TOP lib nordic libraries BLE ;
-SubDirHdrs $(TOP) lib compat ;
+SubDirHdrs $(TOP) lib arduino ;
 SubDirHdrs $(TOP) lib core ;
 SubDirHdrs $(TOP) lib config ;
 SubDirHdrs $(TOP) lib hal STM32CubeF4 Middlewares ST STM32_USB_Device_Library Class CDC Inc ;

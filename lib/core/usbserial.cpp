@@ -19,7 +19,9 @@ USBD_CDC_ItfTypeDef UsbSerial::USBD_Interface_fops_FS = {
     UsbSerial::DeInit_FS,
     UsbSerial::Control_FS,
     UsbSerial::Receive_FS,
-    UsbSerial::TxComplete_FS
+	#ifdef STM32F4XX
+    UsbSerial::TxComplete_FS 
+	#endif
 };
 
 USBD_CDC_LineCodingTypeDef UsbSerial::linecoding = {

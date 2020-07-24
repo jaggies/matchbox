@@ -8,7 +8,7 @@ Library libmatchbox :
 	adc.cpp
 	pin.cpp
 	fifo.cpp
-	eeprom.cpp
+	#eeprom.cpp
 	pinio.cpp
 	lcd.cpp
 	matchbox.cpp

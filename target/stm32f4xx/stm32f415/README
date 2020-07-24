@@ -1,0 +1,2 @@
+This directory contains the output of STM32CubeMX code generation, less libraries that
+are build by the rest of the build system.

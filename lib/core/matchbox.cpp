@@ -35,6 +35,7 @@ typedef struct _ClockConfig {
         uint32_t latency;
 } ClockConfig;
 
+#ifdef STM32F4XX
 static const ClockConfig config[] = {
    // M   N   P              Q  AHBDIV           APB1DIV        APB2DIV        FLASH LATENCY
     { 8,  96, RCC_PLLP_DIV6, 4, RCC_SYSCLK_DIV2, RCC_HCLK_DIV1, RCC_HCLK_DIV1, FLASH_LATENCY_0 },
@@ -48,6 +49,10 @@ static const ClockConfig config[] = {
     { 16, 360, RCC_PLLP_DIV2, 8, RCC_SYSCLK_DIV1, RCC_HCLK_DIV4, RCC_HCLK_DIV1, FLASH_LATENCY_5 },
     { 12, 288, RCC_PLLP_DIV2, 8, RCC_SYSCLK_DIV1, RCC_HCLK_DIV4, RCC_HCLK_DIV4, FLASH_LATENCY_5 }
 };
+#else
+#warning TODO: generate standard clocks for H7
+static const ClockConfig *config;
+#endif
 
 #ifdef USE_FULL_ASSERT
 extern "C" void assert_failed(uint8_t* file, uint32_t line)
@@ -144,7 +149,11 @@ void MatchBox::systemClockConfig(ClockSpeed speed) {
     RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
     _clkSpeed = speed;
 
+	#ifdef STM32F4XX
     __HAL_RCC_PWR_CLK_ENABLE();
+	#else
+	#warning TODO: enable power clock
+	#endif
 
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;

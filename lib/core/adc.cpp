@@ -21,17 +21,19 @@ Adc::Adc(Device device, int sampleCount) :
     // Configure  global features of the ADC (Clock, Resolution, Data Alignment and #conversion)
     bzero(&_adc, sizeof(_adc));
     _adc.Instance = _deviceMap[device];
-    _adc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV8;
     _adc.Init.Resolution = ADC_RESOLUTION_12B;
     _adc.Init.ScanConvMode = DISABLE;
     _adc.Init.ContinuousConvMode = ENABLE;
     _adc.Init.DiscontinuousConvMode = DISABLE;
     _adc.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+	#if defined(STM32F4XX)
+    _adc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV8;
     _adc.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
     _adc.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+    _adc.Init.DMAContinuousRequests = ENABLE;
+	#endif
     _adc.Init.NbrOfDiscConversion = 0;
     _adc.Init.NbrOfConversion = 1;
-    _adc.Init.DMAContinuousRequests = ENABLE;
     _adc.Init.EOCSelection = DISABLE;
     HAL_ADC_Init(&_adc);
 
@@ -39,7 +41,9 @@ Adc::Adc(Device device, int sampleCount) :
     ADC_ChannelConfTypeDef sConfig = {0};
     sConfig.Channel = ADC_CHANNEL_15;
     sConfig.Rank = 1;
+	#if defined(STM32F4XX)
     sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+	#endif
     sConfig.Offset = 0;
     HAL_ADC_ConfigChannel(&_adc, &sConfig);
     _adcMap[device] = this;

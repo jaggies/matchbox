@@ -70,14 +70,6 @@ void Error_Handler(void);
 #define SW2_GPIO_Port GPIOA
 #define PWR_KILL_Pin GPIO_PIN_14
 #define PWR_KILL_GPIO_Port GPIOA
-#define NRF8K_REQN_Pin GPIO_PIN_15
-#define NRF8K_REQN_GPIO_Port GPIOA
-#define NRF8K_SCK_Pin GPIO_PIN_3
-#define NRF8K_SCK_GPIO_Port GPIOB
-#define NRF8K_MISO_Pin GPIO_PIN_4
-#define NRF8K_MISO_GPIO_Port GPIOB
-#define NRF8K_MOSI_Pin GPIO_PIN_5
-#define NRF8K_MOSI_GPIO_Port GPIOB
 #define SD_DET_Pin GPIO_PIN_8
 #define SD_DET_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

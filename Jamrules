@@ -53,6 +53,7 @@ if $(TARGET) = stm32f4xx {
 	exit ;
 }
 
+INCLUDE += $(ALL_LOCATE_TARGET) ;
 INCLUDE += $(TOP)/lib/core/$(TARGET) $(TOP)target/$(TARGET) $(STM32INC) ;
 
 # M4 with hardware floating point
@@ -67,3 +68,20 @@ CC += $(CFLAGS) $(COPT) ;
 C++ += $(CFLAGS) ;
 LINK += $(LDFLAGS) -L $(ALL_LOCATE_TARGET) -Wl,--gc-sections -mcpu=cortex-m4 ;
 
+CSV2HEADER = $(TOP)/bin/makepinheader.py ;
+
+rule PinMap
+{
+    local csvsrc = $(>) ;
+    local hdrsrc = $(<) ;
+
+    SEARCH on $(csvsrc) = $(SEARCH_SOURCE) ;
+    MakeLocate $(hdrsrc) : $(ALL_LOCATE_TARGET) ;
+
+    Depends $(hdrsrc) : $(csvsrc) ;
+    Clean clean : $(hdrsrc) ;
+}
+
+actions PinMap {
+    $(CSV2HEADER) -p $(>) -h $(<)
+}

@@ -13,3 +13,6 @@ Library libhal :
 	startup_stm32f415xx.s
 	system_stm32f4xx.c
 	;
+
+# This includes all device-specific code, such as clock generation, system config, etc.
+SubInclude TOP target stm32f4xx stm32f415 ;

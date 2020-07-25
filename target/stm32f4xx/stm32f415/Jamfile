@@ -1,0 +1,19 @@
+SubDir TOP target stm32f4xx stm32f415 ;
+PinMap pinmap.h : stm32f415.csv ;
+
+SubDir TOP target stm32f4xx stm32f415 Src ;
+SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Device ST STM32F4xx Include ;
+SubDirHdrs $(TOP) lib hal STM32CubeF4 Drivers CMSIS Include ;
+SubDirHdrs $(TOP) target stm32f4xx stm32f415 Inc ;
+
+Library libhal :
+	#main.c # Modified to be a weak symbol
+	#stm32f4xx_hal_msp.c
+	#stm32f4xx_it.c
+	#system_stm32f4xx.c
+	#usbd_cdc_if.c
+	#usbd_conf.c
+	#usbd_desc.c
+	#usb_device.c
+	;
+

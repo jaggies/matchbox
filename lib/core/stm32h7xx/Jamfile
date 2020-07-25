@@ -15,8 +15,9 @@ SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
 Library libmatchbox :
 	#sd_diskio_bspv1.c
 	#sd_diskio_bspv2.c
-	sd_diskio_dma_bspv1.c
+	#sd_diskio_dma_bspv1.c
 	#sd_diskio_dma_bspv2.c
 	#sd_diskio_dma_rtos_bspv1.c
 	#sd_diskio_dma_rtos_bspv2.c
+	stubs.c
 	;

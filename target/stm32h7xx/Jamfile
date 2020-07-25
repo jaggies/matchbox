@@ -3,10 +3,6 @@ SubDir TOP target stm32h7xx ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include ;
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
 
-# TODO: use Jam to produce this path
-MEMMAP = $(TOP)/target/stm32h7xx/STM32H743XIHx_FLASH_RAM_D1.ld ;
-LINK += -T $(MEMMAP) ;
-
 DEFINES += STM32H7XX STM32H743xx __FPU_PRESENT ;
 
 Library libhal :

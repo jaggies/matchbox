@@ -6,14 +6,22 @@ SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Device ST STM32H7xx Include 
 SubDirHdrs $(TOP) lib hal STM32CubeH7 Drivers CMSIS Include ;
 SubDirHdrs $(TOP) target stm32h7xx stm32h743 Inc ;
 
-Library libhal :
-	main.c # Modified to be a weak symbol
-	stm32h7xx_hal_msp.c
-	stm32h7xx_it.c
-	system_stm32h7xx.c
-	usbd_cdc_if.c
-	usbd_conf.c
-	usbd_desc.c
-	usb_device.c
-	;
+MEMMAP = $(TOP)/target/stm32h7xx/stm32h743/STM32H743VITx_FLASH.ld ;
+LINK += -T $(MEMMAP) ;
 
+Library libhal :
+	bsp_driver_sd.c
+	#fatfs.c
+	#fatfs_platform.c
+	freertos.c
+	#main.c
+	#sd_diskio.c
+	#stm32h7xx_hal_msp.c
+	#stm32h7xx_hal_timebase_tim.c
+	#stm32h7xx_it.c
+	##system_stm32h7xx.c
+	#usbd_cdc_if.c
+	#usbd_conf.c
+	#usbd_desc.c
+	#usb_device.c
+	;

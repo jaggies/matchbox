@@ -8,7 +8,6 @@ Library libmatchbox :
 	adc.cpp
 	pin.cpp
 	fifo.cpp
-	#eeprom.cpp
 	pinio.cpp
 	lcd.cpp
 	matchbox.cpp
@@ -17,13 +16,14 @@ Library libmatchbox :
 	usart.cpp
 	usbserial.cpp
 	util.cpp
+	usbd_desc.c
 	;
 
 if $(TARGET) = stm32f4xx {
 Library libmatchbox :
+	eeprom.cpp
 	usbd_cdc_if.c
-	usbd_desc.c
-;
+	;
 }
 
 SubInclude TOP lib core $(TARGET) ;

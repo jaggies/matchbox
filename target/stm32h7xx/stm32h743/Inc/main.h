@@ -10,10 +10,10 @@
   * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
@@ -70,8 +70,6 @@ void Error_Handler(void);
 #define SW1_GPIO_Port GPIOD
 #define SW2_Pin GPIO_PIN_15
 #define SW2_GPIO_Port GPIOD
-#define NRF8K_RDYN_Pin GPIO_PIN_9
-#define NRF8K_RDYN_GPIO_Port GPIOA
 #define SD_DET_Pin GPIO_PIN_8
 #define SD_DET_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

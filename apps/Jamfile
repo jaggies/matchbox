@@ -1,14 +1,17 @@
 SubDir TOP apps ;
-SubInclude TOP apps bletest ;
 SubInclude TOP apps blink ;
-SubInclude TOP apps experimental ;
-SubInclude TOP apps fatfs ;
+# Exclude these apps while stm32h7 porting is in progress...
+if $(TARGET) = stm32f4xx {
 SubInclude TOP apps hello ;
+SubInclude TOP apps fatfs ;
+SubInclude TOP apps bletest ;
+SubInclude TOP apps experimental ;
 SubInclude TOP apps lcdtest ;
 SubInclude TOP apps nrfclass ;
-SubInclude TOP apps pincheck ;
 SubInclude TOP apps rtc ;
+SubInclude TOP apps threadtest ;
+SubInclude TOP apps pincheck ;
 SubInclude TOP apps sdio_bsp ;
 SubInclude TOP apps sdio_test ;
 SubInclude TOP apps sdio_dma_test ;
-SubInclude TOP apps threadtest ;
+}

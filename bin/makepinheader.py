@@ -59,7 +59,7 @@ def generateHeader(pinFile, headerFile):
 				#name = row[4] if row[3] in userdefined else row[3]
 				name = row[4] if row[4] else row[3]
 				name = toC(name)
-				pin = re.split("-", row[1])[0]
+				pin = re.split(r'\W+', row[1])[0]
 				print("#define\t", name, "\t", pin, "\t// Pin ", row[0], file=outFile); 
 	except csv.Error as e:
 		sys.exit('File {}, line {}: {}', format(pinFile, csvFile.line_num, e))

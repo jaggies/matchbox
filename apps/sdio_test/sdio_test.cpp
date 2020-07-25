@@ -8,7 +8,11 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#if defined(STM32F4XX)
 #include "stm32f4xx_hal.h"
+#elif defined(STM32H7XX)
+#include "stm32h7xx_hal.h"
+#endif
 #include "matchbox.h"
 #include "pin.h"
 #include "util.h"

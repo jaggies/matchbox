@@ -15,10 +15,15 @@ Library libmatchbox :
 	syscalls.c
 	spi.cpp
 	usart.cpp
-	usbd_cdc_if.c
-	usbd_desc.c
 	usbserial.cpp
 	util.cpp
 	;
+
+if $(TARGET) = stm32f4xx {
+Library libmatchbox :
+	usbd_cdc_if.c
+	usbd_desc.c
+;
+}
 
 SubInclude TOP lib core $(TARGET) ;

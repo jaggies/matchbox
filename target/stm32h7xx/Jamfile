@@ -13,3 +13,6 @@ Library libhal :
 	startup_stm32h743xx.s
 	system_stm32h7xx.c
     ;
+
+# This includes all device-specific code, such as clock generation, system config, etc.
+SubInclude TOP target stm32h7xx stm32h743 ;

@@ -27,13 +27,7 @@
 #define NRF8K_REQN SPI3_NSS
 
 // RTC
-#if defined(STM32F4XX)
-#define RTC_ASYNCH_PREDIV	0U
-#define RTC_SYNCH_PREDIV	31U 
-#else
-#warning need to define RTC parameters
-#define RTC_ASYNCH_PREDIV	0U
-#define RTC_SYNCH_PREDIV	31U 
-#endif
+#define RTC_ASYNCH_PREDIV       0x7fU // 128
+#define RTC_SYNCH_PREDIV        0x00ffU // * 256 = 32768
 
 #endif /* BOARD_H_ */
